@@ -3,6 +3,10 @@
 
 This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincoln, where you can find lecture slides and links to the datasets used during lectures.
 
+## Syllabus
+
++ [Syllabus](https://tmieno2.github.io/AECN-Data-Science-R/Syllabus/2022/syllabus_2022.pdf)
+
 ## Lecture Notes
 
 + Chapter 1: Introduction to R ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-1-Introduction/Introduction.html))

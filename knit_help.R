@@ -6,8 +6,8 @@ library(pagedown)
 # /*===========================================================
 #' # Chapter 0: Logistics
 # /*===========================================================
-rmarkdown::render(here::here("Chapter-0/kobe-logistics.rmd"))
-pagedown::chrome_print(here::here("Chapter-0/kobe-logistics.html"))
+rmarkdown::render(here::here("Chapter-0/logistics.rmd"))
+pagedown::chrome_print(here::here("Chapter-0/logistics.html"))
 
 # /*===========================================================
 #' # Chapter 1: Introduction

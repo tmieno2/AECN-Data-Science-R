@@ -1,0 +1,45 @@
+---
+title: "Course Logistics"
+output:
+  xaringan::moon_reader:
+    # css: [default, metropolis, metropolis-fonts] 
+    css: xaringan-themer.css 
+    # self_contained: true
+    nature:
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: middle
+
+```{r, child = "setup.Rmd"}
+```
+
+# Meeting time
+
++ MW: 1:00 pm ~ 2:30 pm
+
+---
+class: middle
+
+# Grading
+
++ Assignment 1: 20 points 
++ Assignment 2: 20 points
++ Assignment 3: 20 points
++ Final project: 40 points
+
+---
+class: middle
+
+# Request
+
+Any requests on topics to cover?
+
+---
+class: middle
+
+# Self-introduction
+
+
