@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Writing Articles to WORD using Rmarkdown</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="AECN 396/896-002" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections/anchor-sections.js"></script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link href="libs/tabwid/tabwid.css" rel="stylesheet" />
+    <script src="libs/tabwid/tabwid.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Writing Articles to WORD using Rmarkdown
+### AECN 396/896-002
+
+---
+
+class: middle
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content.hljs-github h1 {
+  margin-top: 5px;  
+  margin-bottom: 25px;  
+}
+
+.remark-slide-content.hljs-github {
+  padding-top: 10px;  
+  padding-left: 30px;  
+  padding-right: 30px;  
+}
+
+.panel-tabs {
+  &lt;!-- color: #062A00; --&gt;
+  color: #841F27;
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panel-tab {
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 3px;  
+  margin-right: 3px;  
+  padding-top: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panelset .panel-tabs .panel-tab {
+  min-height: 40px;
+}
+
+.remark-slide th {
+  border-bottom: 1px solid #ddd;
+}
+
+.remark-slide thead {
+  border-bottom: 0px;
+}
+
+.gt_footnote {
+  padding: 2px;  
+}
+
+.remark-slide table {
+  border-collapse: collapse;
+}
+
+.remark-slide tbody {
+  border-bottom: 2px solid #666;
+}
+
+
+.important {
+  background-color: lightpink;
+  border: 2px solid blue;
+  font-weight: bold;
+} 
+
+.remark-code {
+  display: block;
+  overflow-x: auto;
+  padding: .5em;
+  background: #ffe7e7;
+} 
+
+.hljs-github .hljs {
+  background: #f2f2fd;
+}
+
+.remark-inline-code {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: #e6e6e6;
+}
+
+.r.hljs.remark-code.remark-inline-code{
+  font-size: 0.9em
+}
+
+.left-full {
+  width: 80%;
+  float: left;
+}
+
+.left-code {
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left6 {
+  width: 60%;
+  height: 92%;
+  float: left;
+}
+
+.left5 {
+  width: 49%;
+  &lt;!-- height: 92%; --&gt;
+  float: left;
+}
+
+.right5 {
+  width: 49%;
+  float: right;
+  padding-left: 1%;
+}
+
+.right4 {
+  width: 39%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left3 {
+  width: 29%;
+  height: 92%;
+  float: left;
+}
+
+.right7 {
+  width: 69%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left4 {
+  width: 38%;
+  float: left;
+}
+
+.right6 {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+ul li{
+  margin: 7px;
+}
+
+ul, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+ol li{
+  margin: 7px;
+}
+
+ol, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+.content-box { 
+    box-sizing: border-box;
+    background-color: #e2e2e2;
+}
+.content-box-blue,
+.content-box-gray,
+.content-box-grey,
+.content-box-army,
+.content-box-green,
+.content-box-purple,
+.content-box-red,
+.content-box-yellow {
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 0 0 10px;
+  overflow: hidden;
+  padding: 0px 5px 0px 5px;
+  width: 100%;
+}
+.content-box-blue { background-color: #F0F8FF; }
+.content-box-gray { background-color: #e2e2e2; }
+.content-box-grey { background-color: #F5F5F5; }
+.content-box-army { background-color: #737a36; }
+.content-box-green { background-color: #d9edc2; }
+.content-box-purple { background-color: #e2e2f9; }
+.content-box-red { background-color: #ffcccc; }
+.content-box-yellow { background-color: #fef5c4; }
+.content-box-blue .remark-inline-code,
+.content-box-blue .remark-inline-code,
+.content-box-gray .remark-inline-code,
+.content-box-grey .remark-inline-code,
+.content-box-army .remark-inline-code,
+.content-box-green .remark-inline-code,
+.content-box-purple .remark-inline-code,
+.content-box-red .remark-inline-code,
+.content-box-yellow .remark-inline-code { 
+  background: none;
+}
+
+.full-width {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+}
+&lt;/style&gt;
+
+
+&lt;style type="text/css"&gt;
+blockquote, .blockquote {
+  display: block;
+  margin-top: 0.1em;
+  margin-bottom: 0.2em;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-left: solid 10px #0148A4;
+  border-top: solid 2px #0148A4;
+  border-bottom: solid 2px #0148A4;
+  border-right: solid 2px #0148A4;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  /* background-color: #e64626; */
+  color: #e64626;
+  padding: 0.5em;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.blockquote p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h1:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h2:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h3:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h4:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.text-shadow {
+  text-shadow: 0 0 4px #424242;
+}
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+/******************
+ * Slide scrolling
+ * (non-functional)
+ * not sure if it is a good idea anyway
+slides &gt; slide {
+  overflow: scroll;
+ padding: 5px 40px;
+}
+.scrollable-slide .remark-slide {
+  height: 400px;
+  overflow: scroll !important;
+}
+ ******************/
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-box-24 {
+  height:24em;
+  overflow-y: scroll;
+}
+.scroll-box-30 {
+  height:30em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+ 
+&lt;/style&gt;
+
+
+
+# Learning objectives
+
+Learn how to use a combination of R packages to generate (mostly) publication-ready articles in WORD 
+
+&lt;br&gt;
+
+&lt;span style="color:red"&gt; Tips: &lt;/span&gt;hitting letter "o" key will give you a panel view of the slides
+
+---
+class: middle
+
+# Before you start 
+
++ This lecture slides assume basic knowledge on how to use Rmarkdown. See [here](https://bookdown.org/yihui/rmarkdown/) first if are not familiar with Rmarkdown.
+
++ Go [here](https://www.dropbox.com/sh/7dccenk0f03v7sq/AADTO0UpSjuD4y3T4KDyTQgia?dl=0) and download all the files including sample_to_word.Rmd (a sample Rmarkdown file).
+
+---
+class: middle
+
+# Steps 
+
+Here are the proposed steps to generate a fully publication-ready article: 
+
++ Write an Rmarkdown file and knit to a WORD file (the focus of this lecture)
+  * regular texts
+  * R codes for analysis, tables, figures
+
++ Do final formatting jobs on the output WORD file (not discussed here) to the specific needs required by the final destination of the article
+
+---
+class: middle
+
+# Why Rmarkdown-WORD?
+
++ No manual copying and pasting of tables and figures
+
++ No manual formatting of tables and figures when they get updated in the course of your research projects
+
++ No manual updating of data-driven numbers (e.g., coefficient estimates, summary numbers) in text
+
+---
+class: middle
+
+# What can you do with Rmarkdown-WORD?
+
++ include (run) R codes to
+  * run statistical or modeling analysis  
+  * create figures (e.g., the `ggplot2` package)
+  * create tables (e.g., the `modelsummary` and `flextable` packages)
+
++ refer to the R objects generated (data, tables, figures) to place them in the output WORD file 
+
++ cross-reference tables and figures using special syntaxes
+
++ create citations and a reference list automatically using special syntaxes 
+
++ format citation and reference styles using [Citation Style Language](https://citationstyles.org/)  
+
++ use Latex math syntax to write equations 
+
++ use markdown syntax for formatting the output WORD file 
+  * headings
+  * footnotes
+
+--
+
+.content-box-red[**Challenges**]
+
+It is impossible to include track changes!
+
+---
+class: inverse, center, middle
+name: user-defined-function
+
+# YAML header
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+class: middle
+
+In the YAML header, you can add 
+
++ `title`
++ `authors`
++ `date`
++ `abstract`
+
+.content-box-green[**Direction**]
+
+Take a look at these entries in the YAML header in sample_to_word.Rmd and check how they appear on sample_to_word.docx 
+
+---
+class: middle
+
+In the YAML header, include the lines below
+
+
+```r
+output:
+  bookdown::word_document2: 
+```
+
+to direct R to knit an Rmd file to a WORD file using `bookdown::word_document2` building process.
+
+Note: `bookdown::word_document2` is used instead of `word_document:` as it allows us to easily cross-reference tables and figure. 
+
+--
+
+Note: We also specify bibliography and style reference files in the YAML header as we will see later.
+
+---
+class: middle
+
+As we will see later, the YAML header also 
+
+---
+class: inverse, center, middle
+name: user-defined-function
+
+# WORD Structure and Formatting
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+class: middle
+
+# Section, subsection, subsubsections
+
+Use `#`, `##`, `###` at the beginning of the line to define sections, subsections, and subsubsections.
+
+.content-box-green[**Example**]
+
+
+```r
+# This becomes section title  
+
+## This becomes subsection title  
+
+### This becomes subsubsection title  
+```
+
+.content-box-green[**Direction**]
+
+Confirm that `# Materials and Methods` and `## Data` in sample_to_word.Rmd turn into a section and subsection title in sample_to_word.docx.
+
+---
+class: middle
+
+# Footnote
+
+.content-box-green[**How**]
+
+You can add a footnote using `^[]` like this:
+
+
+```r
+regular texts^[this is a footnote]
+```
+
+Footnotes are automatically numbered.
+
+.content-box-green[**Direction**]
+
+See the Conclusion section of the sample Rmd file and output WORD file. 
+
+---
+class: middle
+
+# Specifying the style 
+
+Rmarkdown itself is very limited in its ability to specify the style of the output WORD file .red[syntactically].   
+
+Few exceptions are:
+
++ bold font: `**this becomes bold**` (or `__this becomes bold__`)
++ italic font: `*this becomes italic*` 
+
+Confirm this by comparing the first sentence in the Introduction section of the sample Rmd and WORD files.
+
+---
+class: middle
+
+However, you can define the style of the output WORD file in detail using a style reference WORD file.
+
+.content-box-green[**Example**]
+
+font size and family for different parts of a WORD file (e.g., section, subsection, footnote)
+
+---
+class: middle
+
+.content-box-green[**How**]
+
++ Create a reference word file (here, it's called "word-style.docx") that follows the style you would like the output WORD file to have
+
++ Add the following to the YAML header
+
+
+```r
+output:
+  bookdown::word_document2:
+*   reference_docx: word-style.docx
+```
+
+.red[Important]: only the style of the style reference WORD file will be inherited to the output WORD file, but not its contents 
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
++ See the style of "sample_to_word.dcox"
+
++ Open "word-style.docx" and confirm the style of the file
+
++ Uncomment `reference_docx: word-style.docx` to the YAML header, knit to a WORD file, and check the style of "sample_to_word.dcox"
+
+---
+class: middle
+
+You can change the style of the reference WORD style file and save the changes. Then, the style changes will be reflected in the output WORD file.
+
+&lt;img src="style-change.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+See [here](https://bookdown.org/yihui/rmarkdown-cookbook/word-template.html) for more on how to create a WORD style template. 
+
+---
+class: middle
+
+# Tips 
+
+.content-box-green[**Line break**]
+
+````markdown
+&lt;br&gt;
+````
+
+Make sure you have empty space above and below `&lt;br&gt;` (see the bottom entry of [this page](https://stackoverflow.com/questions/43239868/add-blank-line-to-word-output-rmarkdown)).
+
+.content-box-green[**Direction**]
+
+See the Materials and Methods section of the Rmd and its output WORD files.
+
+---
+class: middle
+
+.content-box-green[**Page break (hacky)**]
+
++ Use `#####` to create a page break. 
+
++ This is only possible because I have configured the `word-style.docx` so that `#####` create a line break
+
++ See [here](https://datascienceplus.com/r-markdown-how-to-insert-page-breaks-in-a-ms-word-document/) if you want to create your own syntax to generate a page break on your own reference style docx file. (just build on the word-style.docx file I provided if you do not want to bother to do it)
+
++ Note that this method will leave the texts after `#####` in white (that's why you cannot see the texts). If you do not like this, simply do not use this syntax to include page breaks.
+
+--
+
+.content-box-green[**Direction**]
+
++ Check just above the Materials and Methods section in the Rmd file and confirm that there is a line that starts with `#####` 
+
++ Confirm that a page break indeed happened right before the Materials and Methods section
+
+---
+class: inverse, center, middle
+name: user-defined-function
+
+# Citations and References
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+class: middle
+
+# Add Citations and References
+
+.content-box-green[**How**]
+
++ Create a reference file (here, "bibliography.bib")
+
++ Add the following to the YAML header (see the sample Rmd file for an example)
+
+
+```r
+bibliography: bibliography file name
+```
+
++ Add `&lt;div id="refs"&gt;&lt;/div&gt;` in the Reference section (see the sample Rmd file)
+
+---
+class: middle
+
+.content-box-green[**Syntax**]
+
++ use `@reference_name` to print "author names (year)" in the output WORD file
+
++ use `[@reference_name]` to print "(author names, year)" in the output WORD file 
+
++ use `[@reference_name_1; @reference_name_2]` to print "(author names, year; author names, year)" in the output WORD file 
+
++ use `[-@reference_name]` to print just year
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
+See the Introduction and Reference sections in the sample RMD file and its output WORD file.
+
+---
+class: middle
+
+Other bibliography systems can be used:
+
+<div class="tabwid"><style>.cl-ebe3f0de{font-family:'Arial';font-size:18px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;}.cl-ebe3fd7c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;line-height: 1.00;background-color:transparent;}.cl-ebe419ce{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe419ec{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe419f6{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a00{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a01{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a0a{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a14{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a1e{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a28{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a29{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a32{width:98px;background-color:transparent;vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 2.00px solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ebe41a3c{width:133px;background-color:transparent;vertical-align: middle;border-bottom: 2.00px solid rgba(0, 0, 0, 1.00);border-top: 2.00px solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table style='border-collapse:collapse;'><thead><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a3c"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">format</span></p></td><td class="cl-ebe41a32"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">extension</span></p></td></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-ebe419ec"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">CSL-JSON</span></p></td><td class="cl-ebe419ce"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.json</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a0a"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">MODS</span></p></td><td class="cl-ebe41a01"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.mods</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a14"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">BibLaTeX</span></p></td><td class="cl-ebe41a1e"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.bib</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a14"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">BibTeX</span></p></td><td class="cl-ebe41a1e"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.bibtex</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a29"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">RIS</span></p></td><td class="cl-ebe41a28"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.ris</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a14"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">EndNote</span></p></td><td class="cl-ebe41a1e"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.enl</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a14"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">EndNote XML</span></p></td><td class="cl-ebe41a1e"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.xml</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a29"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">ISI</span></p></td><td class="cl-ebe41a28"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.wos</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a14"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">MEDLINE</span></p></td><td class="cl-ebe41a1e"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.medline</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ebe41a00"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">Copac</span></p></td><td class="cl-ebe419f6"><p class="cl-ebe3fd7c"><span class="cl-ebe3f0de">.copac</span></p></td></tr></tbody></table></div>
+
+---
+class: middle
+
+# Citation and Reference Style 
+
+You can change the citation and reference style using [Citation Style Language](https://citationstyles.org/).
+
+--
+
+.content-box-green[**How**]
+
++ Obtain the csl file you would like to use from the [Zotero citation style repository](https://www.zotero.org/styles).
+
++ Place the following in the YAML header (see the YAML header of sample_to_word.Rmd for an example):
+
+
+```r
+csl: csl file name 
+```
+
++ Then, when knitted, citations and references styles reflect what the style specified by the csl file  
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
++ Check the current citation and reference style of sample_to_word.docx
+
++ uncomment `# csl: agronomy.csl` in the YAML header 
+
++ knit and confirm the changes in the citation and reference styles
+
+---
+class: inverse, center, middle
+name: user-defined-function
+
+# Tables and Figures
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+class: middle
+
+# Tables
+
+.content-box-green[**How**]
+
++ Create a table using the `flextable` package (this is not the only option) 
+
++ Add an R code chunk like this:
+  * `table_ft` is a `flextable` object.
+  * `table-name` is the chunk name
+
+````markdown
+```{r table-name}
+  table_ft
+```
+````
+
++ Use `\@ref(tab:table-name)` in the rmarkdown file to cross-reference the table (table numbering in the output WORD file is automatic)
+
++ .red[Caveat]: You cannot use `_` in the chunk name (`-` is allowed). Cross-referencing would not work with chunk names that include `_`.
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
+See the Table section in "sample_to_word.Rmd" and its output WORD file. 
+
+---
+class: middle
+
+# Figures
+
+.content-box-green[**How**]
+
++ Create a figure using the `ggplot2` package (this is not the only option) 
+
++ Add an R code chunk like this:
+  * `figure_g` is a `ggplot2` object.
+  * `figure-name` is the chunk name
+  * `fig.cap = "caption"` adds `caption` as the caption of the figure 
+
+````markdown
+```{r figure-name, fig.cap = "caption"}
+  figure_g 
+```
+````
+
++ Use `\@ref(fig:figure-name)` in the rmarkdown file to cross-reference the figure (figure numbering in the output WORD file is automatic)
+
++ .red[Caveat]: You cannot use `_` in the chunk name (`-` is allowed). Cross-referencing would not work with chunk names that include `_`.
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
+See the Figure section in "sample_to_word.Rmd" and its output WORD file. 
+
+---
+class: inverse, center, middle
+name: user-defined-function
+
+# Mathematical equations
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+class: middle
+
+You can use Latex.red[-like] math syntax to write mathematical equations.
+
+.content-box-green[**Examples**]
+
+````markdown
+$Y_z = f_z(S) + g_z(N) + h_z(X,Y) + \varepsilon_z$
+````
+
+`\(Y_z = f_z(S) + g_z(N) + h_z(X,Y) + \varepsilon_z\)`
+
+````markdown
+$\bar{x} = \frac{\sum_{i=1}^n x_i}{n}$
+````
+
+`\(\bar{x} = \frac{\sum_{i=1}^n x_i}{n}\)`
+
+````markdown
+$$
+\begin{aligned}
+ AR(p): Y_i &amp;= c + \epsilon_i + \phi_i Y_{i-1} \dots \\
+ Y_{i} &amp;= c + \phi_i Y_{i-1} \dots
+\end{aligned}
+$$
+````
+
+$$
+`\begin{aligned}
+ AR(p): Y_i &amp;= c + \epsilon_i + \phi_i Y_{i-1} \dots \\
+ Y_{i} &amp;= c + \phi_i Y_{i-1} \dots
+\end{aligned}`
+$$
+
+---
+class: middle
+
+.content-box-red[**Caveat**]
+
++ When knitted to WORD, Latex is .red[NOT] involved in converting Latex.red[-like] math syntax to math equations. Instead, pandoc is doing the conversion job.
+
++ So, it is not surprising that not all the Latex math capabilities can be utilized when knitting to a WORD file. 
+
++ For example, the math written in an "align" environment does not print in the output WORD file even though it prints the equations on RStudio.  
+
++ With that said, many of the syntaxes that you will need are the same between Rmd-to-WORD and Latex.   
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
++ Confirm that the equations (in the Statistical Model subsection) written in the "aligned" and "align" environments are both correctly printed below on RStudio (RStudio can interpret them)
+
++ Now, knit to a WORD file and confirm that the equations from the "align" environment do not appear in the WORD document 
+
+---
+class: middle
+
+# Equation numbering and cross-reference 
+
+By default, equation numbering is not supported with `bookdown::word_document2`.
+
+In order to number and cross-reference equations automatically, we can use `pandoc-crossref` (see [here](https://stackoverflow.com/questions/47985267/equation-numbering-in-rmarkdown-for-export-to-word) for how to install it). 
+
+
+.content-box-green[**How**]
+
+Place `{#eq:equation-name}` after an equation like this:
+
+
+```r
+$$y = \beta_0 + \beta_1 x + \varepsilon$$ {#eq:eqn1}  
+```
+
+We can then cross-reference the equation with [@eq:equation-name].
+
+.red[Note]: do not forget `eq:`
+
+---
+class: middle
+
+.content-box-green[**Direction**]
+
++ Look at the Statistical Model section of the sample Rmd and WORD file to see examples.
+
++ As you can see in the sample WORD file, `eq. ` is added to the cross-referenced equation number.
+
+---
+class: middle
+
+.content-box-green[**Changing the prefix**]
+
+In order to change the prefix, put this in the YAML header:
+
+
+```r
+eqnPrefix:
+  - "prefix you like"
+```
+
+--
+
+.content-box-green[**Direction**]
+
++ Uncomment the following lines in the YAML header of the sample Rmd file and knit 
+
+
+```r
+# eqnPrefix:
+#   - "Equation" 
+```
+
++ Confirm that the prefix for the first equation has changed 
+
+---
+class: middle
+
+.content-box-green[**Suppress prefix**]
+
+In order to just have equation number, put `-` in front of `@` like this:
+
+
+```r
+[-@eq:eqn2]
+```
+
+--
+
+.content-box-green[**Direction**]
+
+Confirm that the prefix of the second equation is gone (only equation number). 
+
+---
+class: middle
+
+.content-box-green[**Creating white space**]
+
+Sometimes, you need to insert white space inside equations. You can use the following syntax to achieve that:
+
+* `\quad`: space equal to the current font size 
+* `\,`: 3/18 of \quad 
+* `\:`: 4/18 of \quad 
+* `\;`:5/18 of \quad 
+* `\qquad`: twice of \quad (= 36 mu) 
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

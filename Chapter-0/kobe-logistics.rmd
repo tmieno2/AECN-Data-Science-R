@@ -1,0 +1,73 @@
+---
+title: "Course Logistics"
+output:
+  xaringan::moon_reader:
+    # css: [default, metropolis, metropolis-fonts] 
+    css: ../xaringan-themer.css 
+    self_contained: true
+    nature:
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: middle
+
+```{r, child = "setup.Rmd"}
+```
+
+```{r knitr-setup, include = FALSE, cache = F}
+library(knitr)
+library(here)
+opts_chunk$set(
+  echo = F,
+  root.dir = here()
+)
+```
+
+```{r prep, include = FALSE, cache = F}
+library(data.table)
+library(magick)
+library(fixest)
+library(officer)
+library(flextable)
+library(dplyr)
+library(ggplot2)
+```
+
+# Meeting time
+
++ Tuesday: 8:50 am ~ 10:20 am
++ Friday: 8:50 am ~ 10:20 am
+
+---
+class: middle
+
+# Some simple rules during a lecture
+
++ Keep your camera on
++ You do not ask me if you can go to a bathroom or not. Feel free to just leave
++ You are free to drink (no alcohol though), but not eat
+
+---
+class: middle
+
+# Grading
+
++ Assignment 1: 40 points 
++ Assignment 2: 40 points
++ Final project: 20 points
+
+---
+class: middle
+
+# Random thing
+
++ Any data sets that you want me to use for demonstrations?
+
+---
+class: middle
+
+# Self-introduction
+
+

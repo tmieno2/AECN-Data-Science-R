@@ -1,0 +1,5897 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data wrangling with tidyverse</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="AECN 396/896-002" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <script src="libs/mark.js/mark.min.js"></script>
+    <link href="libs/xaringanExtra-search/search.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-search/search.js"></script>
+    <script>window.addEventListener('load', function() { window.xeSearch = new RemarkSearch({"position":"bottom-left","caseSensitive":false,"showIcon":true,"autoSearch":true}) })</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data wrangling with <code>tidyverse</code>
+### AECN 396/896-002
+
+---
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content.hljs-github h1 {
+  margin-top: 5px;  
+  margin-bottom: 25px;  
+}
+
+.remark-slide-content.hljs-github {
+  padding-top: 10px;  
+  padding-left: 30px;  
+  padding-right: 30px;  
+}
+
+.panel-tabs {
+  &lt;!-- color: #062A00; --&gt;
+  color: #841F27;
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panel-tab {
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 3px;  
+  margin-right: 3px;  
+  padding-top: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panelset .panel-tabs .panel-tab {
+  min-height: 40px;
+}
+
+.remark-slide th {
+  border-bottom: 1px solid #ddd;
+}
+
+.remark-slide thead {
+  border-bottom: 0px;
+}
+
+.gt_footnote {
+  padding: 2px;  
+}
+
+.remark-slide table {
+  border-collapse: collapse;
+}
+
+.remark-slide tbody {
+  border-bottom: 2px solid #666;
+}
+
+
+.important {
+  background-color: lightpink;
+  border: 2px solid blue;
+  font-weight: bold;
+} 
+
+.remark-code {
+  display: block;
+  overflow-x: auto;
+  padding: .5em;
+  background: #ffe7e7;
+} 
+
+.hljs-github .hljs {
+  background: #f2f2fd;
+}
+
+.remark-inline-code {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: #e6e6e6;
+}
+
+.r.hljs.remark-code.remark-inline-code{
+  font-size: 0.9em
+}
+
+.left-full {
+  width: 80%;
+  float: left;
+}
+
+.left-code {
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left6 {
+  width: 60%;
+  height: 92%;
+  float: left;
+}
+
+.left5 {
+  width: 49%;
+  &lt;!-- height: 92%; --&gt;
+  float: left;
+}
+
+.right5 {
+  width: 49%;
+  float: right;
+  padding-left: 1%;
+}
+
+.right4 {
+  width: 39%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left3 {
+  width: 29%;
+  height: 92%;
+  float: left;
+}
+
+.right7 {
+  width: 69%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left4 {
+  width: 38%;
+  float: left;
+}
+
+.right6 {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+ul li{
+  margin: 7px;
+}
+
+ul, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+ol li{
+  margin: 7px;
+}
+
+ol, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+.content-box { 
+    box-sizing: border-box;
+    background-color: #e2e2e2;
+}
+.content-box-blue,
+.content-box-gray,
+.content-box-grey,
+.content-box-army,
+.content-box-green,
+.content-box-purple,
+.content-box-red,
+.content-box-yellow {
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 0 0 10px;
+  overflow: hidden;
+  padding: 0px 5px 0px 5px;
+  width: 100%;
+}
+.content-box-blue { background-color: #F0F8FF; }
+.content-box-gray { background-color: #e2e2e2; }
+.content-box-grey { background-color: #F5F5F5; }
+.content-box-army { background-color: #737a36; }
+.content-box-green { background-color: #d9edc2; }
+.content-box-purple { background-color: #e2e2f9; }
+.content-box-red { background-color: #ffcccc; }
+.content-box-yellow { background-color: #fef5c4; }
+.content-box-blue .remark-inline-code,
+.content-box-blue .remark-inline-code,
+.content-box-gray .remark-inline-code,
+.content-box-grey .remark-inline-code,
+.content-box-army .remark-inline-code,
+.content-box-green .remark-inline-code,
+.content-box-purple .remark-inline-code,
+.content-box-red .remark-inline-code,
+.content-box-yellow .remark-inline-code { 
+  background: none;
+}
+
+.full-width {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+}
+&lt;/style&gt;
+
+
+&lt;style type="text/css"&gt;
+blockquote, .blockquote {
+  display: block;
+  margin-top: 0.1em;
+  margin-bottom: 0.2em;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-left: solid 10px #0148A4;
+  border-top: solid 2px #0148A4;
+  border-bottom: solid 2px #0148A4;
+  border-right: solid 2px #0148A4;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  /* background-color: #e64626; */
+  color: #e64626;
+  padding: 0.5em;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.blockquote p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h1:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h2:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h3:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h4:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.text-shadow {
+  text-shadow: 0 0 4px #424242;
+}
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+/******************
+ * Slide scrolling
+ * (non-functional)
+ * not sure if it is a good idea anyway
+slides &gt; slide {
+  overflow: scroll;
+ padding: 5px 40px;
+}
+.scrollable-slide .remark-slide {
+  height: 400px;
+  overflow: scroll !important;
+}
+ ******************/
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-box-24 {
+  height:24em;
+  overflow-y: scroll;
+}
+.scroll-box-30 {
+  height:30em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+ 
+&lt;/style&gt;
+
+# Table of contents
+
+1. [Importing and exporting data](#inputoutput)
+2. [`data.frame` and `tibble`](#df_tbl)
+3. [Data manipulation with `dplyr`: the Basics](#dplyr)
+4. [Grouped operations](#grouped)
+5. [Extensions](#extensions)
+6. [Reshaping data](#reshaping)
+7. [Merging datasets](#merging)
+
+---
+
+# Learning objectives
+
+The objectives of this chapter is to learn how to use the `tidyverse` package to 
+
++ import and export datasets in various formats
++ manipulate data 
++ reshape a dataset
++ merge multiple datasets 
+
+---
+
+#  `tidyverse` package
+
+.panelset[ 
+
+.panel[.panel-name[What is it?]
+&lt;br&gt;
+The `tidyverse` is a package of a collection of packages developed mainly by Hadley Wickham. Some of the packages included are
+
++ `readr`: read datasets in various formats
++ `dplyr`: manipulate and merge datasets
++ `tidyr`: reshape datasets 
++ `ggplot2`: data visualization 
++ `stringr`: character string operations
+
+These packages are by no means the only ways to do the operations we will learn today. However, we learn these packages because they are easy to use. 
+
+They are also easy to learn and get help as they are extremely popular and very well-documented. Go to the [tidyverse website](http://www.tidyverse.org/), and click on the icon of the package you would like to learn, then you will have a nice documentation of the packages. 
+ 
+You could also google the package name, and you will see bunch of introductions/tutorials.
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+Install the package if you have not.
+
+
+```r
+install.packages("tidyverse")
+```
+
+When you load the `tidyverse` package, it automatically loads many of the packages contained in it. 
+
+
+```r
+library(tidyverse)
+```
+
+  ]
+
+.panel[.panel-name[Conflicts?]
+
+Sometimes packages share the same functions names. 
+
+When those packages are loaded, there are function name conflicts where the function from the package loaded later masks the function from the other package.
+
+  ]
+
+]
+
+---
+
+class: inverse, center, middle
+name: df_tbl
+
+# `data.frame` and `tibble`
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# `data.frame` and `tibble` 
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+&lt;br&gt;
+
+## `data.frame`
+
+The traditional (most common) class of two-dimensional data (rows and columns) supported by R.
+
+&lt;br&gt;
+
+## `tibble`
+
+A relatively newer class of two-dimensional data that brings minor enhancements over `data.frame`.
+
+`tibble` is defined by the `tibble` package, which is part of the `tidyverse` package.
+
+  ]
+
+.panel[.panel-name[Objectives]
+
+&lt;br&gt;
+
++ Learn basic operations on `data.frame` and `tibble` 
+
++ Highlight some differences between the two (They are almost interchangeable, and you do no need to pay much attention to which class of data you are dealing with)
+
+
+  ]
+
+.panel[.panel-name[Preparation 1]
+
+&lt;br&gt;
+
+We use `HousePrices` dataset from the `AER` package.
+
+
+```r
+#--- load the AER package ---#
+library(AER)
+
+#--- load the HousePrices data ---#
+data(HousePrices)
+```
+
+&lt;br&gt;
+
+`HousePrices` is a `data.frame`.
+
+
+```r
+class(HousePrices)
+```
+
+```
+## [1] "data.frame"
+```
+
+  ]
+
+.panel[.panel-name[Preparation 2]
+
+&lt;br&gt;
+
+You can convert a `data.frame` into a `tibble` using `as_tibble()`:
+
+
+```r
+HousePrices_tbl &lt;- as_tibble(HousePrices)
+```
+
+&lt;br&gt;
+
+`HousePrices` is a `tibble` (and also a `data.frame`).
+
+
+```r
+class(HousePrices_tbl)
+```
+
+```
+## [1] "tbl_df"     "tbl"        "data.frame"
+```
+
+  ]
+
+]
+
+
+---
+
+# `data.frame` and `tibble`: display method
+
+.left5[
+
+`data.frame`
+
+
+```r
+HousePrices
+```
+
+```
+##      price lotsize bedrooms bathrooms stories driveway
+## 1    42000    5850        3         1       2      yes
+## 2    38500    4000        2         1       1      yes
+## 3    49500    3060        3         1       1      yes
+## 4    60500    6650        3         1       2      yes
+## 5    61000    6360        2         1       1      yes
+## 6    66000    4160        3         1       1      yes
+## 7    66000    3880        3         2       2      yes
+## 8    69000    4160        3         1       3      yes
+## 9    83800    4800        3         1       1      yes
+## 10   88500    5500        3         2       4      yes
+## 11   90000    7200        3         2       1      yes
+## 12   30500    3000        2         1       1       no
+## 13   27000    1700        3         1       2      yes
+## 14   36000    2880        3         1       1       no
+## 15   37000    3600        2         1       1      yes
+## 16   37900    3185        2         1       1      yes
+## 17   40500    3300        3         1       2       no
+## 18   40750    5200        4         1       3      yes
+## 19   45000    3450        1         1       1      yes
+## 20   45000    3986        2         2       1       no
+## 21   48500    4785        3         1       2      yes
+## 22   65900    4510        4         2       2      yes
+## 23   37900    4000        3         1       2      yes
+## 24   38000    3934        2         1       1      yes
+## 25   42000    4960        2         1       1      yes
+## 26   42300    3000        2         1       2      yes
+## 27   43500    3800        2         1       1      yes
+## 28   44000    4960        2         1       1      yes
+## 29   44500    3000        3         1       1       no
+## 30   44900    4500        3         1       2      yes
+## 31   45000    3500        2         1       1       no
+## 32   48000    3500        4         1       2      yes
+## 33   49000    4000        2         1       1      yes
+## 34   51500    4500        2         1       1      yes
+## 35   61000    6360        2         1       2      yes
+## 36   61000    4500        2         1       1      yes
+## 37   61700    4032        2         1       1      yes
+## 38   67000    5170        3         1       4      yes
+## 39   82000    5400        4         2       2      yes
+## 40   54500    3150        2         2       1       no
+## 41   66500    3745        3         1       2      yes
+## 42   70000    4520        3         1       2      yes
+## 43   82000    4640        4         1       2      yes
+## 44   92000    8580        5         3       2      yes
+## 45   38000    2000        2         1       2      yes
+## 46   44000    2160        3         1       2       no
+## 47   41000    3040        2         1       1       no
+## 48   43000    3090        3         1       2       no
+## 49   48000    4960        4         1       3       no
+## 50   54800    3350        3         1       2      yes
+## 51   55000    5300        5         2       2      yes
+## 52   57000    4100        4         1       1       no
+## 53   68000    9166        2         1       1      yes
+## 54   95000    4040        3         1       2      yes
+## 55   38000    3630        3         3       2       no
+## 56   25000    3620        2         1       1      yes
+## 57   25245    2400        3         1       1       no
+## 58   56000    7260        3         2       1      yes
+## 59   35500    4400        3         1       2      yes
+## 60   30000    2400        3         1       2      yes
+## 61   48000    4120        2         1       2      yes
+## 62   48000    4750        2         1       1      yes
+## 63   52000    4280        2         1       1      yes
+## 64   54000    4820        3         1       2      yes
+## 65   56000    5500        4         1       2      yes
+## 66   60000    5500        3         1       2      yes
+## 67   60000    5040        3         1       2      yes
+## 68   67000    6000        2         1       1      yes
+## 69   47000    2500        2         1       1       no
+## 70   70000    4095        3         1       2       no
+## 71   45000    4095        2         1       1      yes
+## 72   51000    3150        3         1       2      yes
+## 73   32500    1836        2         1       1       no
+## 74   34000    2475        3         1       2      yes
+## 75   35000    3210        3         1       2      yes
+## 76   36000    3180        3         1       1       no
+## 77   45000    1650        3         1       2       no
+## 78   47000    3180        4         1       2      yes
+## 79   55000    3180        2         2       1      yes
+## 80   63900    6360        2         1       1      yes
+## 81   50000    4240        3         1       2      yes
+## 82   35000    3240        2         1       1       no
+## 83   50000    3650        3         1       2      yes
+## 84   43000    3240        3         1       2      yes
+## 85   55500    3780        2         1       2      yes
+## 86   57000    6480        3         1       2       no
+## 87   60000    5850        2         1       1      yes
+## 88   78000    3150        3         2       1      yes
+## 89   35000    3000        2         1       1      yes
+## 90   44000    3090        2         1       1      yes
+## 91   47000    6060        3         1       1      yes
+## 92   58000    5900        4         2       2       no
+## 93  163000    7420        4         1       2      yes
+## 94  128000    8500        3         2       4      yes
+## 95  123500    8050        3         1       1      yes
+## 96   39000    6800        2         1       1      yes
+## 97   53900    8250        3         1       1      yes
+## 98   59900    8250        3         1       1      yes
+## 99   35000    3500        2         1       1      yes
+## 100  43000    2835        2         1       1      yes
+## 101  57000    4500        3         2       2       no
+## 102  79000    3300        3         3       2      yes
+## 103 125000    4320        3         1       2      yes
+## 104 132000    3500        4         2       2      yes
+## 105  58000    4992        3         2       2      yes
+## 106  43000    4600        2         1       1      yes
+## 107  48000    3720        2         1       1       no
+## 108  58500    3680        3         2       2      yes
+## 109  73000    3000        3         2       2      yes
+## 110  63500    3750        2         1       1      yes
+## 111  43000    5076        3         1       1       no
+## 112  46500    4500        2         1       1       no
+## 113  92000    5000        3         1       2      yes
+## 114  75000    4260        4         1       2      yes
+## 115  75000    6540        4         2       2       no
+## 116  85000    3700        4         1       2      yes
+## 117  93000    3760        3         1       2      yes
+## 118  94500    4000        3         2       2      yes
+## 119 106500    4300        3         2       2      yes
+## 120 116000    6840        5         1       2      yes
+## 121  61500    4400        2         1       1      yes
+## 122  80000   10500        4         2       2      yes
+## 123  37000    4400        2         1       1      yes
+## 124  59500    4840        3         1       2      yes
+## 125  70000    4120        2         1       1      yes
+## 126  95000    4260        4         2       2      yes
+## 127 117000    5960        3         3       2      yes
+## 128 122500    8800        3         2       2      yes
+## 129 123500    4560        3         2       2      yes
+## 130 127000    4600        3         2       2      yes
+## 131  35000    4840        2         1       2      yes
+## 132  44500    3850        3         1       2      yes
+## 133  49900    4900        3         1       2       no
+## 134  50500    3850        3         1       1      yes
+## 135  65000    3760        3         1       1      yes
+## 136  90000    6000        4         2       4      yes
+## 137  46000    4370        3         1       2      yes
+## 138  35000    7700        2         1       1      yes
+## 139  26500    2990        2         1       1       no
+## 140  43000    3750        3         1       2      yes
+## 141  56000    3000        3         1       2      yes
+## 142  40000    2650        3         1       2      yes
+## 143  51000    4500        4         2       2      yes
+## 144  51000    4500        2         1       1       no
+## 145  57250    4500        3         1       2       no
+## 146  44000    4500        2         1       2      yes
+## 147  61000    2175        3         1       2       no
+## 148  62000    4500        3         2       3      yes
+## 149  80000    4800        5         2       3       no
+## 150  50000    4600        4         1       2      yes
+## 151  59900    3450        3         1       2      yes
+## 152  35500    3000        3         1       2       no
+## 153  37000    3600        2         2       2      yes
+## 154  42000    3600        3         1       2       no
+## 155  48000    3750        3         1       1      yes
+## 156  60000    2610        4         3       2       no
+## 157  60000    2953        3         1       2      yes
+## 158  60000    2747        4         2       2       no
+## 159  62000    1905        5         1       2       no
+## 160  63000    3968        3         1       2       no
+## 161  63900    3162        3         1       2      yes
+## 162 130000    6000        4         1       2      yes
+## 163  25000    2910        3         1       1       no
+## 164  50000    2135        3         2       2       no
+## 165  52900    3120        3         1       2       no
+## 166  62000    4075        3         1       1      yes
+## 167  73500    3410        3         1       2       no
+## 168  38000    2800        3         1       1      yes
+## 169  46000    2684        2         1       1      yes
+## 170  48000    3100        3         1       2       no
+## 171  52500    3630        2         1       1      yes
+## 172  32000    1950        3         1       1       no
+## 173  38000    2430        3         1       1       no
+## 174  46000    4320        3         1       1       no
+## 175  50000    3036        3         1       2      yes
+## 176  57500    3630        3         2       2      yes
+## 177  70000    5400        4         1       2      yes
+## 178  69900    3420        4         2       2      yes
+## 179  74500    3180        3         2       2      yes
+## 180  42000    3660        4         1       2       no
+## 181  60000    4410        2         1       1       no
+## 182  50000    3990        3         1       2      yes
+## 183  58000    4340        3         1       1      yes
+## 184  63900    3510        3         1       2      yes
+## 185  28000    3420        5         1       2       no
+## 186  54000    3420        2         1       2      yes
+## 187  44700    5495        3         1       1      yes
+## 188  47000    3480        4         1       2       no
+## 189  50000    7424        3         1       1       no
+## 190  57250    3460        4         1       2      yes
+## 191  67000    3630        3         1       2      yes
+## 192  52500    3630        2         1       1      yes
+## 193  42000    3480        3         1       2       no
+## 194  57500    3460        3         2       1      yes
+## 195  33000    3180        2         1       1      yes
+## 196  34400    3635        2         1       1       no
+## 197  40000    3960        3         1       1      yes
+## 198  40500    4350        3         1       2       no
+## 199  46500    3930        2         1       1       no
+## 200  52000    3570        3         1       2      yes
+## 201  53000    3600        3         1       1      yes
+## 202  53900    2520        5         2       1       no
+## 203  50000    3480        3         1       1       no
+## 204  55500    3180        4         2       2      yes
+## 205  56000    3290        2         1       1      yes
+## 206  60000    4000        4         2       2       no
+## 207  60000    2325        3         1       2       no
+## 208  69500    4350        2         1       1      yes
+## 209  72000    3540        2         1       1       no
+## 210  92500    3960        3         1       1      yes
+## 211  40500    2640        2         1       1       no
+## 212  42000    2700        2         1       1       no
+## 213  47900    2700        3         1       1       no
+## 214  52000    3180        3         1       2       no
+## 215  62000    3500        4         1       2      yes
+## 216  41000    3630        2         1       1      yes
+## 217 138300    6000        4         3       2      yes
+## 218  42000    3150        3         1       2       no
+## 219  47000    3792        4         1       2      yes
+## 220  64500    3510        3         1       3      yes
+## 221  46000    3120        3         1       2       no
+## 222  58000    3000        4         1       3      yes
+## 223  70100    4200        3         1       2      yes
+## 224  78500    2817        4         2       2       no
+## 225  87250    3240        4         1       3      yes
+## 226  70800    2800        3         2       2       no
+## 227  56000    3816        2         1       1      yes
+## 228  48000    3185        2         1       1      yes
+## 229  68000    6321        3         1       2      yes
+## 230  79000    3650        3         2       2      yes
+## 231  80000    4700        4         1       2      yes
+## 232  87000    6615        4         2       2      yes
+## 233  25000    3850        3         1       2      yes
+## 234  32500    3970        1         1       1       no
+## 235  36000    3000        2         1       2      yes
+## 236  42500    4352        4         1       2       no
+## 237  43000    3630        4         1       2      yes
+## 238  50000    3600        6         1       2      yes
+## 239  26000    3000        2         1       1      yes
+## 240  30000    3000        4         1       2      yes
+## 241  34000    2787        4         2       2      yes
+## 242  52000    3000        2         1       2      yes
+## 243  70000    4770        3         1       1      yes
+## 244  27000    3649        2         1       1      yes
+## 245  32500    3970        3         1       2      yes
+## 246  37200    2910        2         1       1       no
+## 247  38000    3480        2         1       1      yes
+## 248  42000    6615        3         1       2      yes
+## 249  44500    3500        2         1       1      yes
+## 250  45000    3450        3         1       2      yes
+## 251  48500    3450        3         1       1      yes
+## 252  52000    3520        2         2       1      yes
+## 253  53900    6930        4         1       2       no
+## 254  60000    4600        3         2       2      yes
+## 255  61000    4360        4         1       2      yes
+## 256  64500    3450        3         1       2      yes
+## 257  71000    4410        4         3       2      yes
+## 258  75500    4600        2         2       1      yes
+## 259  33500    3640        2         1       1      yes
+## 260  41000    6000        2         1       1      yes
+## 261  41000    5400        4         1       2      yes
+## 262  46200    3640        4         1       2      yes
+## 263  48500    3640        2         1       1      yes
+## 264  48900    4040        2         1       1      yes
+## 265  50000    3640        2         1       1      yes
+## 266  51000    3640        2         1       1      yes
+## 267  52500    5640        2         1       1       no
+## 268  52500    3600        2         1       1      yes
+## 269  54000    3600        2         1       1      yes
+## 270  59000    4632        4         1       2      yes
+## 271  60000    3640        3         2       2      yes
+## 272  63000    4900        2         1       2      yes
+## 273  64000    4510        4         1       2      yes
+## 274  64900    4100        2         2       1      yes
+## 275  65000    3640        3         1       2      yes
+## 276  66000    5680        3         1       2      yes
+## 277  70000    6300        3         1       1      yes
+## 278  65500    4000        3         1       2      yes
+## 279  57000    3960        3         1       2      yes
+## 280  52000    5960        3         1       2      yes
+## 281  54000    5830        2         1       1      yes
+## 282  74500    4500        4         2       1       no
+## 283  90000    4100        3         2       3      yes
+## 284  45000    6750        2         1       1      yes
+## 285  45000    9000        3         1       2      yes
+## 286  65000    2550        3         1       2      yes
+## 287  55000    7152        3         1       2      yes
+## 288  62000    6450        4         1       2      yes
+## 289  30000    3360        2         1       1      yes
+## 290  34000    3264        2         1       1      yes
+## 291  38000    4000        3         1       1      yes
+## 292  39000    4000        3         1       2      yes
+## 293  45000    3069        2         1       1      yes
+## 294  47000    4040        2         1       1      yes
+## 295  47500    4040        2         1       1      yes
+## 296  49000    3185        2         1       1      yes
+## 297  50000    5900        2         1       1      yes
+## 298  50000    3120        3         1       2      yes
+## 299  52900    5450        2         1       1      yes
+## 300  53000    4040        2         1       1      yes
+## 301  55000    4080        2         1       1      yes
+## 302  56000    8080        3         1       1      yes
+## 303  58500    4040        2         1       2      yes
+## 304  59500    4080        3         1       2      yes
+## 305  60000    5800        3         1       1      yes
+## 306  64000    5885        2         1       1      yes
+## 307  67000    9667        4         2       2      yes
+## 308  68100    3420        4         2       2      yes
+## 309  70000    5800        2         1       1      yes
+## 310  72000    7600        4         1       2      yes
+## 311  57500    5400        3         1       1      yes
+## 312  69900    4995        4         2       1      yes
+## 313  70000    3000        3         1       2      yes
+## 314  75000    5500        3         2       1      yes
+## 315  76900    6450        3         2       1      yes
+## 316  78000    6210        4         1       4      yes
+## 317  80000    5000        3         1       4      yes
+## 318  82000    5000        3         1       3      yes
+## 319  83000    5828        4         1       4      yes
+## 320  83000    5200        3         1       3      yes
+## 321  83900    5500        3         1       3      yes
+## 322  88500    6350        3         2       3      yes
+## 323  93000    8250        3         2       3      yes
+## 324  98000    6000        3         1       1      yes
+## 325  98500    7700        3         2       1      yes
+## 326  99000    8880        3         2       2      yes
+## 327 101000    8880        2         1       1      yes
+## 328 110000    6480        3         2       4      yes
+## 329 115442    7000        3         2       4      yes
+## 330 120000    8875        3         1       1      yes
+## 331 124000    7155        3         2       1      yes
+## 332 175000    8960        4         4       4      yes
+## 333  50000    7350        2         1       1      yes
+## 334  55000    3850        2         1       1      yes
+## 335  60000    7000        3         1       1      yes
+## 336  61000    7770        2         1       1      yes
+## 337 106000    7440        3         2       1      yes
+## 338 155000    7500        3         3       1      yes
+## 339 141000    8100        4         1       2      yes
+## 340  62500    3900        3         1       2      yes
+## 341  70000    2970        3         1       3      yes
+## 342  73000    3000        3         1       2      yes
+## 343  80000   10500        2         1       1      yes
+## 344  80000    5500        3         2       2      yes
+## 345  88000    4500        3         1       4      yes
+## 346  49000    3850        3         1       1      yes
+## 347  52000    4130        3         2       2      yes
+## 348  59500    4046        3         1       2      yes
+## 349  60000    4079        3         1       3      yes
+## 350  64000    4000        3         1       2      yes
+## 351  64500    9860        3         1       1      yes
+## 352  68500    7000        3         1       2      yes
+## 353  78500    7980        3         1       1      yes
+## 354  86000    6800        2         1       1      yes
+## 355  86900    4300        6         2       2      yes
+## 356  75000   10269        3         1       1      yes
+## 357  78000    6100        3         1       3      yes
+## 358  95000    6420        3         2       3      yes
+## 359  97000   12090        4         2       2      yes
+## 360 107000    6600        3         1       4      yes
+## 361 130000    6600        4         2       2      yes
+## 362 145000    8580        4         3       4      yes
+## 363 175000    9960        3         2       2      yes
+## 364  72000   10700        3         1       2      yes
+## 365  84900   15600        3         1       1      yes
+## 366  99000   13200        2         1       1      yes
+## 367 114000    9000        4         2       4      yes
+## 368 120000    7950        5         2       2      yes
+## 369 145000   16200        5         3       2      yes
+## 370  79000    6100        3         2       1      yes
+## 371  82000    6360        3         1       1      yes
+## 372  85000    6420        3         1       1      yes
+## 373 100500    6360        4         2       3      yes
+## 374 122000    6540        4         2       2      yes
+## 375 126500    6420        3         2       2      yes
+## 376 133000    6550        4         2       2      yes
+## 377 140000    5750        3         2       4      yes
+## 378 190000    7420        4         2       3      yes
+## 379  84000    7160        3         1       1      yes
+## 380  97000    4000        3         2       2      yes
+## 381 103500    9000        4         2       4      yes
+## 382 112500    6550        3         1       2      yes
+## 383 140000   13200        3         1       2      yes
+## 384  74700    7085        3         1       1      yes
+## 385  78000    6600        4         2       2      yes
+## 386  78900    6900        3         1       1      yes
+## 387  83900   11460        3         1       3      yes
+## 388  85000    7020        3         1       1      yes
+## 389  85000    6540        3         1       1      yes
+## 390  86000    8000        3         1       1      yes
+## 391  86900    9620        3         1       1      yes
+## 392  94500   10500        3         2       1      yes
+## 393  96000    5020        3         1       4      yes
+## 394 106000    7440        3         2       4      yes
+## 395  72000    6600        3         1       1      yes
+## 396  74500    7200        3         1       2      yes
+## 397  77000    6710        3         2       2      yes
+## 398  80750    6660        4         2       2      yes
+## 399  82900    7000        3         1       1      yes
+## 400  85000    7231        3         1       2      yes
+## 401  92500    7410        3         1       1      yes
+## 402  76000    7800        3         1       1      yes
+## 403  77500    6825        3         1       1      yes
+## 404  80000    6360        3         1       3      yes
+## 405  80000    6600        4         2       1      yes
+## 406  86000    6900        3         2       1      yes
+## 407  87000    6600        3         1       1      yes
+## 408  87500    6420        3         1       3      yes
+## 409  89000    6600        3         2       1      yes
+## 410  89900    6600        3         2       3      yes
+## 411  90000    9000        3         1       1      yes
+## 412  95000    6500        3         2       3      yes
+## 413 112000    6360        3         2       4      yes
+## 414  31900    5300        3         1       1       no
+## 415  52000    2850        3         2       2       no
+## 416  90000    6400        3         1       1      yes
+## 417 100000   11175        3         1       1      yes
+## 418  91700    6750        2         1       1      yes
+## 419 174500    7500        4         2       2      yes
+## 420  94700    6000        3         1       2      yes
+## 421  68000   10240        2         1       1      yes
+## 422  80000    5136        3         1       2      yes
+## 423  61100    3400        3         1       2      yes
+## 424  62900    2880        3         1       2      yes
+## 425  65500    3840        3         1       2      yes
+## 426  66000    2870        2         1       2      yes
+## 427  49500    5320        2         1       1      yes
+## 428  50000    3512        2         1       1      yes
+## 429  53500    3480        2         1       1      yes
+## 430  58550    3600        3         1       1      yes
+## 431  64500    3520        2         1       2      yes
+## 432  65000    5320        3         1       2      yes
+## 433  69000    6040        3         1       1      yes
+## 434  73000   11410        2         1       2      yes
+## 435  75000    8400        3         1       2      yes
+## 436  75000    5300        4         2       1      yes
+## 437 132000    7800        3         2       2      yes
+## 438  60000    3520        3         1       2      yes
+## 439  65000    5360        3         1       2      yes
+## 440  69000    6862        3         1       2      yes
+## 441  51900    3520        3         1       1      yes
+## 442  57000    4050        2         1       2      yes
+## 443  65000    3520        3         1       1      yes
+## 444  79500    4400        4         1       2      yes
+## 445  72500    5720        2         1       2      yes
+## 446 104900   11440        4         1       2      yes
+## 447 114900    7482        3         2       3      yes
+## 448 120000    5500        4         2       2      yes
+## 449  58000    4320        3         1       2      yes
+## 450  67000    5400        2         1       2      yes
+## 451  67000    4320        3         1       1      yes
+## 452  69000    4815        2         1       1      yes
+## 453  73000    6100        3         1       1      yes
+## 454  73500    7980        3         1       1      yes
+## 455  74900    6050        3         1       1      yes
+## 456  75000    3800        3         1       2      yes
+## 457  79500    5400        5         1       2      yes
+## 458 120900    6000        3         2       4      yes
+## 459  44555    2398        3         1       1      yes
+## 460  47000    2145        3         1       2      yes
+## 461  47600    2145        3         1       2      yes
+## 462  49000    2145        3         1       3      yes
+## 463  49000    2610        3         1       2      yes
+## 464  49000    1950        3         2       2      yes
+## 465  49500    2145        3         1       3      yes
+## 466  52000    2275        3         1       3      yes
+## 467  54000    2856        3         1       3      yes
+## 468  55000    2015        3         1       2      yes
+## 469  55000    2176        2         1       2      yes
+## 470  56000    2145        4         2       1      yes
+## 471  60000    2145        3         1       3      yes
+## 472  60500    2787        3         1       1      yes
+## 473  50000    9500        3         1       2      yes
+## 474  64900    4990        4         2       2      yes
+## 475  93000    6670        3         1       3      yes
+## 476  85000    6254        4         2       1      yes
+## 477  61500   10360        2         1       1      yes
+## 478  88500    5500        3         2       1      yes
+## 479  88000    5450        4         2       1      yes
+## 480  89000    5500        3         1       3      yes
+## 481  89500    6000        4         1       3      yes
+## 482  95000    5700        3         1       1      yes
+## 483  95500    6600        2         2       4      yes
+## 484  51500    4000        2         1       1      yes
+## 485  62900    4880        3         1       1      yes
+## 486 118500    4880        4         2       2      yes
+## 487  42900    8050        2         1       1      yes
+## 488  44100    8100        2         1       1      yes
+## 489  47000    5880        3         1       1      yes
+## 490  50000    5880        2         1       1      yes
+## 491  50000   12944        3         1       1      yes
+## 492  53000    6020        3         1       1      yes
+## 493  53000    4050        2         1       1      yes
+## 494  54000    8400        2         1       1      yes
+## 495  58500    5600        2         1       1      yes
+## 496  59000    5985        3         1       1      yes
+## 497  60000    4500        3         1       1      yes
+## 498  62900    4920        3         1       2      yes
+## 499  64000    8250        3         1       1      yes
+## 500  65000    8400        4         1       4      yes
+## 501  67900    6440        2         1       1      yes
+## 502  68500    8100        4         1       4      yes
+## 503  70000    6720        3         1       1      yes
+## 504  70500    5948        3         1       2      yes
+## 505  71500    8150        3         2       1      yes
+## 506  71900    4800        2         1       1      yes
+## 507  75000    9800        4         2       2      yes
+## 508  75000    8520        3         1       1      yes
+## 509  87000    8372        3         1       3      yes
+## 510  64000    4040        3         1       2      yes
+## 511  70000    4646        3         1       2      yes
+## 512  47500    4775        4         1       2      yes
+## 513  62600    4950        4         1       2      yes
+## 514  66000    5010        3         1       2      yes
+## 515  58900    6060        2         1       1      yes
+## 516  53000    3584        2         1       1      yes
+## 517  95000    6000        3         2       3      yes
+## 518  96500    6000        4         2       4      yes
+## 519 101000    6240        4         2       2      yes
+## 520 102000    6000        3         2       2      yes
+## 521 103000    7680        4         2       4      yes
+## 522 105000    6000        4         2       4      yes
+## 523 108000    6000        4         2       4      yes
+## 524 110000    6000        4         2       4      yes
+## 525 113000    6000        4         2       4      yes
+## 526 120000    7475        3         2       4      yes
+## 527 105000    5150        3         2       4      yes
+## 528 106000    6325        3         1       4      yes
+## 529 107500    6000        3         2       4      yes
+## 530 108000    6000        3         2       3      yes
+## 531 113750    6000        3         1       4      yes
+## 532 120000    7000        3         1       4      yes
+## 533  70000   12900        3         1       1      yes
+## 534  71000    7686        3         1       1      yes
+## 535  82000    5000        3         1       3      yes
+## 536  82000    5800        3         2       4      yes
+## 537  82500    6000        3         2       4      yes
+## 538  83000    4800        3         1       3      yes
+## 539  84000    6500        3         2       3      yes
+## 540  85000    7320        4         2       2      yes
+## 541  85000    6525        3         2       4      yes
+## 542  91500    4800        3         2       4      yes
+## 543  94000    6000        3         2       4      yes
+## 544 103000    6000        3         2       4      yes
+## 545 105000    6000        3         2       2      yes
+## 546 105000    6000        3         1       2      yes
+##     recreation fullbase gasheat aircon garage prefer
+## 1           no      yes      no     no      1     no
+## 2           no       no      no     no      0     no
+## 3           no       no      no     no      0     no
+## 4          yes       no      no     no      0     no
+## 5           no       no      no     no      0     no
+## 6          yes      yes      no    yes      0     no
+## 7           no      yes      no     no      2     no
+## 8           no       no      no     no      0     no
+## 9          yes      yes      no     no      0     no
+## 10         yes       no      no    yes      1     no
+## 11          no      yes      no    yes      3     no
+## 12          no       no      no     no      0     no
+## 13          no       no      no     no      0     no
+## 14          no       no      no     no      0     no
+## 15          no       no      no     no      0     no
+## 16          no       no      no    yes      0     no
+## 17          no       no      no     no      1     no
+## 18          no       no      no     no      0     no
+## 19          no       no      no     no      0     no
+## 20         yes      yes      no     no      1     no
+## 21         yes      yes      no    yes      1     no
+## 22          no      yes      no     no      0     no
+## 23          no       no      no    yes      0     no
+## 24          no       no      no     no      0     no
+## 25          no       no      no     no      0     no
+## 26          no       no      no     no      0     no
+## 27          no       no      no     no      0     no
+## 28          no      yes      no    yes      0     no
+## 29          no       no      no    yes      0     no
+## 30          no       no      no    yes      0     no
+## 31          no      yes      no     no      0     no
+## 32          no       no      no    yes      2     no
+## 33          no       no      no     no      0     no
+## 34          no       no      no     no      0     no
+## 35          no       no      no     no      0     no
+## 36          no       no      no    yes      2     no
+## 37          no      yes      no     no      0     no
+## 38          no       no      no    yes      0     no
+## 39          no       no      no    yes      2     no
+## 40          no      yes      no     no      0     no
+## 41          no      yes      no     no      0     no
+## 42          no      yes      no    yes      0     no
+## 43          no       no      no     no      1     no
+## 44          no       no      no     no      2     no
+## 45          no       no      no     no      0     no
+## 46          no      yes      no     no      0     no
+## 47          no       no      no     no      0     no
+## 48          no       no      no     no      0     no
+## 49          no       no      no     no      0     no
+## 50          no       no      no     no      0     no
+## 51          no       no      no     no      0     no
+## 52          no      yes      no     no      0     no
+## 53          no      yes      no    yes      2     no
+## 54          no      yes     yes     no      1     no
+## 55         yes       no      no     no      0     no
+## 56          no       no      no     no      0     no
+## 57          no       no      no     no      0     no
+## 58         yes      yes      no     no      3     no
+## 59          no       no      no     no      0     no
+## 60          no       no      no     no      0     no
+## 61          no       no      no     no      0     no
+## 62          no       no      no     no      0     no
+## 63          no       no      no    yes      2     no
+## 64          no       no      no     no      0     no
+## 65         yes      yes      no     no      0     no
+## 66          no       no      no    yes      0     no
+## 67          no      yes      no    yes      0     no
+## 68          no      yes      no    yes      1     no
+## 69          no       no      no    yes      0     no
+## 70         yes      yes      no    yes      0     no
+## 71          no       no      no     no      2     no
+## 72          no      yes      no     no      0     no
+## 73          no      yes      no     no      0     no
+## 74          no       no      no     no      0     no
+## 75          no      yes      no     no      0     no
+## 76          no       no      no     no      0     no
+## 77          no      yes      no     no      0     no
+## 78          no      yes      no    yes      0     no
+## 79          no      yes      no     no      2     no
+## 80          no      yes      no    yes      1     no
+## 81          no       no      no    yes      0     no
+## 82         yes       no      no     no      1     no
+## 83          no       no      no     no      0     no
+## 84          no       no      no     no      2     no
+## 85         yes      yes      no     no      0     no
+## 86          no       no      no    yes      1     no
+## 87         yes      yes      no     no      2     no
+## 88         yes      yes      no    yes      0     no
+## 89          no       no      no     no      1     no
+## 90         yes      yes      no     no      0     no
+## 91         yes      yes      no     no      0     no
+## 92          no      yes      no     no      1     no
+## 93         yes      yes      no    yes      2     no
+## 94          no       no      no    yes      2     no
+## 95         yes      yes      no    yes      1     no
+## 96          no       no      no     no      0     no
+## 97          no       no      no     no      2     no
+## 98          no      yes      no     no      3     no
+## 99         yes       no      no     no      0     no
+## 100         no       no      no     no      0     no
+## 101         no      yes      no    yes      0     no
+## 102         no      yes      no     no      0     no
+## 103         no      yes     yes     no      2     no
+## 104         no       no     yes     no      2     no
+## 105         no       no      no     no      2     no
+## 106         no       no      no     no      0     no
+## 107         no       no      no    yes      0     no
+## 108         no       no      no     no      0     no
+## 109        yes      yes      no     no      0     no
+## 110        yes      yes      no     no      0     no
+## 111         no       no      no     no      0     no
+## 112         no       no      no     no      0     no
+## 113         no       no      no    yes      0     no
+## 114         no      yes      no    yes      0     no
+## 115         no       no      no    yes      0     no
+## 116        yes       no      no    yes      0     no
+## 117         no       no     yes     no      2     no
+## 118         no      yes      no    yes      1     no
+## 119         no      yes      no     no      1     no
+## 120        yes      yes      no    yes      1     no
+## 121         no       no      no     no      1     no
+## 122         no       no      no     no      1     no
+## 123         no       no      no     no      0     no
+## 124         no       no      no     no      1     no
+## 125         no      yes      no     no      1     no
+## 126         no       no     yes     no      0     no
+## 127        yes      yes      no     no      1     no
+## 128         no       no      no    yes      2     no
+## 129        yes      yes      no    yes      1     no
+## 130        yes       no      no    yes      2     no
+## 131         no       no      no     no      0     no
+## 132         no       no      no     no      0     no
+## 133         no       no      no     no      0     no
+## 134         no       no      no     no      2     no
+## 135         no       no      no     no      2     no
+## 136         no       no      no     no      1     no
+## 137         no       no      no     no      0     no
+## 138         no       no      no     no      0     no
+## 139         no       no      no     no      1     no
+## 140         no       no      no     no      0     no
+## 141         no       no      no     no      0     no
+## 142         no      yes      no     no      1     no
+## 143         no      yes      no     no      2     no
+## 144         no       no      no     no      0     no
+## 145         no      yes      no    yes      0     no
+## 146         no       no     yes     no      1     no
+## 147        yes      yes      no    yes      0     no
+## 148         no       no     yes     no      1     no
+## 149         no      yes     yes     no      0     no
+## 150         no       no      no     no      0     no
+## 151         no       no      no     no      1     no
+## 152         no       no      no     no      0     no
+## 153         no      yes      no     no      1     no
+## 154         no       no      no     no      1     no
+## 155         no       no      no     no      0     no
+## 156         no       no      no     no      0     no
+## 157         no      yes      no    yes      0     no
+## 158         no       no      no     no      0     no
+## 159         no      yes      no     no      0     no
+## 160         no       no      no     no      0     no
+## 161         no       no      no    yes      1     no
+## 162         no      yes      no     no      2     no
+## 163         no       no      no     no      0     no
+## 164         no       no      no     no      0     no
+## 165         no      yes     yes     no      0     no
+## 166        yes      yes      no     no      2     no
+## 167         no       no      no    yes      0     no
+## 168         no       no      no     no      0     no
+## 169         no       no      no    yes      1     no
+## 170         no      yes      no     no      0     no
+## 171         no      yes      no     no      0     no
+## 172         no       no     yes     no      0     no
+## 173         no       no      no     no      0     no
+## 174         no       no      no     no      1     no
+## 175         no      yes      no     no      0     no
+## 176         no       no     yes     no      2     no
+## 177         no       no      no     no      0     no
+## 178         no      yes      no    yes      2     no
+## 179         no       no      no     no      2     no
+## 180         no       no      no     no      0     no
+## 181         no       no      no     no      1     no
+## 182         no       no      no     no      0     no
+## 183         no       no      no     no      0     no
+## 184         no       no      no     no      0     no
+## 185         no       no      no     no      0     no
+## 186         no       no     yes     no      1     no
+## 187         no      yes      no     no      0     no
+## 188         no       no      no     no      1     no
+## 189         no       no      no     no      0     no
+## 190         no       no      no    yes      0     no
+## 191         no       no      no     no      2     no
+## 192         no       no      no    yes      0     no
+## 193         no       no      no     no      1     no
+## 194         no      yes      no    yes      1     no
+## 195         no       no      no     no      0     no
+## 196         no       no      no     no      0     no
+## 197         no       no      no     no      0     no
+## 198         no       no     yes     no      1     no
+## 199         no       no      no     no      0     no
+## 200         no      yes      no     no      0     no
+## 201         no       no      no     no      1     no
+## 202         no      yes      no    yes      1     no
+## 203         no       no      no    yes      0     no
+## 204         no       no      no     no      0     no
+## 205         no       no     yes     no      1     no
+## 206         no       no      no     no      0     no
+## 207         no       no      no     no      0     no
+## 208         no      yes      no     no      0     no
+## 209        yes      yes      no     no      0     no
+## 210         no      yes      no     no      2     no
+## 211         no       no      no     no      1     no
+## 212         no       no      no     no      0     no
+## 213         no       no      no     no      0     no
+## 214         no      yes      no     no      0     no
+## 215         no       no      no     no      2     no
+## 216         no       no      no     no      0     no
+## 217        yes      yes     yes     no      2     no
+## 218         no       no      no     no      0     no
+## 219         no       no      no     no      0     no
+## 220         no       no      no     no      0     no
+## 221         no       no      no     no      0     no
+## 222         no      yes      no    yes      2     no
+## 223         no       no      no     no      1     no
+## 224        yes      yes      no     no      1     no
+## 225         no       no      no     no      1     no
+## 226         no      yes      no    yes      1     no
+## 227         no      yes      no    yes      2     no
+## 228         no      yes      no     no      2     no
+## 229         no      yes      no    yes      1     no
+## 230         no       no      no     no      2     no
+## 231        yes      yes      no    yes      1     no
+## 232        yes       no     yes     no      1     no
+## 233         no       no      no     no      0     no
+## 234         no       no      no     no      0     no
+## 235         no       no      no     no      0     no
+## 236         no       no      no     no      1     no
+## 237         no       no      no     no      3     no
+## 238         no       no      no     no      1     no
+## 239         no      yes      no     no      2     no
+## 240         no       no      no     no      0     no
+## 241         no       no      no     no      0     no
+## 242         no       no      no    yes      0     no
+## 243        yes      yes      no     no      0     no
+## 244         no       no      no     no      0     no
+## 245         no      yes      no     no      0     no
+## 246         no       no      no     no      0     no
+## 247         no       no      no     no      1     no
+## 248         no       no      no     no      0     no
+## 249         no       no      no     no      0     no
+## 250         no      yes      no     no      0     no
+## 251         no      yes      no     no      2     no
+## 252         no      yes      no     no      0     no
+## 253         no       no      no     no      1     no
+## 254         no       no      no    yes      1     no
+## 255         no       no      no     no      0     no
+## 256         no      yes      no     no      1     no
+## 257         no      yes      no     no      2     no
+## 258         no       no      no    yes      2     no
+## 259         no       no      no     no      0     no
+## 260         no       no      no     no      0     no
+## 261         no       no      no     no      0     no
+## 262         no      yes      no     no      0     no
+## 263         no       no      no     no      0     no
+## 264         no       no      no     no      0     no
+## 265         no       no      no     no      1     no
+## 266         no       no      no     no      0     no
+## 267         no       no      no     no      0     no
+## 268         no       no      no     no      0     no
+## 269         no       no      no     no      0     no
+## 270         no       no      no    yes      0     no
+## 271         no      yes      no     no      0     no
+## 272         no      yes      no     no      0     no
+## 273         no       no      no    yes      2     no
+## 274        yes      yes      no     no      0     no
+## 275         no       no      no    yes      0     no
+## 276        yes       no      no    yes      1     no
+## 277         no       no      no    yes      2     no
+## 278         no       no      no     no      1     no
+## 279         no       no      no     no      0     no
+## 280        yes      yes      no     no      0     no
+## 281         no       no      no     no      2     no
+## 282         no      yes      no    yes      2     no
+## 283         no       no      no    yes      2     no
+## 284         no       no      no     no      0     no
+## 285         no       no      no     no      2     no
+## 286         no      yes      no     no      0     no
+## 287         no       no      no    yes      0     no
+## 288         no       no      no     no      0     no
+## 289         no       no      no     no      1     no
+## 290         no       no      no     no      0     no
+## 291         no       no      no     no      0     no
+## 292         no       no      no     no      1     no
+## 293         no       no      no     no      1     no
+## 294         no       no      no     no      0     no
+## 295         no       no      no     no      1     no
+## 296         no       no      no     no      2     no
+## 297         no       no      no     no      1     no
+## 298         no       no      no     no      1     no
+## 299         no       no      no     no      0     no
+## 300         no       no      no     no      0     no
+## 301         no       no      no     no      0     no
+## 302         no       no      no    yes      2     no
+## 303         no       no      no     no      1     no
+## 304         no       no      no     no      2     no
+## 305         no       no     yes     no      2     no
+## 306         no       no      no    yes      1     no
+## 307        yes      yes      no     no      1     no
+## 308         no       no      no     no      0     no
+## 309        yes      yes      no    yes      0     no
+## 310         no       no      no    yes      2     no
+## 311         no       no      no     no      3     no
+## 312         no      yes      no     no      0     no
+## 313         no      yes      no    yes      0     no
+## 314         no      yes      no     no      0     no
+## 315        yes      yes     yes     no      0     no
+## 316        yes       no      no    yes      0     no
+## 317         no       no      no     no      0     no
+## 318         no       no      no    yes      0     no
+## 319        yes       no      no     no      0     no
+## 320         no       no      no    yes      0     no
+## 321        yes       no      no    yes      1     no
+## 322        yes       no      no    yes      0     no
+## 323         no       no      no    yes      0     no
+## 324         no       no      no    yes      1     no
+## 325         no       no      no     no      2     no
+## 326         no      yes      no    yes      1     no
+## 327         no       no      no    yes      1     no
+## 328         no       no      no    yes      2     no
+## 329         no       no      no    yes      2     no
+## 330         no       no      no     no      1     no
+## 331        yes      yes      no    yes      2     no
+## 332         no       no      no    yes      3     no
+## 333         no       no      no     no      1     no
+## 334         no       no      no     no      0     no
+## 335         no       no      no     no      3     no
+## 336         no       no      no     no      1     no
+## 337        yes      yes      no    yes      0    yes
+## 338         no      yes      no    yes      2    yes
+## 339        yes      yes      no    yes      2    yes
+## 340         no       no      no     no      0     no
+## 341         no       no      no     no      0     no
+## 342         no      yes      no     no      0     no
+## 343         no       no      no     no      1     no
+## 344         no       no      no     no      1     no
+## 345         no       no      no    yes      0     no
+## 346         no       no      no     no      0     no
+## 347         no       no      no     no      2     no
+## 348         no      yes      no     no      1     no
+## 349         no       no      no     no      0     no
+## 350         no       no      no     no      2     no
+## 351         no       no      no     no      0     no
+## 352         no      yes      no     no      0     no
+## 353         no       no      no     no      2     no
+## 354        yes      yes      no     no      2     no
+## 355         no       no      no     no      0     no
+## 356         no       no      no     no      1    yes
+## 357        yes       no      no    yes      0    yes
+## 358         no       no      no    yes      0    yes
+## 359         no       no      no     no      2    yes
+## 360         no       no      no    yes      3    yes
+## 361        yes      yes      no    yes      1    yes
+## 362         no       no      no    yes      2    yes
+## 363         no      yes      no     no      2    yes
+## 364        yes      yes      no     no      0     no
+## 365         no       no      no    yes      2     no
+## 366         no      yes     yes     no      1     no
+## 367         no       no      no    yes      2     no
+## 368         no      yes     yes     no      2     no
+## 369         no       no      no     no      0     no
+## 370         no      yes      no     no      2    yes
+## 371        yes      yes      no    yes      2    yes
+## 372         no      yes      no    yes      0    yes
+## 373         no       no      no    yes      2    yes
+## 374        yes      yes      no    yes      2    yes
+## 375         no       no      no    yes      1    yes
+## 376         no       no      no    yes      1    yes
+## 377        yes       no      no    yes      1    yes
+## 378         no       no      no    yes      2    yes
+## 379         no      yes      no     no      2    yes
+## 380         no      yes      no    yes      0    yes
+## 381        yes       no      no    yes      1    yes
+## 382         no      yes      no    yes      0    yes
+## 383         no      yes      no    yes      2    yes
+## 384        yes      yes      no     no      2    yes
+## 385        yes      yes      no     no      0    yes
+## 386        yes      yes      no     no      0    yes
+## 387         no       no      no     no      2    yes
+## 388         no      yes      no    yes      2    yes
+## 389        yes      yes      no     no      2    yes
+## 390        yes      yes      no    yes      2    yes
+## 391         no      yes      no     no      2    yes
+## 392         no      yes      no    yes      1    yes
+## 393         no       no      no    yes      0    yes
+## 394         no       no      no     no      1    yes
+## 395        yes      yes      no     no      0    yes
+## 396        yes      yes      no     no      1    yes
+## 397        yes      yes      no     no      1    yes
+## 398        yes      yes      no     no      1    yes
+## 399         no      yes      no     no      2    yes
+## 400        yes      yes      no    yes      0    yes
+## 401        yes      yes      no    yes      2    yes
+## 402         no      yes      no    yes      2    yes
+## 403        yes      yes      no    yes      0    yes
+## 404         no       no      no     no      0    yes
+## 405         no      yes      no     no      0    yes
+## 406        yes      yes      no     no      0    yes
+## 407        yes      yes      no     no      2    yes
+## 408         no      yes      no     no      0    yes
+## 409         no      yes      no    yes      0    yes
+## 410         no       no      no    yes      0    yes
+## 411         no      yes      no     no      1    yes
+## 412         no       no      no    yes      0    yes
+## 413         no       no      no    yes      0    yes
+## 414         no       no      no    yes      0    yes
+## 415         no      yes      no     no      0    yes
+## 416        yes      yes      no    yes      1    yes
+## 417         no      yes      no    yes      1    yes
+## 418        yes      yes      no     no      2    yes
+## 419         no      yes      no    yes      3    yes
+## 420         no       no     yes     no      1    yes
+## 421         no       no      no    yes      2    yes
+## 422        yes      yes      no    yes      0    yes
+## 423         no      yes      no     no      2    yes
+## 424         no       no      no     no      0    yes
+## 425         no       no      no     no      1    yes
+## 426        yes      yes      no     no      0    yes
+## 427         no       no      no     no      1    yes
+## 428         no       no      no     no      1    yes
+## 429         no       no      no     no      0    yes
+## 430         no      yes      no    yes      0    yes
+## 431         no       no      no     no      0    yes
+## 432        yes      yes      no     no      0    yes
+## 433         no       no      no     no      2    yes
+## 434         no       no      no     no      0    yes
+## 435        yes      yes      no    yes      2    yes
+## 436         no       no      no    yes      0    yes
+## 437         no       no      no     no      0    yes
+## 438         no       no      no     no      0    yes
+## 439         no       no      no     no      2    yes
+## 440         no       no      no    yes      2    yes
+## 441         no       no      no     no      2    yes
+## 442        yes      yes      no     no      0    yes
+## 443         no       no      no     no      0    yes
+## 444         no       no      no    yes      2    yes
+## 445         no       no      no    yes      0    yes
+## 446         no      yes      no     no      1    yes
+## 447         no       no     yes     no      1    yes
+## 448         no      yes      no    yes      1    yes
+## 449         no       no      no     no      2    yes
+## 450         no       no      no     no      0    yes
+## 451         no       no      no     no      0    yes
+## 452         no       no      no    yes      0    yes
+## 453         no      yes      no    yes      0    yes
+## 454         no       no      no     no      1    yes
+## 455         no      yes      no     no      0    yes
+## 456        yes      yes      no     no      1    yes
+## 457        yes      yes      no    yes      0    yes
+## 458        yes      yes      no    yes      0    yes
+## 459         no       no      no     no      0    yes
+## 460         no      yes      no     no      0    yes
+## 461         no      yes      no     no      0    yes
+## 462         no       no      no     no      0    yes
+## 463         no      yes      no     no      0    yes
+## 464         no      yes      no     no      0    yes
+## 465         no       no      no     no      0    yes
+## 466         no       no     yes    yes      0    yes
+## 467         no       no      no     no      0    yes
+## 468         no      yes      no     no      0    yes
+## 469        yes       no      no     no      0    yes
+## 470         no      yes      no     no      0    yes
+## 471         no       no      no     no      1    yes
+## 472         no      yes      no     no      0    yes
+## 473         no       no      no     no      3    yes
+## 474        yes      yes      no     no      0    yes
+## 475         no      yes      no     no      0    yes
+## 476         no      yes      no     no      1    yes
+## 477         no       no      no     no      1    yes
+## 478        yes      yes      no     no      2    yes
+## 479         no      yes      no    yes      0    yes
+## 480         no       no      no     no      1    yes
+## 481        yes      yes      no     no      0    yes
+## 482        yes      yes      no    yes      2    yes
+## 483         no      yes      no     no      0    yes
+## 484         no       no      no     no      0    yes
+## 485         no       no      no     no      2    yes
+## 486         no       no      no    yes      1    yes
+## 487         no       no      no     no      0     no
+## 488         no       no      no     no      1     no
+## 489         no       no      no     no      1     no
+## 490         no       no      no     no      0     no
+## 491         no       no      no     no      0     no
+## 492         no       no      no     no      0     no
+## 493         no       no      no     no      0     no
+## 494         no       no      no     no      1     no
+## 495         no       no      no    yes      0     no
+## 496         no      yes      no     no      0     no
+## 497         no      yes      no     no      0     no
+## 498         no       no      no     no      1     no
+## 499         no       no      no     no      0     no
+## 500         no       no      no     no      3     no
+## 501         no       no      no    yes      3     no
+## 502         no      yes      no    yes      2     no
+## 503         no       no      no     no      0     no
+## 504         no       no      no    yes      0     no
+## 505        yes      yes      no     no      0     no
+## 506        yes      yes      no     no      0     no
+## 507        yes       no      no     no      2     no
+## 508         no       no      no    yes      2     no
+## 509         no       no      no    yes      2     no
+## 510         no       no      no     no      1     no
+## 511        yes      yes      no     no      2     no
+## 512         no       no      no     no      0     no
+## 513         no       no      no    yes      0     no
+## 514         no      yes      no     no      0     no
+## 515         no      yes      no     no      1     no
+## 516         no       no     yes     no      0     no
+## 517        yes       no      no    yes      0     no
+## 518         no       no      no    yes      0     no
+## 519         no       no      no    yes      1     no
+## 520        yes       no      no     no      1     no
+## 521        yes       no      no    yes      1     no
+## 522        yes       no      no    yes      1     no
+## 523         no       no      no    yes      1     no
+## 524         no       no      no     no      2     no
+## 525         no       no      no    yes      1     no
+## 526         no       no      no    yes      2     no
+## 527         no       no      no    yes      2     no
+## 528         no       no      no    yes      1     no
+## 529         no       no      no    yes      1     no
+## 530         no       no      no    yes      0     no
+## 531        yes       no      no    yes      2     no
+## 532         no       no      no    yes      2     no
+## 533         no       no      no     no      2     no
+## 534        yes      yes     yes     no      0     no
+## 535         no       no      no    yes      0     no
+## 536         no       no      no    yes      0     no
+## 537         no       no      no    yes      0     no
+## 538         no       no      no    yes      0     no
+## 539         no       no      no    yes      0     no
+## 540         no       no      no     no      0     no
+## 541         no       no      no     no      1     no
+## 542        yes       no      no    yes      0     no
+## 543         no       no      no    yes      0     no
+## 544        yes       no      no    yes      1     no
+## 545        yes       no      no    yes      1     no
+## 546         no       no      no    yes      1     no
+```
+]
+
+.right5[
+
+`tibble`
+
+
+```r
+HousePrices_tbl
+```
+
+```
+## # A tibble: 546 × 12
+##    price lotsize bedrooms bathrooms stories driveway
+##    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;fct&gt;   
+##  1 42000    5850        3         1       2 yes     
+##  2 38500    4000        2         1       1 yes     
+##  3 49500    3060        3         1       1 yes     
+##  4 60500    6650        3         1       2 yes     
+##  5 61000    6360        2         1       1 yes     
+##  6 66000    4160        3         1       1 yes     
+##  7 66000    3880        3         2       2 yes     
+##  8 69000    4160        3         1       3 yes     
+##  9 83800    4800        3         1       1 yes     
+## 10 88500    5500        3         2       4 yes     
+## # … with 536 more rows, and 6 more variables:
+## #   recreation &lt;fct&gt;, fullbase &lt;fct&gt;, gasheat &lt;fct&gt;,
+## #   aircon &lt;fct&gt;, garage &lt;dbl&gt;, prefer &lt;fct&gt;
+```
+
+]
+
+---
+
+# Accessing parts of the data 
+
+.panelset[ 
+
+.panel[.panel-name[Numerical index]
+
+&lt;br&gt;
+
+Subsetting a data.frame works in a very similar manner as a matrix:
+
+
+```r
+matrix[rows of interest, columns of interest]
+```
+
+## Example:
+
+2nd to 8th rows, the 3rd and 5th columns
+
+.left5[
+
+`data.frame`
+
+
+```r
+HousePrices[2:8, c(3,5)]
+```
+
+```
+##   bedrooms stories
+## 2        2       1
+## 3        3       1
+## 4        3       2
+## 5        2       1
+## 6        3       1
+## 7        3       2
+## 8        3       3
+```
+]
+
+.right5[
+
+`tibble`
+
+
+```r
+HousePrices_tbl[2:8, c(3,5)]
+```
+
+```
+## # A tibble: 7 × 2
+##   bedrooms stories
+##      &lt;dbl&gt;   &lt;dbl&gt;
+## 1        2       1
+## 2        3       1
+## 3        3       2
+## 4        2       1
+## 5        3       1
+## 6        3       2
+## 7        3       3
+```
+]
+
+  ]
+
+.panel[.panel-name[Variable names]
+
+&lt;br&gt;
+
+But, subsetting a data.frame using numerical indexes are not recommended because it is not immediately clear to you (or your collaborators who might look at the code) what you intended to do with the code.
+
+Instead, the following is better:
+
+
+```r
+data[, c("variable 1", "variable 2", ...)]
+```
+
+## Examples:
+
+.left5[
+`data.frame`
+
+
+```r
+head(HousePrices[, "price"])
+```
+
+```
+## [1] 42000 38500 49500 60500 61000 66000
+```
+]
+
+.right5[
+`tibble`
+
+
+```r
+head(HousePrices_tbl[, "price"])
+```
+
+```
+## # A tibble: 6 × 1
+##   price
+##   &lt;dbl&gt;
+## 1 42000
+## 2 38500
+## 3 49500
+## 4 60500
+## 5 61000
+## 6 66000
+```
+]
+
+  ]
+
+.panel[.panel-name[$]
+
+&lt;br&gt;
+
+Alternatively, to access a column (variable) from a dataset, you can use `$` like below (remember? A `data.frame` is a special kind of `list`).
+
+## Examples:
+
+.left5[
+
+`data.frame`
+
+
+```r
+head(HousePrices$price)
+```
+
+```
+## [1] 42000 38500 49500 60500 61000 66000
+```
+]
+
+.right5[
+`tibble`
+
+```r
+head(HousePrices_tbl$price)
+```
+
+```
+## [1] 42000 38500 49500 60500 61000 66000
+```
+]
+
+  ]
+
+]
+
+
+
+
+&lt;!-- 
+#/*=================================================*/
+#' # Input and output
+#/*=================================================*/
+--&gt;
+
+---
+
+class: inverse, center, middle
+name: inputoutput
+
+# Importing and Exporting Datasets
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# Importing and Exporting Datasets
+
+## Objectives
+
++ read datasets in various formats (**csv**, **xlsx**, **dta**, and **rds**) containing corn yields in Nebraska counties for the year of 2008.  
+
++ write R objects as files in various formats 
+
+## Directions
+
++ Go [here](https://www.dropbox.com/sh/0hhhrx02y29oksr/AABy9Spbfd4xna4SpBe-i-vra?dl=0) and download all the files
++ Place all the data files in the same folder (any folder) 
+
+---
+
+# Import files (datasets) in various formats 
+
+Check the format in which the dataset is stored by looking at the extension of the file (what comes after the file name and a dot)
+  * **corn.csv**: a file format Microsof Excel supports. 
+  * **corn.xlsx**: another format supported by Microsof Excel, which may have more than one tabs of data sheets. 
+  * **corn.dta**: a format that STATA support (software that is immensely popular for economists). 
+  * **corn.rds**: a format that R supports. 
+
+--
+
+When you import a dataset, you need to use a particular function that is appropriate for the particular type of format the dataset is in.   
+
+---
+
+# Read a csv file
+
+.panelset[ 
+
+.panel[.panel-name[read.csv()]
+
+&lt;br&gt;
+
+You can use `read.csv()` from the `base` package.
+
+## Syntax
+
+
+```r
+#--- NOT RUN ---#  
+data = read.csv(path to the file to import)
+```
+
+## Examples
+
+
+```r
+corn_yields_df &lt;- read.csv("~/Dropbox/TeachingUNL/DataScience/Datasets/Chapter_3_data_wrangling/corn_yields.csv")
+```
+
+  ]
+
+.panel[.panel-name[read_csv()]
+
+&lt;br&gt;
+
+You can use `read_csv()` from the `readr` package.
+
+## Syntax
+
+
+```r
+#--- NOT RUN ---#  
+data = read_csv(path to the file to import)
+```
+
+## Examples
+
+
+```r
+corn_yields_tbl &lt;- read_csv("~/Dropbox/TeachingUNL/DataScience/Datasets/Chapter_3_data_wrangling/corn_yields.csv")
+```
+
+  ]
+
+.panel[.panel-name[compare]
+
+&lt;span style="color:red"&gt; Direction:&lt;/span&gt; evaluate `corn_yields_df` and `corn_yields_tbl` to see the differences.
+
+&lt;br&gt;
+
+Data read using `read.csv()`:
+
+
+```r
+class(corn_yields_df)
+```
+
+```
+## [1] "data.frame"
+```
+
+&lt;br&gt;
+
+Data read using `read_csv()`:
+
+
+```r
+class(corn_yields_tbl) 
+```
+
+```
+## [1] "spec_tbl_df" "tbl_df"      "tbl"        
+## [4] "data.frame"
+```
+
+  ]
+
+]
+
+
+---
+
+# Setting the working directory
+
+.panelset[ 
+
+.panel[.panel-name[What and why]
+
+&lt;br&gt;
+
++ In the previous slide, we provided a full path to the csv file to read onto R.
+
++ If you expect to import and/or export (save) datasets and R objects often in that particular directory, it would be nice to tell R to look for files in the directory by default.
+
+So, a code like this works:
+
+
+```r
+corn_yield &lt;- read.csv("corn_yields.csv")
+```
+
++ This will save us from writing out the full path every time we either import or export datasets.
+
++ You can do so by designate the directory as the **working directory**.  
+
++ Once the working directory is set, R looks for files in that directory unless told otherwise. 
+
++ It is not just when importing datasets. When you export an R object as a file, R will create a file in the working directory by default.   
+
+  ]
+
+.panel[.panel-name[how]
+
+&lt;br&gt;
+
+You can use `setwd()` to designate a directory as the working directory:
+
+
+```r
+#--- Setting a directory (path) in your computer---#
+setwd("~/Dropbox/TeachingUNL/DataScience/Datasets/Chapter_3_data_wrangling")
+```
+
+&lt;br&gt;
+
+You can check the current working directory using the `getwd()` function:
+
+
+```r
+#--- find the current working directory ---#
+getwd()
+```
+
+```
+## [1] "/Users/tmieno2/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-3-DataWrangling"
+```
+
+  ]
+
+.panel[.panel-name[navigation]
+
+&lt;br&gt;
+
+Suppose it is convenient for you to set the working directory somewhere else than the folder where all the datasets are residing.
+
+
+```r
+setwd("~/Dropbox/TeachingUNL/DataScience")
+```
+
+&lt;br&gt;
+
+You can then provide the path to the file relative to the working directory like this:
+
+
+```r
+data &lt;- read_csv("Datasets/Chapter_3_data_wrangling/corn_yields.csv")
+```
+
+&lt;br&gt;
+
+You can use `..` to move up a folder. For example, if you want to import **corn_yields.csv** stored in "~/Dropbox/TeachingUNL", then the following works:
+
+
+```r
+data &lt;- read_csv("../corn_yields.csv")
+```
+
+  ]
+
+.panel[.panel-name[RStudio project]
+
+&lt;br&gt;
+
+You can create an R Project using RStudio:
+
++ click on a blue transparent box with a plus sign at the upper left corner of RStudio
++ click on "new directory" (to initiate a new folder) or "existing directory" (to designate an existing folder)
+
+(&lt;span style="color:blue"&gt; Direction: &lt;/span&gt; demonstrate on RStduio)
+
+&lt;br&gt;
+
+When you open an R Project folder, then the working directory is set at the project folder. Confirm this:
+
+
+```r
+getwd() 
+```
+
+  ]
+
+]
+
+---
+
+# Read a sheet from an xls(x) file
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
++ You can use `read_excel()` from the `readxl` package to read data sheets from an **xls(x)** file, which is part of the `tidyverse` package. 
+
++ The `readxl` package is installed when you install the `tidyverse` pacakge. 
+
++ However, it is not loaded automatically when you load the `tidyverse` package. 
+
++ So, you need to library the package even if you have loaded the `tidyverse` package. 
+
+
+
+```r
+library(readxl)
+```
+
+  ]
+
+.panel[.panel-name[Syntax and Examples]
+
+## Syntax
+
+
+```r
+read_excel(path to the file, sheet = x)
+```
+
++ `x`: sheet number
+
+## Examples
+
+Import a sheet of an **xls(x)** file using `read_excel()`:
+
+
+```r
+corn_08 &lt;- read_excel("corn_yields.xls", sheet = 1) # 1st sheet 
+corn_09 &lt;- read_excel("corn_yields.xls", sheet = 2) # 2nd sheet
+```
+
+
+
+
+  ]
+
+.panel[.panel-name[Note]
+
+&lt;br&gt;
+
+
+```r
+#--- check the class ---#
+class(corn_08) 
+```
+
+```
+## [1] "tbl_df"     "tbl"        "data.frame"
+```
+
+Notice that the data is converted into a **tibble** (because the `readxl` package is part of the `tidyverse` package.).
+
+  ]
+
+]
+
+---
+
+# Read a STATA data file (.dta)  
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
+Use the `read.dta13()` function from the `readstata13` package.
+
+
+```r
+#--- install the package ---#
+install.packages(readstata13)
+
+#--- load the package ---#
+library(readstata13) 
+```
+
+
+
+  ]
+
+.panel[.panel-name[Syntax and Examples]
+
+## Syntax
+
+
+```r
+#--- Syntax (NOT RUN) ---#
+read.dta13(file path)
+```
+
+## Examples
+
+
+```r
+#--- import the data ---#
+corn_yields &lt;- read.dta13("corn_yields.dta")
+```
+
+  ]
+
+.panel[.panel-name[Note]
+
+&lt;br&gt;
+
+
+```r
+#--- check the class ---#
+class(corn_yields) 
+```
+
+```
+## [1] "data.frame"
+```
+
+Notice that the data is converted into a **data.frame** object, not a **tibble**.
+
+  ]
+
+]
+
+---
+
+
+# Read an **rds** file 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
++ An **rds** (&lt;span style="color:red"&gt; r &lt;/span&gt;&lt;span style="color:red"&gt;d&lt;/span&gt;ata&lt;span style="color:red"&gt; s&lt;/span&gt;et) file is a file type that is supported by R.  
+
++ You can use the `readRDS()` function to read an **rds** file. 
+
++ No special packages are necessary.
+
+  ]
+
+.panel[.panel-name[Syntax and Examples]
+
+## Syntax
+
+
+```r
+readRDS("path to the file") 
+```
+
+## Examples
+
+
+```r
+corn_yields &lt;- readRDS("corn_yields.rds") 
+```
+
+  ]
+
+.panel[.panel-name[Note]
+
+&lt;br&gt;
+
+
+```r
+class(corn_yields)
+```
+
+```
+## [1] "tbl_df"     "tbl"        "data.frame"
+```
+
+&lt;br&gt;
+
+Notice that the imported dataset is already a `tibble` object. This is because the R object exported as **corn_yields.rds** was `tibble`. 
+
+  ]
+]
+
+---
+
+# Export an R object 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+&lt;br&gt;
++ Exporting datasets work much the same way as importing them. 
+
++ Here is the list of functions that let you export a `data.frame` or (`tibble`) in different formats:
+  * **csv**: `write_csv()`
+  * **dta**: `save.dta13()`
+  * **rds**: `saveRDS()`
+ 
+  ]
+
+.panel[.panel-name[Syntax and Examples]
+
+&lt;br&gt;
+
+## Syntax
+
+
+```r
+export_function(obeject name, file name)
+```
+
+## Examples
+
+
+```r
+#--- export as csv ---#
+write_csv(corn_yields, "corn_yields_exp_rownames.csv")
+
+#--- export as dta ---#
+save.dta13(corn_yields, "corn_yields_exp.dta")
+
+#--- export as rds ---#
+saveRDS(corn_yields, "corn_yields_exp.rds")
+
+#--- export as xls file ---#
+# just don't do it
+```
+
+  ]
+
+.panel[.panel-name[type preservation]
+
+&lt;br&gt;
+
+You can export any kind of R objects as an rds file.
+
+
+```r
+a_list &lt;- list(a = c("R", "rocks"), b = corn_yields)   
+
+saveRDS(a_list, "a_list.rds")
+
+readRDS("a_list.rds")
+```
+
+```
+## $a
+## [1] "R"     "rocks"
+## 
+## $b
+## # A tibble: 161 × 9
+##     Year State  FIPS County_name State_name Commodity
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;    
+##  1  2008    31 31019 BUFFALO     NEBRASKA   CORN     
+##  2  2008    31 31019 BUFFALO     NEBRASKA   CORN     
+##  3  2008    31 31041 CUSTER      NEBRASKA   CORN     
+##  4  2008    31 31041 CUSTER      NEBRASKA   CORN     
+##  5  2008    31 31047 DAWSON      NEBRASKA   CORN     
+##  6  2008    31 31047 DAWSON      NEBRASKA   CORN     
+##  7  2008    31 31077 GREELEY     NEBRASKA   CORN     
+##  8  2008    31 31077 GREELEY     NEBRASKA   CORN     
+##  9  2008    31 31079 HALL        NEBRASKA   CORN     
+## 10  2008    31 31079 HALL        NEBRASKA   CORN     
+## # … with 151 more rows, and 3 more variables:
+## #   Data item &lt;chr&gt;, Irrigated &lt;int&gt;, Yield &lt;int&gt;
+```
+
+As you can see a list is saved as an rds file, and when imported, it is still a list.
+
+  ]
+
+.panel[.panel-name[file size]
+
+&lt;br&gt;
+
+Check the size of the corn data files in different formats. 
+
+Which one is the smallest?
+
+  ]
+
+]
+
+&lt;!-- 
+#/*=================================================*/
+#' # Data manipulation using dplyr
+#/*=================================================*/
+--&gt;
+
+---
+class: inverse, center, middle
+name: dplyr
+
+# Data manipulation using the `dplyr` package
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+
+# Essential verbs 
+
++ `filter()`
++ `mutate()`
++ `select()`
++ `rename()`
++ `arrange()`
++ `relocate()`
+
+---
+
+
+# Before we start
+
+For illustrations, we will use `flights_mini` that we create below:
+
+
+```r
+library(nycflights13)
+
+(
+flights_mini &lt;- distinct(flights,month,day,.keep_all=TRUE) %&gt;% 
+  filter(day %in% c(1,2)) %&gt;% 
+  arrange(month)
+)
+```
+
+```
+## # A tibble: 24 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     2       42           2359        43
+##  3  2013     2     1      456            500        -4
+##  4  2013     2     2        3           2359         4
+##  5  2013     3     1        4           2159       125
+##  6  2013     3     2       43           2355        48
+##  7  2013     4     1      454            500        -6
+##  8  2013     4     2        9           2355        14
+##  9  2013     5     1        9           1655       434
+## 10  2013     5     2        3           1905       298
+## # … with 14 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+# `filter()`: row-wise subset
+
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
+`filter()`: subset data row-wise using logical conditions based on variables  
+ 
+
+
+```r
+#--- syntax ---# 
+filter(dataset, condition 1, ..., condition K)
+```
+
+  ]
+
+.panel[.panel-name[equal to]
+&lt;br&gt;
+Observations where `month` is 4:
+
+
+```r
+filter(flights_mini, month == 4) 
+```
+
+```
+## # A tibble: 2 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     4     1      454            500        -6
+## 2  2013     4     2        9           2355        14
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[not equal to]
+&lt;br&gt;
+Observations where `month` is NOT 4:
+
+
+```r
+filter(flights_mini, month != 4) 
+```
+
+```
+## # A tibble: 22 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     2       42           2359        43
+##  3  2013     2     1      456            500        -4
+##  4  2013     2     2        3           2359         4
+##  5  2013     3     1        4           2159       125
+##  6  2013     3     2       43           2355        48
+##  7  2013     5     1        9           1655       434
+##  8  2013     5     2        3           1905       298
+##  9  2013     6     1        2           2359         3
+## 10  2013     6     2       14           2359        15
+## # … with 12 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[inequality]
+&lt;br&gt;
+Observations where `month` is less than 4:
+
+
+```r
+filter(flights_mini, month &lt; 4) 
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     1     1      517            515         2
+## 2  2013     1     2       42           2359        43
+## 3  2013     2     1      456            500        -4
+## 4  2013     2     2        3           2359         4
+## 5  2013     3     1        4           2159       125
+## 6  2013     3     2       43           2355        48
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+
+]
+
+
+---
+
+
+# `filter()`: multiple conditions
+
+.panelset[ 
+
+.panel[.panel-name[and (&amp;)]
+&lt;br&gt;
+
+```r
+filter(flights_mini, month &gt;= 9 &amp; month &lt;= 11) 
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     9     1        9           2359        10
+## 2  2013     9     2        8           2255        73
+## 3  2013    10     1      447            500       -13
+## 4  2013    10     2      449            500       -11
+## 5  2013    11     1        5           2359         6
+## 6  2013    11     2      453            500        -7
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+```r
+#--- alternatively ---#
+# filter(flights_mini, month &gt;= 9, month &lt;= 11) 
+```
+
+  ]
+
+.panel[.panel-name[or (|)]
+&lt;br&gt;
+
+```r
+filter(flights_mini, month &gt;= 11 | month &lt;= 1) 
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     1     1      517            515         2
+## 2  2013     1     2       42           2359        43
+## 3  2013    11     1        5           2359         6
+## 4  2013    11     2      453            500        -7
+## 5  2013    12     1       13           2359        14
+## 6  2013    12     2       12           2250        82
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[in any of (`%in%`)]
+&lt;br&gt;
+
+```r
+filter(flights_mini, month %in% c(1, 2, 3)) 
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     1     1      517            515         2
+## 2  2013     1     2       42           2359        43
+## 3  2013     2     1      456            500        -4
+## 4  2013     2     2        3           2359         4
+## 5  2013     3     1        4           2159       125
+## 6  2013     3     2       43           2355        48
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+```r
+#--- equivalently ---#
+# filter(flights_mini, month == 1 | month == 2 | month == 2) 
+```
+
+This is very useful when you have many values to check.  
+
+  ]
+
+]
+
+---
+
+# Important 
+
+&lt;br&gt;
+
+Notice that the original data `flights_mini` was not affected by the `filter()` operations in the previous slides.
+
+This is consistent across all the verbs in `dplyr`. Whatever actions you take, the original data is unaltered.
+
+--
+
+To use the transformed data for later use, you need to assign it to a new object (or overwrite if that is okay):
+
+
+```r
+flights_mini_filtered &lt;- filter(flights_mini, month == 4) 
+
+flights_mini_filtered
+```
+
+```
+## # A tibble: 2 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     4     1      454            500        -6
+## 2  2013     4     2        9           2355        14
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+# Exercises 
+
+.panelset[ 
+
+.panel[.panel-name[Exercise 1]
+
+&lt;br&gt;
+
+E1: Find the observations in June and July
+
+&lt;br&gt;
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+&lt;br&gt;
+
+Here is the output you should get: 
+
+
+```
+## # A tibble: 4 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     6     1        2           2359         3
+## 2  2013     6     2       14           2359        15
+## 3  2013     7     1        1           2029       212
+## 4  2013     7     2       12           2245        87
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+&lt;br&gt;
+
+E2: Find the observations in January, April, July, September, and December
+
+&lt;br&gt;
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+&lt;br&gt;
+
+Here is the output you should get: 
+
+
+```
+## # A tibble: 10 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     2       42           2359        43
+##  3  2013     4     1      454            500        -6
+##  4  2013     4     2        9           2355        14
+##  5  2013     6     1        2           2359         3
+##  6  2013     6     2       14           2359        15
+##  7  2013     9     1        9           2359        10
+##  8  2013     9     2        8           2255        73
+##  9  2013    12     1       13           2359        14
+## 10  2013    12     2       12           2250        82
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[Exercise 3]
+
+&lt;br&gt;
+
+E3: Find the observations by carrier "US"
+
+&lt;br&gt;
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+&lt;br&gt;
+
+Here is the output you should get: 
+
+
+```
+## # A tibble: 5 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013     2     1      456            500        -4
+## 2  2013     4     1      454            500        -6
+## 3  2013    10     1      447            500       -13
+## 4  2013    10     2      449            500       -11
+## 5  2013    11     2      453            500        -7
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+]
+
+
+
+---
+
+# `select()`: column-wise subset
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
+You can select a subset of variables using `select()`. 
+
+
+```r
+select(dataset, variable 1, variable 2, ...)
+```
+
+If you would like to drop some variables, but want to keep all the other variables, you can take advantage of  `−` operator:
+
+
+```r
+select(dataset, - variable 1, - variable 2, ...)
+```
+
+  ]
+
+.panel[.panel-name[Example 1]
+
+&lt;br&gt;
+
+
+```r
+select(flights_mini, arr_delay)
+```
+
+```
+## # A tibble: 24 × 1
+##    arr_delay
+##        &lt;dbl&gt;
+##  1        11
+##  2        36
+##  3         4
+##  4        29
+##  5       142
+##  6        85
+##  7        -4
+##  8         1
+##  9       408
+## 10       257
+## # … with 14 more rows
+```
+
+  ]
+
+.panel[.panel-name[Example 2]
+
+&lt;br&gt;
+
+
+```r
+select(flights_mini, month, arr_delay, dep_delay)
+```
+
+```
+## # A tibble: 24 × 3
+##    month arr_delay dep_delay
+##    &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1        11         2
+##  2     1        36        43
+##  3     2         4        -4
+##  4     2        29         4
+##  5     3       142       125
+##  6     3        85        48
+##  7     4        -4        -6
+##  8     4         1        14
+##  9     5       408       434
+## 10     5       257       298
+## # … with 14 more rows
+```
+  ]
+
+.panel[.panel-name[Example 3]
+
+&lt;br&gt;
+
+
+
+```r
+select(flights_mini, - year, - month)  
+```
+
+```
+## # A tibble: 24 × 17
+##      day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1     1      517            515         2      830
+##  2     2       42           2359        43      518
+##  3     1      456            500        -4      652
+##  4     2        3           2359         4      513
+##  5     1        4           2159       125      318
+##  6     2       43           2355        48      605
+##  7     1      454            500        -6      636
+##  8     2        9           2355        14      346
+##  9     1        9           1655       434      308
+## 10     2        3           1905       298      241
+## # … with 14 more rows, and 12 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+]
+
+
+---
+
+# Exercises
+
+.panelset[ 
+
+.panel[.panel-name[Exercise 1]
+
+&lt;br&gt;
+
+E1: select all the columns except `arr_delay`
+
+&lt;br&gt;
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+&lt;br&gt;
+
+Here is the output you should get: 
+
+
+```
+## # A tibble: 24 × 18
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     2       42           2359        43
+##  3  2013     2     1      456            500        -4
+##  4  2013     2     2        3           2359         4
+##  5  2013     3     1        4           2159       125
+##  6  2013     3     2       43           2355        48
+##  7  2013     4     1      454            500        -6
+##  8  2013     4     2        9           2355        14
+##  9  2013     5     1        9           1655       434
+## 10  2013     5     2        3           1905       298
+## # … with 14 more rows, and 12 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+&lt;br&gt;
+
+E2: select `arr_delay` and `month`
+
+&lt;br&gt;
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+&lt;br&gt;
+
+Here is the output you should get: 
+
+
+```
+## # A tibble: 24 × 2
+##    month arr_delay
+##    &lt;int&gt;     &lt;dbl&gt;
+##  1     1        11
+##  2     1        36
+##  3     2         4
+##  4     2        29
+##  5     3       142
+##  6     3        85
+##  7     4        -4
+##  8     4         1
+##  9     5       408
+## 10     5       257
+## # … with 14 more rows
+```
+
+  ]
+
+]
+
+
+---
+
+# `relocate()`: change the column order 
+
+&lt;br&gt;
+
+You can use `relocate()` to change the column order. 
+
+
+```r
+relocate(flights_mini, dep_time, dep_delay)
+```
+
+```
+## # A tibble: 24 × 19
+##    dep_time dep_delay  year month   day sched_dep_time
+##       &lt;int&gt;     &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;          &lt;int&gt;
+##  1      517         2  2013     1     1            515
+##  2       42        43  2013     1     2           2359
+##  3      456        -4  2013     2     1            500
+##  4        3         4  2013     2     2           2359
+##  5        4       125  2013     3     1           2159
+##  6       43        48  2013     3     2           2355
+##  7      454        -6  2013     4     1            500
+##  8        9        14  2013     4     2           2355
+##  9        9       434  2013     5     1           1655
+## 10        3       298  2013     5     2           1905
+## # … with 14 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+Chosen variables come front with the order of the rest of the variable unchanged.
+
+---
+
+# Piping with `%&gt;%`
+
+.panelset[ 
+
+.panel[.panel-name[The Basic]
+
+&lt;br&gt;
+
+Let `f()` be a function and `x` is an R object that `f()` accepts. Then, 
+
+`x %&gt;% f()` is the same as `f(x)`
+
+## Example
+
+Try the following codes and confirm they return the same results:
+
+
+```r
+#--- not piped ---#
+mean(seq(1, 99, by = 2))  
+
+#--- piped ---#
+seq(1, 99, by = 2) %&gt;% mean()   
+```
+
+  ]
+
+.panel[.panel-name[More generally]
+
+&lt;br&gt;
+
+Suppose you have more than one arguments to the function like this:
+
+
+```r
+f(x1, x2, option 1, option 2)
+```
+
+Then,
+
+
+```r
+z %&gt;% f(x2, option 1, option 2) 
+```
+
+is equivalent to
+
+
+```r
+f(z, x2, option 1, option 2) 
+```
+
+That is, in general, an R object that precedes the piping operator (`%&gt;%`) becomes the &lt;span style="color:red"&gt; first &lt;/span&gt; argument of the function that comes after the piping operator.
+
+  ]
+
+.panel[.panel-name[.]
+
+&lt;br&gt;
+
+What if the object before the piping operator is not the first argument of the subsequent function? 
+
+
+
+```r
+a_string &lt;- "I do not like space"
+
+gsub(" ", "", a_string)
+```
+
+```
+## [1] "Idonotlikespace"
+```
+
+This does not work:
+
+
+```r
+a_string %&gt;%  gsub(" ", "") 
+```
+
+because the above is equivalent to 
+
+
+```r
+a_string &lt;- gsub(a_string, " ", "") 
+```
+
+You can refer to the preceding object by `.` like this:
+
+
+```r
+a_string %&gt;% gsub(" ", "", .)  
+```
+
+```
+## [1] "Idonotlikespace"
+```
+
+  ]
+
+.panel[.panel-name[chaining]
+
+&lt;br&gt;
+
+You can keep piping like this:  
+
+
+```r
+flights_mini %&gt;% 
+  select(year, month, dep_time) %&gt;% 
+  relocate(dep_time) %&gt;% 
+  filter(month &lt;= 3)
+```
+
+&lt;span style="color:red"&gt; Important: &lt;/span&gt; The object created by all the codes preceding the piping operator is passed down to the function after the piping operator. 
+
+For example, `relocate(dep_time)` receives as its first argument the outcome of the evaluation of the highlighted parts of the code below.
+
+
+&lt;code class ='r hljs remark-code'&gt;&lt;span style='background-color:#ffff7f'&gt;flights_mini %&gt;%&lt;/span&gt; &lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;select(year, month, dep_time)&lt;/span&gt; %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;relocate(dep_time) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;filter(month&lt;/code&gt;
+
+  ]
+]
+
+---
+
+# Why piping with `%&gt;%`
+
+.panelset[ 
+
+
+.panel[.panel-name[Problem]
+
+&lt;br&gt;
+
+Consider the following sequence of actions:
+
+
+```r
+a1 &lt;- filter(flights_mini, month &lt;= 3)
+
+a2 &lt;- select(a1, year, month, dep_time)
+
+a3 &lt;- relocate(a2, dep_time)
+```
+
+&lt;br&gt;
+
++ Notice that you generated two intermediate datasets (`a1` and `a2`) to obtain the dataset you wanted (`a3`). 
+
++ These intermediate objects are generated only for the purpose of generating the final dataset.
+
++ It is easy to imagine that you will soon have lots of unnecessary intermediate objects on R.
+
+  ]
+
+.panel[.panel-name[Alternative 1]
+
+&lt;br&gt;
+
+Alternatively, you can do the following:
+
+
+```r
+a3 &lt;- relocate(
+  select(
+    filter(flights_mini, month &lt;= 3)
+    , year, month, dep_time
+  ), 
+  dep_time
+)
+```
+
+&lt;br&gt;
+
++ This does not create any intermediate objects unlike the first example. 
+
++ However, it is hard to understand the code partly because the order of actions is the reverse of the order of the corresponding functions you see as you read the code from left to right.
+
+  ]
+
+.panel[.panel-name[Alternative 2 (with piping)]
+
+&lt;br&gt;
+
+Taking advantage of the piping operator, 
+
+
+```r
+a3 &lt;- flights_mini %&gt;% 
+  filter(month &lt;= 3) %&gt;% 
+  select(year, month, dep_time) %&gt;% 
+  relocate(dep_time)
+```
+
+&lt;br&gt;
+
+  ]
+
+]
+
+---
+
+
+# `mutate()`: define new (or update) variables  
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+You can use `mutate()` to create a new variable (or overwrite the existing one) in the dataset:
+
+## Synatax
+
+
+```r
+mutate(data, new variable name = expression)
+```
+
+## Example
+
+
+```r
+mutate(flights_mini, gain = arr_delay - dep_delay) %&gt;% 
+  filter(month &lt;= 2) %&gt;% 
+  relocate(gain)
+```
+
+```
+## # A tibble: 4 × 20
+##    gain  year month   day dep_time sched_dep_time
+##   &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+## 1     9  2013     1     1      517            515
+## 2    -7  2013     1     2       42           2359
+## 3     8  2013     2     1      456            500
+## 4    25  2013     2     2        3           2359
+## # … with 14 more variables: dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[multiple variables]
+
+You can define multiple variables within a single `mutate()` function.  
+
+You can create a new variable based on the variables that have been just created within the same `mutate()` function.
+
+## Examples
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights_mini %&gt;% mutate(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;gain = &lt;/span&gt;arr_delay-dep_delay,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;gain_per_hour = &lt;span style='background-color:#ffff7f'&gt;gain /&lt;/span&gt; (air_time / 60)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;filter(month &lt;= 2) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;relocate(gain, gain_per_hour)&lt;/code&gt;
+
+
+```
+## # A tibble: 4 × 21
+##    gain gain_per_hour  year month   day dep_time
+##   &lt;dbl&gt;         &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;
+## 1     9          2.38  2013     1     1      517
+## 2    -7         -2.22  2013     1     2       42
+## 3     8          4.90  2013     2     1      456
+## 4    25          7.28  2013     2     2        3
+## # … with 15 more variables: sched_dep_time &lt;int&gt;,
+## #   dep_delay &lt;dbl&gt;, arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[function]
+
+You can apply functions to variables when creating new variables:
+
+## Example
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights_mini %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;mutate(avg_arr_delay = &lt;span style='background-color:#ffff7f'&gt;mean(arr_delay, na.rm = TRUE)&lt;/span&gt;) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;filter(month &lt;= 1) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;relocate(avg_arr_delay)&lt;/code&gt;
+
+
+```
+## # A tibble: 2 × 20
+##   avg_arr_delay  year month   day dep_time sched_dep_time
+##           &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+## 1          61.1  2013     1     1      517            515
+## 2          61.1  2013     1     2       42           2359
+## # … with 14 more variables: dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+Note: the function you apply has to accept a vector (a variable column).
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+]
+
+---
+
+# More on `mutate()` 
+
+.panelset[ 
+
+.panel[.panel-name[selective mutation]
+
+Sometimes, you want to to alter the values of a variable for specific rows that satisfy certain conditions.
+
+**Example**:
+Suppose you found out that `dep_time` for all the flights from `JFK` was misreported so that `dep_time` is 10 minutes earlier than the true departure times. 
+
+So, we would like to add 10 minutes to all the flights by `JFK`.
+
+You can use `ifelse()` like this:
+
+.scroll-box-18[
+
+```r
+flights_mini %&gt;% 
+  mutate(
+*   dep_time_correct = ifelse(origin == "JFK", dep_time + 10, dep_time)
+  ) %&gt;% 
+  relocate(origin, dep_time, dep_time_correct) %&gt;% arrange(origin) 
+```
+
+```
+## # A tibble: 24 × 20
+##    origin dep_time dep_time_correct  year month   day
+##    &lt;chr&gt;     &lt;int&gt;            &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1 EWR         517              517  2013     1     1
+##  2 EWR         456              456  2013     2     1
+##  3 EWR         454              454  2013     4     1
+##  4 EWR         447              447  2013    10     1
+##  5 EWR         449              449  2013    10     2
+##  6 EWR         453              453  2013    11     2
+##  7 JFK          42               52  2013     1     2
+##  8 JFK           3               13  2013     2     2
+##  9 JFK           4               14  2013     3     1
+## 10 JFK          43               53  2013     3     2
+## # … with 14 more rows, and 14 more variables:
+## #   sched_dep_time &lt;int&gt;, dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;
+```
+]
+
+  ] 
+
+.panel[.panel-name[dichotomous]
+
+Suppose you want to label flights with `arr_delay &gt; 0` to be `time-loss` and `time-gain` otherwise:
+
+You can use `ifelse()` for defining a dichotomous variable like this:
+
+.scroll-box-20[
+
+```r
+flights_mini %&gt;% 
+  mutate(
+*   loss_or_gain = ifelse(arr_delay &gt; 0, "time-loss", "time-gain")
+  ) %&gt;% 
+  relocate(arr_delay, loss_or_gain)
+```
+
+```
+## # A tibble: 24 × 20
+##    arr_delay loss_or_gain  year month   day dep_time
+##        &lt;dbl&gt; &lt;chr&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;
+##  1        11 time-loss     2013     1     1      517
+##  2        36 time-loss     2013     1     2       42
+##  3         4 time-loss     2013     2     1      456
+##  4        29 time-loss     2013     2     2        3
+##  5       142 time-loss     2013     3     1        4
+##  6        85 time-loss     2013     3     2       43
+##  7        -4 time-gain     2013     4     1      454
+##  8         1 time-loss     2013     4     2        9
+##  9       408 time-loss     2013     5     1        9
+## 10       257 time-loss     2013     5     2        3
+## # … with 14 more rows, and 14 more variables:
+## #   sched_dep_time &lt;int&gt;, dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[More than two cases]
+
+The `case_when()` function is useful if you have more than two cases.
+
+**Syntax**:
+
+
+```r
+case_when(
+  condition 1 ~ value to assign,
+  condition 2 ~ value to assign,
+  condition 3 ~ value to assign,
+  ...
+)  
+```
+
+**Example**:
+
+.scroll-box-16[
+
+```r
+flights_mini %&gt;% 
+  mutate(origin = case_when(
+    origin == "JFK" ~ "John F. Kennedy",
+    origin == "EWR" ~ "Newark Liberty International", 
+    origin == "LGA" ~ "LaGuardia" 
+    )
+  ) %&gt;% relocate(origin)
+```
+
+```
+## # A tibble: 24 × 19
+##    origin         year month   day dep_time sched_dep_time
+##    &lt;chr&gt;         &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+##  1 Newark Liber…  2013     1     1      517            515
+##  2 John F. Kenn…  2013     1     2       42           2359
+##  3 Newark Liber…  2013     2     1      456            500
+##  4 John F. Kenn…  2013     2     2        3           2359
+##  5 John F. Kenn…  2013     3     1        4           2159
+##  6 John F. Kenn…  2013     3     2       43           2355
+##  7 Newark Liber…  2013     4     1      454            500
+##  8 John F. Kenn…  2013     4     2        9           2355
+##  9 John F. Kenn…  2013     5     1        9           1655
+## 10 John F. Kenn…  2013     5     2        3           1905
+## # … with 14 more rows, and 13 more variables:
+## #   dep_delay &lt;dbl&gt;, arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+]
+
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+
+---
+
+# Exercises 
+
+.panelset[ 
+
+.panel[.panel-name[Exercise 1]
+
+&lt;br&gt;
+
+Find the mean value of `arr_delay` in April and May (combined) and define it as a new variable named `avg_arr_delay`
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+&lt;br&gt;
+
+Find the sum of `dep_delay` in January, February, and December (combined) and define it as a new variable named `sum_arr_delay`, and then move the variable to the first column of the dataset.
+
+  ]
+
+]
+
+---
+
+# `rename()`: rename variables  
+
+.panelset[ 
+
+.panel[.panel-name[How]
+
+## Syntax
+
+
+```r
+rename(data, new variable name = old variable name, ...)
+```
+
+## Example
+
+
+```r
+rename(flights_mini, 
+  departure_delay = dep_delay,
+  departure_time = dep_time
+) %&gt;% head()
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day departure_time sched_dep_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;          &lt;int&gt;          &lt;int&gt;
+## 1  2013     1     1            517            515
+## 2  2013     1     2             42           2359
+## 3  2013     2     1            456            500
+## 4  2013     2     2              3           2359
+## 5  2013     3     1              4           2159
+## 6  2013     3     2             43           2355
+## # … with 14 more variables: departure_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[White space]
+
+Let’s create a dataset with variables that have a white space in their names:
+
+
+```r
+df &lt;- tibble(
+  'County ID' = c(1,2,3),
+  'County Name' = c('Dundy','Chase','Perkins')
+) 
+```
+
+When you have a white space in a variable name, and refer to the variable in a function, it would not work most of the time . For example,
+
+
+```r
+filter(df, County ID == 1)
+```
+
+You could actually enclose the variable name with a white space with back ticks like this:
+
+
+```r
+filter(df, `County ID` == 1)
+```
+
+```
+## # A tibble: 1 × 2
+##   `County ID` `County Name`
+##         &lt;dbl&gt; &lt;chr&gt;        
+## 1           1 Dundy
+```
+
+But, you do not want do this.
+
+Rename it:
+
+
+```r
+rename(df, county_id = `County ID`)  
+```
+
+  ]
+
+]
+
+---
+
+# `arrange()`: ordering rows  
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+&lt;br&gt;
+
+You can use `arrange()` to reorder rows based on the value of variables.
+
+  ]
+
+.panel[.panel-name[How]
+
+## Syntax
+
+
+```r
+#--- Syntax (NOT RUN) ---#
+arrange(flights_mini, variable name)
+```
+
+## Example
+
+
+```r
+arrange(flights_mini, dep_delay) %&gt;% head()
+```
+
+```
+## # A tibble: 6 × 19
+##    year month   day dep_time sched_dep_time dep_delay
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+## 1  2013    10     1      447            500       -13
+## 2  2013    10     2      449            500       -11
+## 3  2013    11     2      453            500        -7
+## 4  2013     4     1      454            500        -6
+## 5  2013     2     1      456            500        -4
+## 6  2013     1     1      517            515         2
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+As you can see, the default is the ascending order. 
+
+  ]
+
+.panel[.panel-name[Descending]
+
+&lt;br&gt;
+
+To arrange in the descending order, you use `desc()` function:
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;arrange(flights_mini, &lt;span style='background-color:#ffff7f'&gt;desc&lt;/span&gt;(dep_delay))&lt;/code&gt;
+
+```
+
+## # A tibble: 24 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     5     1        9           1655       434
+##  2  2013     5     2        3           1905       298
+##  3  2013     7     1        1           2029       212
+##  4  2013     8     1       12           2130       162
+##  5  2013     3     1        4           2159       125
+##  6  2013     7     2       12           2245        87
+##  7  2013    12     2       12           2250        82
+##  8  2013     9     2        8           2255        73
+##  9  2013     3     2       43           2355        48
+## 10  2013     1     2       42           2359        43
+## # … with 14 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+
+```
+
+  ]
+
+]
+
+---
+
+# `distinct()`: extract rows with unique values
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+&lt;br&gt;
+
+`distinct()` extract rows with unique values.
+
+  ]
+
+.panel[.panel-name[Example]
+
+&lt;br&gt;
+
++ (left): `flights_mini` has two observations per month (left). 
++ (right): Only one observation per month (12 unique values) after applying `distinct()` 
+
+.left5[
+
+
+```r
+flights_mini
+```
+
+```
+## # A tibble: 24 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     2       42           2359        43
+##  3  2013     2     1      456            500        -4
+##  4  2013     2     2        3           2359         4
+##  5  2013     3     1        4           2159       125
+##  6  2013     3     2       43           2355        48
+##  7  2013     4     1      454            500        -6
+##  8  2013     4     2        9           2355        14
+##  9  2013     5     1        9           1655       434
+## 10  2013     5     2        3           1905       298
+## # … with 14 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+]
+
+.right5[
+
+
+```r
+distinct(flights_mini, month)
+```
+
+```
+## # A tibble: 12 × 1
+##    month
+##    &lt;int&gt;
+##  1     1
+##  2     2
+##  3     3
+##  4     4
+##  5     5
+##  6     6
+##  7     7
+##  8     8
+##  9     9
+## 10    10
+## 11    11
+## 12    12
+```
+]
+
+  ]
+
+.panel[.panel-name[.keep_all]
+
+&lt;br&gt;
+
+You do not want to lose the other variables? Add `.keep_all = TRUE`
+
+
+```r
+distinct(flights_mini, month, .keep_all = TRUE)
+```
+
+```
+## # A tibble: 12 × 19
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     2     1      456            500        -4
+##  3  2013     3     1        4           2159       125
+##  4  2013     4     1      454            500        -6
+##  5  2013     5     1        9           1655       434
+##  6  2013     6     1        2           2359         3
+##  7  2013     7     1        1           2029       212
+##  8  2013     8     1       12           2130       162
+##  9  2013     9     1        9           2359        10
+## 10  2013    10     1      447            500       -13
+## 11  2013    11     1        5           2359         6
+## 12  2013    12     1       13           2359        14
+## # … with 13 more variables: arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+  ]
+
+]
+
+&lt;!-- 
+#/*=================================================*/
+#' # Grouped operations
+#/*=================================================*/
+--&gt;
+
+---
+class: inverse, center, middle
+name: grouped
+
+# Grouped operations
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# Grouped operations: the basics
+
+.panelset[ 
+ 
+ .panel[.panel-name[Motivation]
+ 
+Group-wise operations, such as the mean of arrival delay by carrier are very useful to gain an insight into differences across groups. 
+
+The `group_by()` function in conjunction with `summarize()` function does exactly that.
+
+
+```r
+#--- group by variables ---#
+group_by(dataset, variable to group by, variable to group by, ...)  
+
+#--- summarize ---#
+summarize(grouped dataset, expression)  
+```
+
+   ]
+ 
+ .panel[.panel-name[Step 1: grouping]
+ 
+You first use `group_by()` to set the group for a dataset:
+
+
+```r
+flights_carrier &lt;- group_by(flights, carrier)  
+
+flights_carrier
+```
+
+```
+## # A tibble: 336,776 × 19
+## # Groups:   carrier [16]
+##     year month   day dep_time sched_dep_time dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1      517            515         2
+##  2  2013     1     1      533            529         4
+##  3  2013     1     1      542            540         2
+##  4  2013     1     1      544            545        -1
+##  5  2013     1     1      554            600        -6
+##  6  2013     1     1      554            558        -4
+##  7  2013     1     1      555            600        -5
+##  8  2013     1     1      557            600        -3
+##  9  2013     1     1      557            600        -3
+## 10  2013     1     1      558            600        -2
+## # … with 336,766 more rows, and 13 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+There are no apparent differences in `flights_carrier` from `flights`. The only thing you did by `group_by()` was to tell R that whatever we will do to the new dataset is going to be done by group, which is reflected in "Groups" of the printed data.
+
+   ]
+
+.panel[.panel-name[Step 2: summarizing]
+ 
+Once the group is set, we are ready to do some group-wise (by carrier) operations. Let’s now find the means of `arr_delay` by carrier so we know which carriers perform better than others. We can do so using `summarize()`. 
+
+
+```r
+summarize(flights_carrier, mean_arr_delay = mean(arr_delay, na.rm = TRUE)) 
+```
+
+```
+## # A tibble: 16 × 2
+##    carrier mean_arr_delay
+##    &lt;chr&gt;            &lt;dbl&gt;
+##  1 9E               7.38 
+##  2 AA               0.364
+##  3 AS              -9.93 
+##  4 B6               9.46 
+##  5 DL               1.64 
+##  6 EV              15.8  
+##  7 F9              21.9  
+##  8 FL              20.1  
+##  9 HA              -6.92 
+## 10 MQ              10.8  
+## 11 OO              11.9  
+## 12 UA               3.56 
+## 13 US               2.13 
+## 14 VX               1.76 
+## 15 WN               9.65 
+## 16 YV              15.6
+```
+
+   ] 
+
+.panel[.panel-name[Piped]
+
+Using the piping operator,
+
+
+```r
+flights %&gt;% 
+  group_by(carrier) %&gt;% 
+  summarize(mean_arr_delay = mean(arr_delay, na.rm = TRUE)) 
+```
+
+```
+## # A tibble: 16 × 2
+##    carrier mean_arr_delay
+##    &lt;chr&gt;            &lt;dbl&gt;
+##  1 9E               7.38 
+##  2 AA               0.364
+##  3 AS              -9.93 
+##  4 B6               9.46 
+##  5 DL               1.64 
+##  6 EV              15.8  
+##  7 F9              21.9  
+##  8 FL              20.1  
+##  9 HA              -6.92 
+## 10 MQ              10.8  
+## 11 OO              11.9  
+## 12 UA               3.56 
+## 13 US               2.13 
+## 14 VX               1.76 
+## 15 WN               9.65 
+## 16 YV              15.6
+```
+
+  ]
+
+]
+
+---
+
+# Grouped operations 
+
+You can apply any functions that work on a vector (a variable) 
+
+
+```r
+flights %&gt;%  
+  group_by(carrier) %&gt;% 
+  summarize(
+    mean_arr_delay = mean(arr_delay, na.rm = TRUE),
+    min_arr_delay = min(arr_delay, na.rm = TRUE),
+    quantile_arr_delay = quantile(arr_delay, prob = 0.9, na.rm = TRUE)
+  ) 
+```
+
+```
+## # A tibble: 16 × 4
+##    carrier mean_arr_delay min_arr_delay quantile_arr_delay
+##    &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt;              &lt;dbl&gt;
+##  1 9E               7.38            -68               64  
+##  2 AA               0.364           -75               38  
+##  3 AS              -9.93            -74               27  
+##  4 B6               9.46            -71               56  
+##  5 DL               1.64            -71               37  
+##  6 EV              15.8             -62               77  
+##  7 F9              21.9             -47               76  
+##  8 FL              20.1             -44               69.6
+##  9 HA              -6.92            -70               19.9
+## 10 MQ              10.8             -53               57  
+## 11 OO              11.9             -26               76.6
+## 12 UA               3.56            -75               43  
+## 13 US               2.13            -70               31  
+## 14 VX               1.76            -86               40  
+## 15 WN               9.65            -58               54  
+## 16 YV              15.6             -46               76
+```
+
+---
+
+# Grouped operations 
+
+What happens if the applied function returns more than one values per group?
+
+
+```r
+flights %&gt;% 
+  group_by(carrier) %&gt;% 
+  summarize(
+    quantile_arr_delay = quantile(arr_delay, prob = c(0.1, 0.9), na.rm = TRUE)
+  ) 
+```
+
+```
+## # A tibble: 32 × 2
+## # Groups:   carrier [16]
+##    carrier quantile_arr_delay
+##    &lt;chr&gt;                &lt;dbl&gt;
+##  1 9E                     -31
+##  2 9E                      64
+##  3 AA                     -32
+##  4 AA                      38
+##  5 AS                     -42
+##  6 AS                      27
+##  7 B6                     -23
+##  8 B6                      56
+##  9 DL                     -29
+## 10 DL                      37
+## # … with 22 more rows
+```
+
+---
+
+# Grouped operations 
+
+Multiple grouping variables?
+
+
+```r
+flights %&gt;% 
+  group_by(carrier, month) %&gt;% 
+  summarize(
+    mean_arr_delay = mean(arr_delay, na.rm = TRUE)
+  ) 
+```
+
+```
+## # A tibble: 185 × 3
+## # Groups:   carrier [16]
+##    carrier month mean_arr_delay
+##    &lt;chr&gt;   &lt;int&gt;          &lt;dbl&gt;
+##  1 9E          1          10.2 
+##  2 9E          2           8.28
+##  3 9E          3           2.03
+##  4 9E          4           5.47
+##  5 9E          5          10.4 
+##  6 9E          6          22.5 
+##  7 9E          7          23.8 
+##  8 9E          8           5.31
+##  9 9E          9          -7.14
+## 10 9E         10          -1.35
+## # … with 175 more rows
+```
+
+---
+  
+# Grouped operations 
+
+You can assign the results of the grouped operations to new variables using `mutate()`
+
+
+```r
+flights_new &lt;- flights %&gt;% 
+  group_by(carrier, month) %&gt;% 
+  mutate(
+    mean_arr_delay = mean(arr_delay, na.rm = TRUE)
+  ) %&gt;% 
+  relocate(mean_arr_delay)
+
+flights_new
+```
+
+```
+## # A tibble: 336,776 × 20
+## # Groups:   carrier, month [185]
+##    mean_arr_delay  year month   day dep_time
+##             &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;
+##  1          3.18   2013     1     1      517
+##  2          3.18   2013     1     1      533
+##  3          0.982  2013     1     1      542
+##  4          4.72   2013     1     1      544
+##  5         -4.40   2013     1     1      554
+##  6          3.18   2013     1     1      554
+##  7          4.72   2013     1     1      555
+##  8         25.2    2013     1     1      557
+##  9          4.72   2013     1     1      557
+## 10          0.982  2013     1     1      558
+## # … with 336,766 more rows, and 15 more variables:
+## #   sched_dep_time &lt;int&gt;, dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+# Exercises
+
+.panelset[ 
+
+.panel[.panel-name[Exercise 1]
+
+&lt;br&gt;
+
+Find the carrier that had the longest average delay during May through August. Below is the output you will see if you get it right.
+
+  ]
+
+.panel[.panel-name[Instruction]
+
+&lt;br&gt;
+
+For the rest of the exercises, we are going to use the weather data for the three airports in NY. First load the weather data and get familiar with the data set.
+
+
+```r
+#--- load the weather data ---#
+data(weather)
+
+#--- omit observations with NA in any of the variables ---#
+weather &lt;- na.omit(weather)
+
+#--- take a look ---#
+weather 
+```
+
+```
+## # A tibble: 4,980 × 15
+##    origin  year month   day  hour  temp  dewp humid
+##    &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 EWR     2013     1     1    16  37.0  19.9  49.6
+##  2 EWR     2013     1     1    18  34.0  15.1  45.4
+##  3 EWR     2013     1     1    21  30.0  12.9  48.5
+##  4 EWR     2013     1     1    22  28.9  12.0  48.7
+##  5 EWR     2013     1     2     0  27.0  10.9  50.3
+##  6 EWR     2013     1     2     1  26.1  10.9  52.2
+##  7 EWR     2013     1     2    11  30.9  12.0  44.9
+##  8 EWR     2013     1     2    12  32    12.9  44.7
+##  9 EWR     2013     1     2    13  34.0  12.9  41.3
+## 10 EWR     2013     1     2    14  34.0  10.9  37.9
+## # … with 4,970 more rows, and 7 more variables:
+## #   wind_dir &lt;dbl&gt;, wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;,
+## #   precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+&lt;br&gt;
+
+Find the daily mean temperature (temp), humidity (humid), wind speed (wind_speed), and precipitation (precip) by the origin of departure. Do not forget to name each daily weather variable. Below is the output you will see if you get it right.
+
+  ]
+
+.panel[.panel-name[Exercise 3]
+
+&lt;br&gt;
+
+Subset the daily weather data you obtained in exercise 2 so that it contains weather information only in Nov, Dec, Jan, and Feb for flights that depart from “EWR”. Below is the output you will see if you get it right.
+
+  ]
+
+.panel[.panel-name[Exercise 4]
+
+&lt;br&gt;
+
+Find the monthly mean temperature (temp), humidity (humid), wind speed (wind_speed), and precipitation (precip) by the origin of departure.
+
+  ]
+
+]
+
+&lt;!-- 
+#/*=================================================*/
+#' # Extensions
+#/*=================================================*/
+--&gt;
+
+---
+class: inverse, center, middle
+name: extensions
+
+# Extensions (may be helpful occasionally)
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# `across()` 
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+&lt;br&gt;
+
++ `across()` lets you apply the same operation (function) to multiple columns at the same time.
+
++ It is used with `summarize()` and `mutate()`
+
++ It is useful when you want to apply the same function to many variables.
+
+  ]
+
+.panel[.panel-name[Syntax and Example]
+
+## Syntax
+
+
+```r
+across(which variables to apply the function, function, options to the function)
+```
+
+## Examples
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#ffff7f'&gt;across(c(arr_delay, dep_delay, air_time, time_hour)&lt;/span&gt;,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mean, # function &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;na.rm = TRUE # an option to the function &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 5
+##   carrier arr_delay dep_delay air_time time_hour          
+##   &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dttm&gt;             
+## 1 9E          7.38      16.7      86.8 2013-07-03 17:06:54
+## 2 AA          0.364      8.59    189.  2013-07-01 03:46:41
+## 3 AS         -9.93       5.80    326.  2013-06-29 05:05:27
+## 4 B6          9.46      13.0     151.  2013-07-02 13:05:56
+## 5 DL          1.64       9.26    174.  2013-07-04 01:49:32
+## 6 EV         15.8       20.0      90.1 2013-07-04 04:33:39
+```
+
+Note: `na.rm = TRUE` is an option for the `mean()` function.
+
+  ]
+
+.panel[.panel-name[Compare]
+
+&lt;br&gt;
+
+Without `across()`
+
+
+```r
+flights %&gt;% 
+  group_by(carrier) %&gt;% 
+  summarize(
+    mean_arr_delay = mean(arr_delay, na.rm = TRUE),
+    mean_dep_delay = mean(dep_delay, na.rm = TRUE),
+    mean_air_time = mean(air_time, na.rm = TRUE),
+    mean_time_hour = mean(time_hour, na.rm = TRUE)
+  ) 
+```
+
+&lt;br&gt;
+
+With `across()`
+
+
+```r
+flights %&gt;% 
+  group_by(carrier) %&gt;% 
+  summarize(
+    across(c(arr_delay, dep_delay, air_time, time_hour),
+    mean,
+    na.rm = TRUE
+    )
+  )
+```
+
+  ] &lt;!-- panel ends here --&gt;
+
+]
+
+
+---
+
+# `across()` with pattern functions
+
+.panelset[ 
+
+.panel[.panel-name[What]
+
+&lt;br&gt;
+
+You can use `across()` (and other `dplyr` functions) in conjunction with functions that identify variables that fit with the pattern you specify:
+
++ `is.numeric()`  
++ `is.character()`  
++ `starts_with()`  
++ `ends_with()`  
+
+  ] &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[numeric]
+
+&lt;br&gt;
+
+Applying the same function to all numeric variables using `where(is.numeric)`:
+
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(&lt;span style='background-color:#ffff7f'&gt;where(is.numeric)&lt;/span&gt;,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mean, # function to apply&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;na.rm = TRUE # option to the function&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 15
+##   carrier  year month   day dep_time sched_dep_time
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;
+## 1 9E       2013  6.56  15.6    1487.          1472.
+## 2 AA       2013  6.48  15.7    1297.          1290.
+## 3 AS       2013  6.41  15.8    1295.          1285.
+## 4 B6       2013  6.52  15.8    1381.          1397.
+## 5 DL       2013  6.57  15.8    1351.          1346.
+## 6 EV       2013  6.58  15.7    1369.          1354.
+## # … with 9 more variables: dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;dbl&gt;, sched_arr_time &lt;dbl&gt;,
+## #   arr_delay &lt;dbl&gt;, flight &lt;dbl&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;
+```
+
+  ] 
+
+.panel[.panel-name[character]
+
+&lt;br&gt;
+
+Applying the same function to all character variables using `where(is.character)`:
+
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(&lt;span style='background-color:#ffff7f'&gt;where(is.character)&lt;/span&gt;,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;n_distinct # function to apply&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 4
+##   carrier tailnum origin  dest
+##   &lt;chr&gt;     &lt;int&gt;  &lt;int&gt; &lt;int&gt;
+## 1 9E          204      3    49
+## 2 AA          601      3    19
+## 3 AS           84      1     1
+## 4 B6          193      3    42
+## 5 DL          629      3    40
+## 6 EV          316      3    61
+```
+
++ `n_distinct()` identifies the number of unique values.
+
+  ]
+
+.panel[.panel-name[end with]
+
+&lt;br&gt;
+
+Applying the same function to all the variables that end with `delay`:
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(&lt;span style='background-color:#ffff7f'&gt;ends_with("delay")&lt;/span&gt;,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mean,&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;na.rm = TRUE&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 3
+##   carrier dep_delay arr_delay
+##   &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 9E          16.7      7.38 
+## 2 AA           8.59     0.364
+## 3 AS           5.80    -9.93 
+## 4 B6          13.0      9.46 
+## 5 DL           9.26     1.64 
+## 6 EV          20.0     15.8
+```
+
++ Use `starts_with()` to apply the same function to all the variables that star with a particular sting of characters:
+
+  ]
+
+.panel[.panel-name[logical operator]
+
+&lt;br&gt;
+
+You can use logical operators:
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(&lt;span style='background-color:#ffff7f'&gt;!where(is.numeric)&lt;/span&gt;, n_distinct)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 5
+##   carrier tailnum origin  dest time_hour
+##   &lt;chr&gt;     &lt;int&gt;  &lt;int&gt; &lt;int&gt;     &lt;int&gt;
+## 1 9E          204      3    49      4696
+## 2 AA          601      3    19      6182
+## 3 AS           84      1     1       714
+## 4 B6          193      3    42      6881
+## 5 DL          629      3    40      5838
+## 6 EV          316      3    61      6017
+```
+
+  ] 
+
+.panel[.panel-name[mix]
+
+&lt;br&gt;
+
+Mixing explicitly naming variables and using functions:
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;flights %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;group_by(carrier) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;summarize(&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(&lt;span style='background-color:#ffff7f'&gt;c(month, ends_with("delay"))&lt;/span&gt;, mean, na.rm = TRUE),&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;across(where(is.character), n_distinct)&lt;br&gt;&amp;nbsp;&amp;nbsp;) %&gt;% head()&lt;/code&gt;
+
+
+```
+## # A tibble: 6 × 7
+##   carrier month dep_delay arr_delay tailnum origin  dest
+##   &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;int&gt;  &lt;int&gt; &lt;int&gt;
+## 1 9E       6.56     16.7      7.38      204      3    49
+## 2 AA       6.48      8.59     0.364     601      3    19
+## 3 AS       6.41      5.80    -9.93       84      1     1
+## 4 B6       6.52     13.0      9.46      193      3    42
+## 5 DL       6.57      9.26     1.64      629      3    40
+## 6 EV       6.58     20.0     15.8       316      3    61
+```
+
+  ] 
+
+]
+
+
+---
+
+# `select()` and `relocate()`
+
+&lt;br&gt;
+
+The approaches to refer to the variables that fit with a specified pattern can be applied to other `dplyr` operations as well:
+
+
+Try:
+
+
+```r
+flights %&gt;% 
+  select(c(origin, where(is.numeric)))  
+```
+
+
+```r
+flights %&gt;% 
+  select(ends_with("delay"))  
+```
+
+
+```r
+flights %&gt;% 
+  relocate(where(is.character))  
+```
+
+&lt;!-- 
+#/*=================================================*/
+#' # Reshaping
+#/*=================================================*/
+--&gt;
+
+---
+class: inverse, center, middle
+name: reshaping
+
+# Reshaping
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# Long and wide formats
+
+.left5[
+
+## Long format
+
+A single column representing a single variable 
+
+
+```
+##      state year yield
+## 1   Kansas 2019   200
+## 2   Kansas 2020   240
+## 3 Nebraska 2019   210
+## 4 Nebraska 2020   220
+## 5     Iowa 2019   220
+## 6     Iowa 2020   230
+## 7 Illinois 2019   190
+## 8 Illinois 2020   150
+```
+]
+
+.right5[
+
+## Wide format
+
+Multiple column representing a single variable 
+
+
+```
+## # A tibble: 4 × 3
+##   state    `2019` `2020`
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Kansas      200    240
+## 2 Nebraska    210    220
+## 3 Iowa        220    230
+## 4 Illinois    190    150
+```
+
+Note: there is nothing in the dataset that tells you what the data values represent in the wide format.
+
+]
+
+---
+
+# Long to wide 
+
+.panelset[ 
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[prepare]
+
+Create the following dataset in long format:
+
+
+```r
+yield_data_long &lt;- data.frame(
+  state = c("Kansas", "Nebraska", "Iowa", "Illinois") %&gt;% rep(each = 2),
+  year = c(2019, 2020) %&gt;% rep(4),
+  yield = c(200, 240, 210, 220, 220, 230, 190, 150)
+  )
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+.panel[.panel-name[how and example]
+
+.left5[
+
+## How
+
+To convert a long-formatted `data.frame` into a wide-formatted `data.frame`, you can use `pivot_wider()` function from the `tidyr` package.
+
+
+```r
+#--- NOT RUN ---#
+pivot_wider(
+  data, 
+  names_from = variable 1, 
+  values_from = variable 2
+)
+```
+
++ the value of `variable 1` becomes the name the new variables
++ the value of `variable 2` becomes the value of the new variables
+]
+
+.right5[
+
+## Example
+
+
+```r
+yield_data_wide &lt;- pivot_wider(
+  yield_data_long, 
+  names_from = year, 
+  values_from = yield
+)
+
+yield_data_wide
+```
+
+```
+## # A tibble: 4 × 3
+##   state    `2019` `2020`
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Kansas      200    240
+## 2 Nebraska    210    220
+## 3 Iowa        220    230
+## 4 Illinois    190    150
+```
+
++ the value of `year` becomes the name the new variables
++ the value of `yield` becomes the value of the new variables
+
+]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+
+.panel[.panel-name[prefix]
+
+You can append a character string to the new variable names. The previous example had `2019` and `2010` as the name of the new variables.
+
+
+```r
+yield_data_long %&gt;%
+  pivot_wider(
+    #--- let R know what the prefix is ---#
+    names_prefix = "yield_",
+    names_from = "year",
+    values_from = "yield"
+  )
+```
+
+```
+## # A tibble: 4 × 3
+##   state    yield_2019 yield_2020
+##   &lt;chr&gt;         &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Kansas          200        240
+## 2 Nebraska        210        220
+## 3 Iowa            220        230
+## 4 Illinois        190        150
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[multiple columns]
+
+.left5[
+
+## Prepare a dataset 
+
+Create the following data in long format;
+
+
+```r
+yield_data_long &lt;- data.frame(
+  state = c("Kansas", "Nebraska", "Iowa", "Illinois") %&gt;% rep(each = 2),
+  year = c(2019, 2020) %&gt;% rep(4),
+  yield = c(200, 240, 210, 220, 220, 230, 190, 150),
+  rainfall = c(14, 15, 15, 16, 20, 21, 24, 15)
+  ) 
+```
+
+
+```
+##      state year yield rainfall
+## 1   Kansas 2019   200       14
+## 2   Kansas 2020   240       15
+## 3 Nebraska 2019   210       15
+## 4 Nebraska 2020   220       16
+## 5     Iowa 2019   220       20
+## 6     Iowa 2020   230       21
+## 7 Illinois 2019   190       24
+## 8 Illinois 2020   150       15
+```
+]
+
+.right5[
+
+## Example
+
+You can simply supply multiple variables to be made wide like this:
+
+
+```r
+yield_data_long %&gt;%  
+  pivot_wider(
+    names_from = "year",
+    values_from = c("yield", "rainfall")
+  )  
+```
+
+```
+## # A tibble: 4 × 5
+##   state  yield_2019 yield_2020 rainfall_2019 rainfall_2020
+##   &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Kansas        200        240            14            15
+## 2 Nebra…        210        220            15            16
+## 3 Iowa          220        230            20            21
+## 4 Illin…        190        150            24            15
+```
+]
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# Wide to long
+
+.panelset[ 
+
+.panel[.panel-name[how]
+
+
+.left5[
+
+## How
+
+To convert a long-formatted `data.frame` into a wide-formatted `data.frame`, you can use `pivot_longer()` function from the `tidyr` package.
+
+
+```r
+pivot_longer(
+  data, 
+  cols = x,
+  names_to = y, 
+  values_to = z 
+)
+```
+
++ `x`: list of the name of the columns to pivot into longer format
++ `y`: what the name of `x` represents
++ `z`: what the values stored in `x` represents
+]
+
+.right5[
+
+## Example
+
+
+```r
+yield_data_wide %&gt;% 
+  pivot_longer(
+    - state, 
+    names_to = "year", 
+    values_to = "yield"
+  )
+```
+
+```
+## # A tibble: 8 × 3
+##   state    year  yield
+##   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
+## 1 Kansas   2019    200
+## 2 Kansas   2020    240
+## 3 Nebraska 2019    210
+## 4 Nebraska 2020    220
+## 5 Iowa     2019    220
+## 6 Iowa     2020    230
+## 7 Illinois 2019    190
+## 8 Illinois 2020    150
+```
+
++ `x`: all the variables except `state`
++ `y`: "year"
++ `z`: "yield"
+
+]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[prefix]
+
+You do not want `year_` in front of the year numbers in the new `year` variable? You can use the `names_prefix` option as follows:
+
+
+```r
+yield_data_wide %&gt;%  
+  pivot_longer(
+    - state,
+    #--- let R know what the prefix is ---#
+    names_prefix = "yield_",
+    names_to = "year",
+    values_to = "yield"
+  )
+```
+
+```
+## # A tibble: 8 × 3
+##   state    year  yield
+##   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
+## 1 Kansas   2019    200
+## 2 Kansas   2020    240
+## 3 Nebraska 2019    210
+## 4 Nebraska 2020    220
+## 5 Iowa     2019    220
+## 6 Iowa     2020    230
+## 7 Illinois 2019    190
+## 8 Illinois 2020    150
+```
+
+Notice `year` is character. Convert it to numeric using `as.numeric()` if you use is as a numeric variable.
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# Wide to long: multiple sets of columns
+
+.panelset[ 
+
+.panel[.panel-name[Prep]
+
+
+.left5[
+
+## Long
+
+Create the following dataset in the long format;
+
+
+```r
+yield_data_long &lt;- data.frame(
+  state = c("Kansas", "Nebraska", "Iowa", "Illinois") %&gt;% rep(each = 2),
+  year = c(2019, 2020) %&gt;% rep(4),
+  yield = c(200, 240, 210, 220, 220, 230, 190, 150),
+  rainfall = c(14, 15, 15, 16, 20, 21, 24, 15)
+  ) 
+```
+
+
+```
+##      state year yield rainfall
+## 1   Kansas 2019   200       14
+## 2   Kansas 2020   240       15
+## 3 Nebraska 2019   210       15
+## 4 Nebraska 2020   220       16
+## 5     Iowa 2019   220       20
+## 6     Iowa 2020   230       21
+## 7 Illinois 2019   190       24
+## 8 Illinois 2020   150       15
+```
+
+]
+
+.right5[
+
+## Wide
+
+Convert the long dataset into the wide format: 
+
+
+```r
+yield_data_wide &lt;- yield_data_long %&gt;% 
+  pivot_wider(
+    names_from = year, 
+    values_from = c(yield, rainfall)
+  ) 
+```
+
+
+```
+## # A tibble: 4 × 5
+##   state  yield_2019 yield_2020 rainfall_2019 rainfall_2020
+##   &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Kansas        200        240            14            15
+## 2 Nebra…        210        220            15            16
+## 3 Iowa          220        230            20            21
+## 4 Illin…        190        150            24            15
+```
+
+.red[Objective]: We would like to convert the wide data back to the original long data.
+
+]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[one-step?]
+
+You cannot revert this data back to the original long-formatted data in one step. 
+
+
+```r
+yield_data_wide %&gt;% 
+  pivot_longer(
+    - state,
+    names_to = "year",
+    values_to = "yield"
+  )
+```
+
+```
+## # A tibble: 16 × 3
+##    state    year          yield
+##    &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;
+##  1 Kansas   yield_2019      200
+##  2 Kansas   yield_2020      240
+##  3 Kansas   rainfall_2019    14
+##  4 Kansas   rainfall_2020    15
+##  5 Nebraska yield_2019      210
+##  6 Nebraska yield_2020      220
+##  7 Nebraska rainfall_2019    15
+##  8 Nebraska rainfall_2020    16
+##  9 Iowa     yield_2019      220
+## 10 Iowa     yield_2020      230
+## 11 Iowa     rainfall_2019    20
+## 12 Iowa     rainfall_2020    21
+## 13 Illinois yield_2019      190
+## 14 Illinois yield_2020      150
+## 15 Illinois rainfall_2019    24
+## 16 Illinois rainfall_2020    15
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[separate()]
+
+However, you take advantage of `dplyr::separate()` function, which separate a variable of type character by a user-specified separator into two variables in the dataset.
+
+
+```r
+#--- syntax ---#
+separate(data, variable name, the name of variables, separator)  
+```
+
+.left5[
+
+Before separation: 
+
+
+```r
+yield_data_wide %&gt;% 
+  #--- select only state and yield variables ---#
+  pivot_longer(
+    - state,
+    names_to = "type_year",
+    values_to = "value"
+  ) 
+```
+
+.scroll-box-12[
+
+```
+## # A tibble: 16 × 3
+##    state    type_year     value
+##    &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;
+##  1 Kansas   yield_2019      200
+##  2 Kansas   yield_2020      240
+##  3 Kansas   rainfall_2019    14
+##  4 Kansas   rainfall_2020    15
+##  5 Nebraska yield_2019      210
+##  6 Nebraska yield_2020      220
+##  7 Nebraska rainfall_2019    15
+##  8 Nebraska rainfall_2020    16
+##  9 Iowa     yield_2019      220
+## 10 Iowa     yield_2020      230
+## 11 Iowa     rainfall_2019    20
+## 12 Iowa     rainfall_2020    21
+## 13 Illinois yield_2019      190
+## 14 Illinois yield_2020      150
+## 15 Illinois rainfall_2019    24
+## 16 Illinois rainfall_2020    15
+```
+]
+
+]
+
+.right5[
+
+After separation: 
+
+
+```r
+yield_data_wide %&gt;% 
+  #--- select only state and yield variables ---#
+  pivot_longer(
+    - state,
+    names_to = "type_year",
+    values_to = "value"
+* ) %&gt;% separate(type_year, c("type", "year"), sep = "_")
+```
+
+.scroll-box-12[
+
+```
+## # A tibble: 16 × 4
+##    state    type     year  value
+##    &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
+##  1 Kansas   yield    2019    200
+##  2 Kansas   yield    2020    240
+##  3 Kansas   rainfall 2019     14
+##  4 Kansas   rainfall 2020     15
+##  5 Nebraska yield    2019    210
+##  6 Nebraska yield    2020    220
+##  7 Nebraska rainfall 2019     15
+##  8 Nebraska rainfall 2020     16
+##  9 Iowa     yield    2019    220
+## 10 Iowa     yield    2020    230
+## 11 Iowa     rainfall 2019     20
+## 12 Iowa     rainfall 2020     21
+## 13 Illinois yield    2019    190
+## 14 Illinois yield    2020    150
+## 15 Illinois rainfall 2019     24
+## 16 Illinois rainfall 2020     15
+```
+]
+]
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[three-step]
+
+After separating `type_year` to `type` and `year`, all you have to do is to apply `pivot_wider()` to have the desired long-formatted data.
+
+
+```r
+yield_data_wide %&gt;% 
+  #--- select only state and yield variables ---#
+  pivot_longer(
+    - state,
+    names_to = "type_year",
+    values_to = "value"
+  ) %&gt;% 
+  separate(type_year, c("type", "year"), sep = "_") %&gt;% 
+* pivot_wider(
+*   names_from = "type",
+*   values_from = "value"
+* )
+```
+
+```
+## # A tibble: 8 × 4
+##   state    year  yield rainfall
+##   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Kansas   2019    200       14
+## 2 Kansas   2020    240       15
+## 3 Nebraska 2019    210       15
+## 4 Nebraska 2020    220       16
+## 5 Iowa     2019    220       20
+## 6 Iowa     2020    230       21
+## 7 Illinois 2019    190       24
+## 8 Illinois 2020    150       15
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+
+---
+
+# Wide or long?
+
+Suppose you are interested in estimating the following statistical model:
+
+`$$corn yield = \beta_0 + \beta_1 R_{May}  + \beta_2 R_{June} + \beta_2 R_{July} + \beta_2 R_{August} + \beta_2 R_{September} + v$$`
+
+where `\(R\)` refers to rainfall.
+
+--
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+Then the following dataset
+
+
+```
+## # A tibble: 8 × 8
+##   state     year yield R_May R_June R_July R_August
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Kansas    2019   200  7.60  4.73   5.98      4.98
+## 2 Kansas    2020   240 19.5  17.0   11.7      19.9 
+## 3 Nebraska  2019   210  8.42  0.151  8.52     18.0 
+## 4 Nebraska  2020   220 10.8  14.3    8.30     17.8 
+## 5 Iowa      2019   220 14.5   5.78  15.8      17.8 
+## 6 Iowa      2020   230 18.0  18.2    4.53     13.4 
+## 7 Illinois  2019   190  1.11  5.58   0.862     4.94
+## 8 Illinois  2020   150  6.37  5.89  17.7      17.3 
+## # … with 1 more variable: R_September &lt;dbl&gt;
+```
+
+is in a &lt;span style="color:red"&gt; long &lt;/span&gt; format.
+
+---
+
+# Wide or long?
+
+This is ".red[too long]" for your analysis. 
+
+
+```
+##        state year yield     month   rainfall
+## 1     Kansas 2019   200       May  1.8962411
+## 1.1   Kansas 2019   200      June  5.8175458
+## 1.2   Kansas 2019   200      July  9.5994637
+## 1.3   Kansas 2019   200    August 19.1121237
+## 1.4   Kansas 2019   200 September  2.5658665
+## 2     Kansas 2020   240       May  0.2189011
+## 2.1   Kansas 2020   240      June  3.0640820
+## 2.2   Kansas 2020   240      July  9.8220007
+## 2.3   Kansas 2020   240    August  6.1743961
+## 2.4   Kansas 2020   240 September 13.0444118
+## 3   Nebraska 2019   210       May 12.9884749
+## 3.1 Nebraska 2019   210      June 15.2337619
+## 3.2 Nebraska 2019   210      July 16.4404200
+## 3.3 Nebraska 2019   210    August  4.6951119
+## 3.4 Nebraska 2019   210 September  1.0105877
+```
+
+--
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+&lt;span style="color:red"&gt; Key point:&lt;/span&gt; Whether a dataset is wide or long is determined based on what you are doing with the dataset.
+
+---
+
+# Exercises 
+
+.panelset[ 
+
+
+.panel[.panel-name[Exercise 1]
+
++ Using `flights` data, calculate the total number of flights by carrier-month, which is in the long format
+
++ Reshape the data into a wide format so that you have number of flights per month in columns 
+
+Here is the output you are supposed to get if done correctly:
+
+
+```
+## # A tibble: 16 × 13
+## # Groups:   carrier [16]
+##    carrier month_1 month_2 month_3 month_4 month_5 month_6
+##    &lt;chr&gt;     &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
+##  1 9E         1573    1459    1627    1511    1462    1437
+##  2 AA         2794    2517    2787    2722    2803    2757
+##  3 AS           62      56      62      60      62      60
+##  4 B6         4427    4103    4772    4517    4576    4622
+##  5 DL         3690    3444    4189    4092    4082    4126
+##  6 EV         4171    3827    4726    4561    4817    4456
+##  7 F9           59      49      57      57      58      55
+##  8 FL          328     296     316     311     325     252
+##  9 HA           31      28      31      30      31      30
+## 10 MQ         2271    2044    2256    2211    2284    2178
+## 11 OO            1      NA      NA      NA      NA       2
+## 12 UA         4637    4346    4971    5047    4960    4975
+## 13 US         1602    1552    1721    1727    1785    1736
+## 14 VX          316     271     303     466     496     480
+## 15 WN          996     911     998     980    1006    1028
+## 16 YV           46      48      18      38      49      49
+## # … with 6 more variables: month_7 &lt;int&gt;, month_8 &lt;int&gt;,
+## #   month_9 &lt;int&gt;, month_10 &lt;int&gt;, month_11 &lt;int&gt;,
+## #   month_12 &lt;int&gt;
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
++ Reshape the data back into the long format so that a single columns has all the flight number values 
+
+Here is the output you are supposed to get if done correctly:
+
+
+```
+## # A tibble: 192 × 3
+## # Groups:   carrier [16]
+##    carrier month num_flights
+##    &lt;chr&gt;   &lt;chr&gt;       &lt;int&gt;
+##  1 9E      1            1573
+##  2 9E      2            1459
+##  3 9E      3            1627
+##  4 9E      4            1511
+##  5 9E      5            1462
+##  6 9E      6            1437
+##  7 9E      7            1494
+##  8 9E      8            1456
+##  9 9E      9            1540
+## 10 9E      10           1673
+## # … with 182 more rows
+```
+
+  ]
+
+]
+
+
+&lt;!-- 
+#/*=================================================*/
+#' # Data merge
+#/*=================================================*/
+--&gt;
+
+---
+
+class: inverse, center, middle
+name: merging
+
+# Merging multiple datasets
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+
+
+# Merging multiple datasets
+
+.panelset[ 
+
+.panel[.panel-name[Motivation]
+
+&lt;br&gt;
+
+It is very common that you have data stored in separate files, and you need to combine them before you conduct any statistical analysis. 
+
+For example, if you are interested in how crop price affects the supply of crops, you want to have price and production data in a single dataset. However, it may be that price and production data are stored in two separate files.
+
+  ]
+
+.panel[.panel-name[Match? 1]
+
+&lt;br&gt;
+
+Now suppose, you have collected price and production data for Lancaster and Douglas County from 2015 to 2016. 
+
+Here is what the datasets look like (these are made-up numbers).
+
+.left5[
+
+```
+##      price
+## 1 2.213899
+## 2 3.043525
+## 3 4.928419
+## 4 4.067760
+```
+]
+
+.right5[
+
+```
+##      yield
+## 1 193.0670
+## 2 193.1554
+## 3 247.0542
+## 4 263.8076
+```
+]
+
+&lt;br&gt;
+
+Question: Can you merge the two?   
+
+  ]
+
+.panel[.panel-name[Match? 2]
+
+&lt;br&gt;
+
+Let's display one more variable from each of the datasets.
+
+.left5[
+
+```
+##      price    county
+## 1 2.213899 Lancaster
+## 2 3.043525 Lancaster
+## 3 4.928419   Douglas
+## 4 4.067760   Douglas
+```
+]
+
+.right5[
+
+```
+##      yield    county
+## 1 193.0670 Lancaster
+## 2 193.1554   Douglas
+## 3 247.0542 Lancaster
+## 4 263.8076   Douglas
+```
+]
+
+&lt;br&gt;
+&lt;br&gt;
+
+Okay, great. At least we know which price and prod belong to which county! In other words, we know which price and prod belong to **who** (or **where**). 
+
+Question: Can you merge the two now?   
+
+  ]
+
+.panel[.panel-name[Match? 3]
+
+&lt;br&gt;
+
+Let's display one more variable from each of the datasets.
+
+.left5[
+
+```
+##      price    county year
+## 1 2.213899 Lancaster 2015
+## 2 3.043525 Lancaster 2016
+## 3 4.928419   Douglas 2015
+## 4 4.067760   Douglas 2016
+```
+]
+
+.right5[
+
+```
+##      yield    county year
+## 1 193.0670 Lancaster 2015
+## 2 193.1554   Douglas 2015
+## 3 247.0542 Lancaster 2016
+## 4 263.8076   Douglas 2016
+```
+]
+
+&lt;br&gt;
+&lt;br&gt;
+
+Question: Can you merge the two now?   
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+The variables that let you merge two datasets are called &lt;span style="color:blue"&gt; keys&lt;/span&gt;.
+
+What are the keys here?
+
+  ]
+
+.panel[.panel-name[How]
+
++ You can use the `left_join()` function from the `dplyr` package to merge two datasets.
+
++ There are different types of join functions:
+  * `right_join()` (you never need to use this one)
+  * `inner_join()`
+  * `full_join()`
+  * `semi_join()`
+  * `nest_join()` 
+
++ But, most of the time, `left_join()` is sufficient. 
+
++ Try to learn other functions when you encounter a case where `left_join()` is not sufficient. Do not waster your time until then. 
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[left_join()]
+
+**Syntax**
+
+
+```r
+#--- Syntax (NOT RUN) ---#
+left_join(data_x, data_y, by = keys)  
+```
+
+**Rules to remember**
+
++ .blue[Rule 1]: It returns all rows from `data_x`, and all columns from `data_x` and `data_y`
++ .blue[Rule 2]: Rows in `data_x` with no match in `data_y` will have NA values in the new columns 
++ .blue[Rule 3]: If there are multiple matches between `data_x` and `data_y`, all combinations of the matches are returned
+
+.content-box-red[Note: The order of datasets matter.]
+
+  ]
+
+]
+
+---
+
+# `left_join()` demonstration: 1 to 1
+
+.panelset[ 
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Data prep]
+
+Run the following code to run the merging demonstration later:
+
+
+```r
+N &lt;- 2
+T &lt;- 2
+
+set.seed(582374)
+
+price_data &lt;- data.frame(
+  price = runif(N * T, min = 2, max = 6),
+  county = c(rep('Lancaster',2),rep('Douglas',2)),
+  year = c(2015, 2016, 2015, 2016)
+  )
+
+yield_data &lt;- data.frame(
+  yield = runif(N * T, min = 180, max = 280),
+  county = c('Lancaster','Douglas','Lancaster','Douglas'),
+  year = c(2015, 2015, 2016, 2016)
+  )
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Demo 1]
+
+The keys are `county` and `year`, so
+
+
+```r
+left_join(yield_data, price_data, by = c("county", "year"))  
+```
+
+```
+##      yield    county year    price
+## 1 193.0670 Lancaster 2015 2.213899
+## 2 193.1554   Douglas 2015 4.928419
+## 3 247.0542 Lancaster 2016 3.043525
+## 4 263.8076   Douglas 2016 4.067760
+```
+
+Switching the two?
+
+
+```r
+left_join(price_data, yield_data, by = c("county", "year"))  
+```
+
+```
+##      price    county year    yield
+## 1 2.213899 Lancaster 2015 193.0670
+## 2 3.043525 Lancaster 2016 247.0542
+## 3 4.928419   Douglas 2015 193.1554
+## 4 4.067760   Douglas 2016 263.8076
+```
+
+&lt;br&gt;
+
+Note: In this instance, .red[which comes first does not matter] because all the individual rows in `yield_data` (left data) have exactly one match in `price_data` (right data) without fail, and vice versa.  
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Data prep 2]
+
+Let's expand the `yield_data`:
+
+
+```r
+yield_data &lt;- data.frame(
+  yield = runif(6, min = 180, max = 280),
+  county = c("Lancaster", "Douglas", "Chase", "Lancaster", "Douglas", "Chase"),
+  year = c(2015, 2015, 2015, 2016, 2016, 2016)
+  ) 
+
+yield_data
+```
+
+```
+##      yield    county year
+## 1 211.2672 Lancaster 2015
+## 2 252.4351   Douglas 2015
+## 3 270.2001     Chase 2015
+## 4 228.9107 Lancaster 2016
+## 5 186.0138   Douglas 2016
+## 6 278.1366     Chase 2016
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Demo 2]
+
+**`yield_data` on the right**:
+
+
+```r
+left_join(price_data, yield_data, by = c("county", "year"))  
+```
+
+```
+##      price    county year    yield
+## 1 2.213899 Lancaster 2015 211.2672
+## 2 3.043525 Lancaster 2016 228.9107
+## 3 4.928419   Douglas 2015 252.4351
+## 4 4.067760   Douglas 2016 186.0138
+```
+
+**`yield_data` on the left**:
+
+
+```r
+left_join(yield_data, price_data, by = c("county", "year"))  
+```
+
+```
+##      yield    county year    price
+## 1 211.2672 Lancaster 2015 2.213899
+## 2 252.4351   Douglas 2015 4.928419
+## 3 270.2001     Chase 2015       NA
+## 4 228.9107 Lancaster 2016 3.043525
+## 5 186.0138   Douglas 2016 4.067760
+## 6 278.1366     Chase 2016       NA
+```
+
+.red[Remember?]
+
++ .blue[Rule 1]: `left_join()` returns all rows from `data_x`, and all columns from `data_x` and `data_y`
++ .blue[Rule 2]: Rows in `data_x` with no match in `data_y` will have NA values in the new columns 
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[keeping all rows]
+
+We saw in the previous slide having `price_data` (as `data_x`) and `yield_data` as (`data_y`), `left_join()` discarded rows in `yield_data` (`data_y`).
+
+If you would like to keep unmatched rows in `data_y`, you can use `full_join()`.
+
+
+```r
+full_join(price_data, yield_data, by = c("county", "year"))  
+```
+
+```
+##      price    county year    yield
+## 1 2.213899 Lancaster 2015 211.2672
+## 2 3.043525 Lancaster 2016 228.9107
+## 3 4.928419   Douglas 2015 252.4351
+## 4 4.067760   Douglas 2016 186.0138
+## 5       NA     Chase 2015 270.2001
+## 6       NA     Chase 2016 278.1366
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+]
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# `left_join` demonstration: 1 to m
+
+
+.panelset[ 
+
+.panel[.panel-name[Data prep]
+
+Let's create a weather dataset where you have more than one observations per county-year:
+
+
+```r
+weather_data &lt;- data.frame(
+  rainfall = 20 * runif(12),
+  county = rep(c("Lancaster", "Douglas", "Chase"), each = 4),
+  year = rep(c(2015, 2016), each = 2) %&gt;% rep(3),
+  month = rep(c(4, 5), 6)
+  ) 
+
+weather_data
+```
+
+```
+##      rainfall    county year month
+## 1  13.0359987 Lancaster 2015     4
+## 2  19.3492593 Lancaster 2015     5
+## 3  13.2268623 Lancaster 2016     4
+## 4  18.1639509 Lancaster 2016     5
+## 5  14.0231417   Douglas 2015     4
+## 6   0.3866028   Douglas 2015     5
+## 7   0.0199757   Douglas 2016     4
+## 8   2.6757665   Douglas 2016     5
+## 9   7.9074977     Chase 2015     4
+## 10  3.3164517     Chase 2015     5
+## 11  8.3719617     Chase 2016     4
+## 12 14.1974153     Chase 2016     5
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Demo]
+
+
+```r
+left_join(yield_data, weather_data, by = c("county", "year"))  
+```
+
+```
+##       yield    county year   rainfall month
+## 1  211.2672 Lancaster 2015 13.0359987     4
+## 2  211.2672 Lancaster 2015 19.3492593     5
+## 3  252.4351   Douglas 2015 14.0231417     4
+## 4  252.4351   Douglas 2015  0.3866028     5
+## 5  270.2001     Chase 2015  7.9074977     4
+## 6  270.2001     Chase 2015  3.3164517     5
+## 7  228.9107 Lancaster 2016 13.2268623     4
+## 8  228.9107 Lancaster 2016 18.1639509     5
+## 9  186.0138   Douglas 2016  0.0199757     4
+## 10 186.0138   Douglas 2016  2.6757665     5
+## 11 278.1366     Chase 2016  8.3719617     4
+## 12 278.1366     Chase 2016 14.1974153     5
+```
+
+.red[Remember?] 
+
++ .blue[Rule 3]: If there are multiple matches between `data_x` and `data_y`, all combinations of the matches are returned
+
+  ]
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+
+---
+
+# Exercises
+
+.panelset[ 
+
+.panel[.panel-name[Preparation]
+
+Create the following datasets and take a look at them to understand what's in them:
+
+**Flights in January**:
+
+
+```r
+flights_Jan &lt;- flights %&gt;% 
+  filter(month == 1) %&gt;% 
+  select(month, day, dep_delay, origin)
+```
+
+**daily temperature in January**:
+
+
+```r
+daily_temp_Jan &lt;- weather %&gt;% 
+  filter(month == 1) %&gt;% 
+  group_by(origin, month, day) %&gt;% 
+  summarize(temp = mean(temp))
+```
+
+**hourly temperature in January**:
+
+
+```r
+hourly_temp_Jan &lt;- weather %&gt;% 
+  filter(month == 1) %&gt;% 
+  select(origin, month, day, hour, temp)
+```
+
+  ] 
+
+.panel[.panel-name[Exercise 1]
+
++ You are interested in learning the impact of **daily** temperature on departure delay for the flights in January. To do so, you need to have them in a single dataset.  
+
++ Is this going to be a 1-to-1 matching or 1-to-m matching?
+
++ Merge `daily_temp_Jan` to `flights_Jan` using `left_join()`
+
+&lt;br&gt;
+
+Here is the output you are supposed to get if done correctly:
+
+
+```
+## # A tibble: 27,004 × 5
+##    month   day dep_delay origin  temp
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;
+##  1     1     1         2 EWR     32.5
+##  2     1     1         4 LGA     37.7
+##  3     1     1         2 JFK     33.0
+##  4     1     1        -1 JFK     33.0
+##  5     1     1        -6 LGA     37.7
+##  6     1     1        -4 EWR     32.5
+##  7     1     1        -5 EWR     32.5
+##  8     1     1        -3 LGA     37.7
+##  9     1     1        -3 JFK     33.0
+## 10     1     1        -2 LGA     37.7
+## # … with 26,994 more rows
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
++ You are interested in learning the impact of **hourly** temperature on departure delay for the flights in January. To do so, you need to have them in a single dataset.  
+
++ Is this going to be a 1-to-1 matching or 1-to-m matching?
+
++ Merge `hourly_temp_Jan` to `flights_Jan` using `left_join()`
+
+&lt;br&gt;
+
+Here is the output you are supposed to get if done correctly:
+
+
+```
+## # A tibble: 151,660 × 6
+##    month   day dep_delay origin  hour  temp
+##    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+##  1     1     1         2 EWR       16  37.0
+##  2     1     1         2 EWR       18  34.0
+##  3     1     1         2 EWR       21  30.0
+##  4     1     1         2 EWR       22  28.9
+##  5     1     1         4 LGA        1  39.9
+##  6     1     1         4 LGA        2  41  
+##  7     1     1         4 LGA        3  41  
+##  8     1     1         4 LGA        4  41  
+##  9     1     1         4 LGA        5  39.9
+## 10     1     1         4 LGA        6  39.9
+## # … with 151,650 more rows
+```
+
+Each flight (single row in `flights_Jan`) now has multiple rows. Was this expected. 
+
+  ]
+
+]
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

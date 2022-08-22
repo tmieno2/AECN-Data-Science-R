@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data wrangling with data.table</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="AECN 396/896-002" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data wrangling with <code>data.table</code>
+### AECN 396/896-002
+
+---
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+
+.remark-slide-content.hljs-github h1 {
+  margin-top: 5px;  
+  margin-bottom: 25px;  
+}
+
+.remark-slide-content.hljs-github {
+  padding-top: 10px;  
+  padding-left: 30px;  
+  padding-right: 30px;  
+}
+
+.panel-tabs {
+  &lt;!-- color: #062A00; --&gt;
+  color: #841F27;
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panel-tab {
+  margin-top: 0px;  
+  margin-bottom: 0px;  
+  margin-left: 3px;  
+  margin-right: 3px;  
+  padding-top: 0px;  
+  padding-bottom: 0px;  
+}
+
+.panelset .panel-tabs .panel-tab {
+  min-height: 40px;
+}
+
+.remark-slide th {
+  border-bottom: 1px solid #ddd;
+}
+
+.remark-slide thead {
+  border-bottom: 0px;
+}
+
+.gt_footnote {
+  padding: 2px;  
+}
+
+.remark-slide table {
+  border-collapse: collapse;
+}
+
+.remark-slide tbody {
+  border-bottom: 2px solid #666;
+}
+
+
+.important {
+  background-color: lightpink;
+  border: 2px solid blue;
+  font-weight: bold;
+} 
+
+.remark-code {
+  display: block;
+  overflow-x: auto;
+  padding: .5em;
+  background: #ffe7e7;
+} 
+
+.hljs-github .hljs {
+  background: #f2f2fd;
+}
+
+.remark-inline-code {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: #e6e6e6;
+}
+
+.r.hljs.remark-code.remark-inline-code{
+  font-size: 0.9em
+}
+
+.left-full {
+  width: 80%;
+  height: 92%;
+  float: left;
+}
+
+.left-code {
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left5 {
+  width: 49%;
+  height: 92%;
+  float: left;
+}
+
+.right5 {
+  width: 49%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left4 {
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+
+.right6 {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+ul li{
+  margin: 7px;
+}
+
+ul, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+ol li{
+  margin: 7px;
+}
+
+ol, li{
+  margin-left: 15px; 
+  padding-left: 0px; 
+}
+
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+.content-box { 
+    box-sizing: border-box;
+    background-color: #e2e2e2;
+}
+.content-box-blue,
+.content-box-gray,
+.content-box-grey,
+.content-box-army,
+.content-box-green,
+.content-box-purple,
+.content-box-red,
+.content-box-yellow {
+  box-sizing: border-box;
+  border-radius: 15px;
+  margin: 0 0 15px;
+  overflow: hidden;
+  padding: 0px 20px 0px 20px;
+  width: 100%;
+}
+.content-box-blue { background-color: #F0F8FF; }
+.content-box-gray { background-color: #e2e2e2; }
+.content-box-grey { background-color: #F5F5F5; }
+.content-box-army { background-color: #737a36; }
+.content-box-green { background-color: #d9edc2; }
+.content-box-purple { background-color: #e2e2f9; }
+.content-box-red { background-color: #ffcccc; }
+.content-box-yellow { background-color: #fef5c4; }
+.content-box-blue .remark-inline-code,
+.content-box-blue .remark-inline-code,
+.content-box-gray .remark-inline-code,
+.content-box-grey .remark-inline-code,
+.content-box-army .remark-inline-code,
+.content-box-green .remark-inline-code,
+.content-box-purple .remark-inline-code,
+.content-box-red .remark-inline-code,
+.content-box-yellow .remark-inline-code { 
+  background: none;
+}
+
+.full-width {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+}
+&lt;/style&gt;
+
+
+&lt;style type="text/css"&gt;
+blockquote, .blockquote {
+  display: block;
+  margin-top: 0.1em;
+  margin-bottom: 0.2em;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-left: solid 10px #0148A4;
+  border-top: solid 2px #0148A4;
+  border-bottom: solid 2px #0148A4;
+  border-right: solid 2px #0148A4;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  /* background-color: #e64626; */
+  color: #e64626;
+  padding: 0.5em;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.blockquote p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h1:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h2:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h3:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote &gt; h4:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.text-shadow {
+  text-shadow: 0 0 4px #424242;
+}
+&lt;/style&gt;
+
+&lt;style type="text/css"&gt;
+/******************
+ * Slide scrolling
+ * (non-functional)
+ * not sure if it is a good idea anyway
+slides &gt; slide {
+  overflow: scroll;
+ padding: 5px 40px;
+}
+.scrollable-slide .remark-slide {
+  height: 400px;
+  overflow: scroll !important;
+}
+ ******************/
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-box-24 {
+  height:24em;
+  overflow-y: scroll;
+}
+.scroll-box-30 {
+  height:30em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+ 
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+2. [`data.frame` and `tibble`](#df_tbl)
+3. [Data manipulation with `dplyr`: the Basics](#dplyr)
+4. [Grouped operations](#grouped)
+5. [Extensions](#extensions)
+6. [Reshaping data](#reshaping)
+7. [Merging datasets](#merging)
+
+---
+
+# Learning objectives
+
+The objectives of this chapter is to learn how to use the `data.table` package to 
+
++ manipulate data 
++ reshape a dataset
++ merge multiple datasets 
+
+---
+
+#  `data.table` package
+
+.panelset[ 
+
+.panel[.panel-name[what is it?]
+
++ The `data.table` package is a popular alternative to `dplyr` that is **much faster** than `dplyr` for most data operations particularly when the dataset is large.
+  * See [here](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping) for the speed comparison of `dplyr` and `data.table`.
+  * [This website](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/) compares `dply` vs `data.table` side by side.
+
++ `data.table` has its own `data.frame` called `data.table`
+
+  ]
+
+.panel[.panel-name[preparation]
+
+**Package**
+
+Install the package if you have not and library it.
+
+
+```r
+install.packages("data.table")
+```
+
+
+```r
+library(data.table)
+```
+
+**Dataset**
+
+We use the following `weather` dataset.
+
+
+```r
+(
+flights &lt;- fread("https://raw.githubusercontent.com/Rdatatable/data.table/master/vignettes/flights14.csv")  
+)
+```
+
+```
+##         year month day dep_delay arr_delay carrier origin
+##      1: 2014     1   1        14        13      AA    JFK
+##      2: 2014     1   1        -3        13      AA    JFK
+##      3: 2014     1   1         2         9      AA    JFK
+##      4: 2014     1   1        -8       -26      AA    LGA
+##      5: 2014     1   1         2         1      AA    JFK
+##     ---                                                  
+## 253312: 2014    10  31         1       -30      UA    LGA
+## 253313: 2014    10  31        -5       -14      UA    EWR
+## 253314: 2014    10  31        -8        16      MQ    LGA
+## 253315: 2014    10  31        -4        15      MQ    LGA
+## 253316: 2014    10  31        -5         1      MQ    LGA
+##         dest air_time distance hour
+##      1:  LAX      359     2475    9
+##      2:  LAX      363     2475   11
+##      3:  LAX      351     2475   19
+##      4:  PBI      157     1035    7
+##      5:  LAX      350     2475   13
+##     ---                            
+## 253312:  IAH      201     1416   14
+## 253313:  IAH      189     1400    8
+## 253314:  RDU       83      431   11
+## 253315:  DTW       75      502   11
+## 253316:  SDF      110      659    8
+```
+
+  ]
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[how]
+
+Here is the general form of `data.table` operation.
+
+
+```r
+data.table[i, j, by]
+```
+
++ `i`: specify which rows (like `dplyr::filter`)  
++ `j`: specify the operations on selected columns   
++ `by`: specify the variable to be used as groups by which operations specified in `j` are implemented     
+
+or
+
+.content-box-red[Take `data.table`, subset/reorder rows using `i`, then calculate `j`, grouped by `by`.]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[key difference form dplyr]
+
+You can implement all the three main actions (filter, calculate, group) in a single statement unlike `dplyr`:
+
+For example, the following set of codes below will give the same results (the number of flights by American Airline by origin-month):
+
+
+**data.table** way:
+
+
+```r
+flights[carrier == "AA", .(.N), by = .(origin, month)] %&gt;% head()
+```
+
+```
+##    origin month    N
+## 1:    JFK     1 1064
+## 2:    LGA     1 1173
+## 3:    EWR     1  278
+## 4:    JFK     2  988
+## 5:    LGA     2 1038
+## 6:    EWR     2  241
+```
+
+**`dplyr`** way :
+
+
+```r
+flights %&gt;% 
+  filter(carrier == "AA") %&gt;% 
+  group_by(origin, month) %&gt;% 
+  summarize(n()) %&gt;% head()
+```
+
+```
+## # A tibble: 6 x 3
+## # Groups:   origin [1]
+##   origin month `n()`
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt;
+## 1 EWR        1   278
+## 2 EWR        2   241
+## 3 EWR        3   258
+## 4 EWR        4   254
+## 5 EWR        5   257
+## 6 EWR        6   256
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# Filter rows
+
+
+```r
+flights[origin == "JFK" &amp; month == 6L, ] %&gt;% head()
+```
+
+```
+##    year month day dep_delay arr_delay carrier origin dest
+## 1: 2014     6   1        -9        -5      AA    JFK  LAX
+## 2: 2014     6   1       -10       -13      AA    JFK  LAX
+## 3: 2014     6   1        18        -1      AA    JFK  LAX
+## 4: 2014     6   1        -6       -16      AA    JFK  LAX
+## 5: 2014     6   1        -4       -45      AA    JFK  LAX
+## 6: 2014     6   1        -6       -23      AA    JFK  LAX
+##    air_time distance hour
+## 1:      324     2475    8
+## 2:      329     2475   12
+## 3:      326     2475    7
+## 4:      320     2475   10
+## 5:      326     2475   18
+## 6:      329     2475   14
+```
+
++ `i`: `origin == "JFK" &amp; month == 6L` 
++ `j`: no action (all columns)
++ `by`: non
+
+---
+
+# Select columns
+
+
+.left5[
+**single column as a vector**
+
+
+```r
+flights[, arr_delay] %&gt;% head()
+```
+
+```
+## [1]  13  13   9 -26   1   0
+```
+
++ `i`: no action (all rows) 
++ `j`: get `arr_delay` itself as it is
++ `by`: non 
+
+**single column as a data.table**
+
+
+```r
+flights[, .(arr_delay)] %&gt;% head()
+```
+
+```
+##    arr_delay
+## 1:        13
+## 2:        13
+## 3:         9
+## 4:       -26
+## 5:         1
+## 6:         0
+```
+
+.content-box-blue[`.` here is a short hand for `list`]
+
+]
+
+.right5[
+**multiple column as a data.table**
+
+
+```r
+flights[, .(arr_delay, dep_delay)] %&gt;% head()
+```
+
+```
+##    arr_delay dep_delay
+## 1:        13        14
+## 2:        13        -3
+## 3:         9         2
+## 4:       -26        -8
+## 5:         1         2
+## 6:         0         4
+```
+
+**select and rename multiple column as a data.table**
+
+
+```r
+flights[, .(a = arr_delay, b = dep_delay)] %&gt;% head()
+```
+
+```
+##      a  b
+## 1:  13 14
+## 2:  13 -3
+## 3:   9  2
+## 4: -26 -8
+## 5:   1  2
+## 6:   0  4
+```
+
+.red[Important Rule]: As long as j-expression returns a list, each element of the list will be converted to a column in the resulting data.table. 
+]
+
+---
+
+# Operations in `j`
+
+**An operation in `j`**
+
+
+```r
+flights[, (arr_delay + dep_delay) &lt; 0] %&gt;% head()
+```
+
+```
+## [1] FALSE FALSE FALSE  TRUE FALSE FALSE
+```
+
+**row-wise subset and operation in `j` at the same time**  
+
+
+```r
+flights[
+  origin == "JFK" &amp; month == 6L, # i
+  .(m_arr = mean(arr_delay), m_dep = mean(dep_delay)) # j
+  ]  
+```
+
+```
+##       m_arr    m_dep
+## 1: 5.839349 9.807884
+```
+
+Remember the rule? `.(m_arr = mean(arr_delay), m_dep = mean(dep_delay))` is a list, so the output is a `data.table`.
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=850px&gt;&lt;/html&gt;
+
+**`dplyr` way**:
+
+
+```r
+filter(flights, origin == "JFK" &amp; month == 6L) %&gt;% 
+  summarize(m_arr = mean(arr_delay), m_dep = mean(dep_delay))
+```
+
+```
+##      m_arr    m_dep
+## 1 5.839349 9.807884
+```
+
+---
+
+# `data.frame`-like column selection and dropping columns
+
+**select variables (like `data.frame`)**
+
+Another way to select particular columns is to provide a concatenated list of variable names in double quotes (just like a `data.frame`):   
+
+
+```r
+flights[, c("arr_delay", "dep_delay")] %&gt;% head(3)
+```
+
+```
+##    arr_delay dep_delay
+## 1:        13        14
+## 2:        13        -3
+## 3:         9         2
+```
+
+**Dropping variables**
+
+You can drop variables by using `-` or `!` in front of the list of the variables to drop:
+
+
+```r
+flights[, !c("arr_delay", "dep_delay")] %&gt;% head(3)
+```
+
+```
+##    year month day carrier origin dest air_time distance hour
+## 1: 2014     1   1      AA    JFK  LAX      359     2475    9
+## 2: 2014     1   1      AA    JFK  LAX      363     2475   11
+## 3: 2014     1   1      AA    JFK  LAX      351     2475   19
+```
+
+```r
+#--- or ---#
+# flights[, !c("arr_delay", "dep_delay")] %&gt;% head(3)
+```
+---
+
+
+# Grouped operations
+
+.left5[
+**group by one variable**
+
+The number of flights by `origin`.
+
+
+```r
+flights[, .(.N), by = .(origin)]
+```
+
+```
+##    origin     N
+## 1:    JFK 81483
+## 2:    LGA 84433
+## 3:    EWR 87400
+```
+
++ `i`: no action (all rows) 
++ `j`: the number of observations
++ `by`: group by `origin` 
+
+**Note**: `.N` is a special symbol from the `data.table` package that means .red[the number of observations].
+
+
+]
+
+.right5[
+
+**group by multiple variables**
+
+
+```r
+flights[, .(.N), by = .(origin, month)] %&gt;% 
+  head()
+```
+
+```
+##    origin month    N
+## 1:    JFK     1 7105
+## 2:    LGA     1 7494
+## 3:    EWR     1 8197
+## 4:    JFK     2 6779
+## 5:    LGA     2 6814
+## 6:    EWR     2 7220
+```
+
+The number of flights by `origin` and `month`.
+
+&lt;br&gt;
+
+**sorted `by`** using `keyby()`
+
+
+```r
+flights[, .(.N), keyby = .(origin, month)] %&gt;% 
+  head()
+```
+
+```
+##    origin month    N
+## 1:    EWR     1 8197
+## 2:    EWR     2 7220
+## 3:    EWR     3 9478
+## 4:    EWR     4 8601
+## 5:    EWR     5 8525
+## 6:    EWR     6 9349
+```
+
+]
+
+---
+
+# Grouped operations for select observations  
+
+
+```r
+flights[carrier == "AA", .(.N), by = .(origin, month)] %&gt;% head()
+```
+
+```
+##    origin month    N
+## 1:    JFK     1 1064
+## 2:    LGA     1 1173
+## 3:    EWR     1  278
+## 4:    JFK     2  988
+## 5:    LGA     2 1038
+## 6:    EWR     2  241
+```
+
+The number of flights by `origin` and `month` for `carrier == "AA"`
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=850px&gt;&lt;/html&gt;
+
+**`dplyr`** way :
+
+
+```r
+flights %&gt;% 
+  filter(carrier == "AA") %&gt;% 
+  group_by(origin, month) %&gt;% 
+  summarize(n()) %&gt;%
+  head()
+```
+
+```
+## # A tibble: 6 x 3
+## # Groups:   origin [1]
+##   origin month `n()`
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt;
+## 1 EWR        1   278
+## 2 EWR        2   241
+## 3 EWR        3   258
+## 4 EWR        4   254
+## 5 EWR        5   257
+## 6 EWR        6   256
+```
+
+---
+
+# Create new (or update) variables
+
+.panelset[ 
+
+.panel[.panel-name[preparation]
+
+Create the following dataset we are going to use in this slide:
+
+
+```r
+(
+flights_mini &lt;- flights[month &lt;= 4,head(.SD, 2), by = month] %&gt;% 
+  .[, .(year, month, day, dep_delay, arr_delay, distance, air_time)] 
+)
+```
+
+```
+##    year month day dep_delay arr_delay distance air_time
+## 1: 2014     1   1        14        13     2475      359
+## 2: 2014     1   1        -3        13     2475      363
+## 3: 2014     2   1        -1         1     2475      358
+## 4: 2014     2   1        -5         3     2475      358
+## 5: 2014     3   1       -11        36     2475      375
+## 6: 2014     3   1        -3        14     2475      368
+## 7: 2014     4   1        -8       -23      764      113
+## 8: 2014     4   1        -8       -11      431       71
+```
+  
+`flights_mini` has two observations per month.
+
+
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[a variable]
+
+In `data.table`, you use `:=` to create a new variable instead of `=`.
+
+
+```r
+#--- example ---#
+flights_mini[, speed := distance / air_time]
+
+#--- see what's inside now ---#
+flights_mini
+```
+
+```
+##    year month day dep_delay arr_delay distance air_time
+## 1: 2014     1   1        14        13     2475      359
+## 2: 2014     1   1        -3        13     2475      363
+## 3: 2014     2   1        -1         1     2475      358
+## 4: 2014     2   1        -5         3     2475      358
+## 5: 2014     3   1       -11        36     2475      375
+## 6: 2014     3   1        -3        14     2475      368
+## 7: 2014     4   1        -8       -23      764      113
+## 8: 2014     4   1        -8       -11      431       71
+##       speed
+## 1: 6.894150
+## 2: 6.818182
+## 3: 6.913408
+## 4: 6.913408
+## 5: 6.600000
+## 6: 6.725543
+## 7: 6.761062
+## 8: 6.070423
+```
+
+
+.red[Important]: 
++ `:=` operator updates data.table columns in-place (by reference), meaning the original data is altered. 
++ Evaluate `flights` and confirm that `speed` is indeed in `flights_mini`.
++ This holds true for any operations involving `:=`. 
++ This is different from `dply.r::mutate()` which does not alter the original dataset
+
+
+  ]
+
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[multiple]
+
+Here are how you define multiple variables at the same time.
+
+**Multiple variable 1**
+
+
+```r
+#--- example ---#
+flights_mini[, c("total_delay", "carrier_origin") := list(arr_delay + dep_delay, distance/air_time)]
+```
+
+The results of the `n`th expression is assigned to `n`th variable name on the left.
+
+**Multiple variable 2**
+
+
+```r
+#--- example ---#
+flights_mini[, `:=`(total_delay = arr_delay + dep_delay, speed = distance/air_time)]
+```
+
+Confirm that `flights_mini` was updated to have the new variables defined just above.
+
+.scroll-box-16[
+
+```r
+flights_mini
+```
+
+```
+##    year month day dep_delay arr_delay distance air_time
+## 1: 2014     1   1        14        13     2475      359
+## 2: 2014     1   1        -3        13     2475      363
+## 3: 2014     2   1        -1         1     2475      358
+## 4: 2014     2   1        -5         3     2475      358
+## 5: 2014     3   1       -11        36     2475      375
+## 6: 2014     3   1        -3        14     2475      368
+## 7: 2014     4   1        -8       -23      764      113
+## 8: 2014     4   1        -8       -11      431       71
+##       speed total_delay carrier_origin
+## 1: 6.894150          27       6.894150
+## 2: 6.818182          10       6.818182
+## 3: 6.913408           0       6.913408
+## 4: 6.913408          -2       6.913408
+## 5: 6.600000          25       6.600000
+## 6: 6.725543          11       6.725543
+## 7: 6.761062         -31       6.761062
+## 8: 6.070423         -19       6.070423
+```
+]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+.panel[.panel-name[selective update]
+
+You can update column values for some rows that satisfy certain conditions by using logical evaluations in `i` and `:=` in `j`.
+
+**Example**
+
+
+```r
+flights_mini[month == 4, arr_delay := arr_delay + 10]
+```
+
+.left5[
+Before:
+
+```
+##    month arr_delay
+## 1:     1        13
+## 2:     1        13
+## 3:     2         1
+## 4:     2         3
+## 5:     3        36
+## 6:     3        14
+## 7:     4       -23
+## 8:     4       -11
+```
+]
+
+.right5[
+After
+
+```
+##    month arr_delay
+## 1:     1        13
+## 2:     1        13
+## 3:     2         1
+## 4:     2         3
+## 5:     3        36
+## 6:     3        14
+## 7:     4       -13
+## 8:     4        -1
+```
+]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[assign summary]
+
+You can calculate grouped summary and assign the values to a variable by grouping in `by` and `:=` with summary expressions in `j`.
+
+**Example**
+
+
+```r
+flights_mini[, mean_arr_delay := mean(arr_delay, na.rm = TRUE), by = month]
+
+#--- see what's inside ---#
+flights_mini[, .(month, arr_delay, mean_arr_delay)]
+```
+
+```
+##    month arr_delay mean_arr_delay
+## 1:     1        13             13
+## 2:     1        13             13
+## 3:     2         1              2
+## 4:     2         3              2
+## 5:     3        36             25
+## 6:     3        14             25
+## 7:     4       -13             -7
+## 8:     4        -1             -7
+```
+
+Of course, all the rows in the same month will have the same value (mean of the `arr_delay` of the group).
+
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[copy]
+
+If you have a reason to now wanting the original data to be altered after `:=` operations. You can create a `deep copy` of the dataset using `data.table::copy()` function.
+
+The object created by `copy()` is independent of the original dataset in the sense that actions on one of them do not affect the other.
+
+
+```r
+#--- create a copy ---#
+flights_mini_copy &lt;- copy(flights_mini)
+
+#--- create a variable ---#
+flights_mini[, constant := 1]
+
+#--- see what's inside of the copy ---#
+flights_mini_copy
+```
+
+```
+##    year month day dep_delay arr_delay distance air_time
+## 1: 2014     1   1        14        13     2475      359
+## 2: 2014     1   1        -3        13     2475      363
+## 3: 2014     2   1        -1         1     2475      358
+## 4: 2014     2   1        -5         3     2475      358
+## 5: 2014     3   1       -11        36     2475      375
+## 6: 2014     3   1        -3        14     2475      368
+## 7: 2014     4   1        -8       -13      764      113
+## 8: 2014     4   1        -8        -1      431       71
+##       speed total_delay carrier_origin mean_arr_delay
+## 1: 6.894150          27       6.894150             13
+## 2: 6.818182          10       6.818182             13
+## 3: 6.913408           0       6.913408              2
+## 4: 6.913408          -2       6.913408              2
+## 5: 6.600000          25       6.600000             25
+## 6: 6.725543          11       6.725543             25
+## 7: 6.761062         -31       6.761062             -7
+## 8: 6.070423         -19       6.070423             -7
+```
+]
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# Other useful operations and tips  
+
+.panelset[ 
+
+.panel[.panel-name[sorting]
+
+You can use `order()` from the base package to sort a `data.table`.
+
+Sorting is about shuffling rows, so you will be working on `i`. 
+
+**Syntax**
+
+
+```r
+#--- NOT RUN ---#
+data.table[order(variable 1, vairable 2, ..), ]  
+```
+
+.left5[
+
+**Before sorting**
+
+
+```r
+flights %&gt;% head()
+```
+
+```
+##    year month day dep_delay arr_delay carrier origin dest
+## 1: 2014     1   1        14        13      AA    JFK  LAX
+## 2: 2014     1   1        -3        13      AA    JFK  LAX
+## 3: 2014     1   1         2         9      AA    JFK  LAX
+## 4: 2014     1   1        -8       -26      AA    LGA  PBI
+## 5: 2014     1   1         2         1      AA    JFK  LAX
+## 6: 2014     1   1         4         0      AA    EWR  LAX
+##    air_time distance hour
+## 1:      359     2475    9
+## 2:      363     2475   11
+## 3:      351     2475   19
+## 4:      157     1035    7
+## 5:      350     2475   13
+## 6:      339     2454   18
+```
+
+]
+
+.right5[
+
+**After sorting `order()`**
+
+
+```r
+flights[order(origin, distance),] %&gt;% head()
+```
+
+```
+##    year month day dep_delay arr_delay carrier origin dest
+## 1: 2014     1  30         9        17      US    EWR  PHL
+## 2: 2014     1  30       -13       -25      US    EWR  PHL
+## 3: 2014     1  31        -8       -25      US    EWR  PHL
+## 4: 2014     1  31        -7        14      US    EWR  PHL
+## 5: 2014     1  31        16        17      US    EWR  PHL
+## 6: 2014     2   1         5         2      US    EWR  PHL
+##    air_time distance hour
+## 1:       46       80   15
+## 2:       34       80   17
+## 3:       23       80    5
+## 4:       36       80   17
+## 5:       34       80   15
+## 6:       31       80    7
+```
+
+]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[rename]
+
+You can use `setnames()` to rename variables.
+
+
+```r
+flights %&gt;% 
+  setnames(c("dest", "hour"), c("destination", "Hour"))
+```
+
+.scroll-box-16[
+
+```r
+flights   
+```
+
+```
+##         year month day dep_delay arr_delay carrier origin
+##      1: 2014     1   1        14        13      AA    JFK
+##      2: 2014     1   1        -3        13      AA    JFK
+##      3: 2014     1   1         2         9      AA    JFK
+##      4: 2014     1   1        -8       -26      AA    LGA
+##      5: 2014     1   1         2         1      AA    JFK
+##     ---                                                  
+## 253312: 2014    10  31         1       -30      UA    LGA
+## 253313: 2014    10  31        -5       -14      UA    EWR
+## 253314: 2014    10  31        -8        16      MQ    LGA
+## 253315: 2014    10  31        -4        15      MQ    LGA
+## 253316: 2014    10  31        -5         1      MQ    LGA
+##         destination air_time distance Hour
+##      1:         LAX      359     2475    9
+##      2:         LAX      363     2475   11
+##      3:         LAX      351     2475   19
+##      4:         PBI      157     1035    7
+##      5:         LAX      350     2475   13
+##     ---                                   
+## 253312:         IAH      201     1416   14
+## 253313:         IAH      189     1400    8
+## 253314:         RDU       83      431   11
+## 253315:         DTW       75      502   11
+## 253316:         SDF      110      659    8
+```
+]
+  
+
+Note: `setnames()` is one of the `data.table` operations that updates the dataset in-place (by reference) just like `:=`.
+
+Rename `Hour` back to `hour` for the subsequent R operations 
+
+
+```r
+flights %&gt;% setnames("Hour", "hour") 
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[shift]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[duplicated and unique]
+
+**find duplicates**
+
+`duplicated()` checks whether each of the observations have other observations that are identical in values of the user-specified variables, and returns a TRUE/FALSE vector of length equal to the number of rows of the data.
+
+The following code checks if there are any other flights that fly on the same hour of the same day.
+
+
+```r
+flights %&gt;% 
+  duplicated(by = c("year", "month", "day", "hour")) %&gt;% 
+  head(10)
+```
+
+```
+##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+## [10]  TRUE
+```
+
+**find unique observations**
+
+`unique()` does the opposite of `duplicated()`. After applying `unique()`, you will be left with only the observations that are unique in all of the variables specified by the user (There will be only one observation that has the same values in all the user-specified variables).
+
+
+```r
+unique(flights, by = c("year", "month", "day", "carrier"))  
+```
+
+```
+##       year month day dep_delay arr_delay carrier origin
+##    1: 2014     1   1        14        13      AA    JFK
+##    2: 2014     1   1         4       -12      AS    EWR
+##    3: 2014     1   1        51        60      B6    JFK
+##    4: 2014     1   1        10        10      DL    LGA
+##    5: 2014     1   1        25        35      EV    EWR
+##   ---                                                  
+## 3934: 2014    10  31       -12       -41      AS    EWR
+## 3935: 2014    10  31         6         8      US    JFK
+## 3936: 2014    10  31         2       -15      VX    JFK
+## 3937: 2014    10  31         0       -30      WN    EWR
+## 3938: 2014    10  31        12         7      UA    LGA
+##       destination air_time distance hour
+##    1:         LAX      359     2475    9
+##    2:         SEA      347     2402   18
+##    3:         CHS      109      636    8
+##    4:         ATL      126      762   18
+##    5:         DAY      102      533   17
+##   ---                                   
+## 3934:         SEA      319     2402   18
+## 3935:         CLT       86      541    6
+## 3936:         SFO      352     2586    7
+## 3937:         AUS      217     1504   13
+## 3938:         ORD      121      733   10
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[fcase]
+
+`fcase()` is like `case_when()` in `dplyr`. 
+
+
+```r
+fcase(
+  condition 1, value 1,  
+  condition 2, value 2,  
+  condition 3, value 3,  
+  .
+  .
+  .
+) 
+```
+
+**Example**
+
+
+```r
+flights[, above_average_dealy := fcase(
+  arr_delay &lt; mean(arr_delay), FALSE,  
+  arr_delay &gt;= mean(arr_delay), TRUE  
+)]  
+
+flights[, .(arr_delay, above_average_dealy)]
+```
+
+```
+##         arr_delay above_average_dealy
+##      1:        13                TRUE
+##      2:        13                TRUE
+##      3:         9                TRUE
+##      4:       -26               FALSE
+##      5:         1               FALSE
+##     ---                              
+## 253312:       -30               FALSE
+## 253313:       -14               FALSE
+## 253314:        16                TRUE
+## 253315:        15                TRUE
+## 253316:         1               FALSE
+```
+
+Note: for this example, we could have just used `fifelse()` as the created variable is dichotomous.
+
+]
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[Piping]
+
+You can use `%&gt;%` to chain piped operations just like `dplyr` using `.` to refer to the `data.table` generated through the preceding actions. 
+
+**Example:**
+
+
+```r
+flights[, .(.N), by = .(origin, month)] %&gt;% 
+  .[i, j, by] %&gt;% 
+  .[i, j, by] %&gt;% 
+  .[i, j, by]  
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# .SD
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+`.SD` (which stands for **S**ubset **D**ata) is a special symbol that allows you to do many cool things.
+
+Let's create a small `data.table` that will help us understand what `.SD` does (we will come back to the code later).
+
+
+```r
+(
+flights_mini &lt;- flights[,head(.SD, 2), by = month] %&gt;% 
+  .[, .(year, month, dep_delay, arr_delay)]
+)
+```
+
+```
+##     year month dep_delay arr_delay
+##  1: 2014     1        14        13
+##  2: 2014     1        -3        13
+##  3: 2014     2        -1         1
+##  4: 2014     2        -5         3
+##  5: 2014     3       -11        36
+##  6: 2014     3        -3        14
+##  7: 2014     4        -8       -23
+##  8: 2014     4        -8       -11
+##  9: 2014     5        43         5
+## 10: 2014     5        -1       -38
+## 11: 2014     6        -9        -5
+## 12: 2014     6       -10       -13
+## 13: 2014     7        -3        -2
+## 14: 2014     7        -6       -14
+## 15: 2014     8        -3        -5
+## 16: 2014     8        19        55
+## 17: 2014     9        -9       -26
+## 18: 2014     9        -7       -21
+## 19: 2014    10        -5       -15
+## 20: 2014    10        -7       -21
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[What is it?]
+
+Without grouping specified in `by`, `.SD` is the `data.table` itself. So, `flights_mini[, .SD]` is the same as `flights_mini` 
+
+But, when grouped, it becomes the subset (grouped) of the `data.table`.
+
+**Example**:
+
+
+```r
+flights_mini[, print(.SD), by = month]
+```
+
+.scroll-box-20[
+
+```
+##    year dep_delay arr_delay
+## 1: 2014        14        13
+## 2: 2014        -3        13
+##    year dep_delay arr_delay
+## 1: 2014        -1         1
+## 2: 2014        -5         3
+##    year dep_delay arr_delay
+## 1: 2014       -11        36
+## 2: 2014        -3        14
+##    year dep_delay arr_delay
+## 1: 2014        -8       -23
+## 2: 2014        -8       -11
+##    year dep_delay arr_delay
+## 1: 2014        43         5
+## 2: 2014        -1       -38
+##    year dep_delay arr_delay
+## 1: 2014        -9        -5
+## 2: 2014       -10       -13
+##    year dep_delay arr_delay
+## 1: 2014        -3        -2
+## 2: 2014        -6       -14
+##    year dep_delay arr_delay
+## 1: 2014        -3        -5
+## 2: 2014        19        55
+##    year dep_delay arr_delay
+## 1: 2014        -9       -26
+## 2: 2014        -7       -21
+##    year dep_delay arr_delay
+## 1: 2014        -5       -15
+## 2: 2014        -7       -21
+```
+
+```
+## Empty data.table (0 rows and 1 cols): month
+```
+]
+
+
++ `.SD` contains all the columns except the grouping columns by default.
++ The original order is preserved by `origin`
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[example 1]
+
+Apply the same function across all the variables:
+
+
+```r
+flights_mini[, lapply(.SD, mean)]
+```
+
+```
+##    year month dep_delay arr_delay
+## 1: 2014   5.5     -1.15      -2.7
+```
+
+Of course, you could get the same results by this, but the output is a list, not a data.table.
+
+
+```r
+lapply(flights_mini, mean)
+```
+
+```
+## $year
+## [1] 2014
+## 
+## $month
+## [1] 5.5
+## 
+## $dep_delay
+## [1] -1.15
+## 
+## $arr_delay
+## [1] -2.7
+```
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=850px&gt;&lt;/html&gt;
+
+**dplyr** way:
+
+
+```r
+summarize(flights_mini, across(everything(), mean))
+```
+
+```
+##   year month dep_delay arr_delay
+## 1 2014   5.5     -1.15      -2.7
+```
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[example 2]
+
+Apply the same function across all the variables by group:
+
+
+```r
+flights_mini[, lapply(.SD, mean), by = month] %&gt;% head()
+```
+
+```
+##    month year dep_delay arr_delay
+## 1:     1 2014       5.5      13.0
+## 2:     2 2014      -3.0       2.0
+## 3:     3 2014      -7.0      25.0
+## 4:     4 2014      -8.0     -17.0
+## 5:     5 2014      21.0     -16.5
+## 6:     6 2014      -9.5      -9.0
+```
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=850px&gt;&lt;/html&gt;
+
+**dplyr** way:
+
+
+```r
+flights_mini %&gt;% 
+  group_by(month) %&gt;% 
+  summarize(across(everything(), mean)) %&gt;% head()
+```
+
+```
+## # A tibble: 6 x 4
+##   month  year dep_delay arr_delay
+##   &lt;int&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1     1  2014       5.5      13  
+## 2     2  2014      -3         2  
+## 3     3  2014      -7        25  
+## 4     4  2014      -8       -17  
+## 5     5  2014      21       -16.5
+## 6     6  2014      -9.5      -9
+```
+
+]
+
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[columns of choice]
+
+Instead of let `.SD` contain all the columns, you can use `.SDcols` to pick variables to be included in `.SD` after `by,`.
+
+**Example**
+
+
+```r
+flights_mini[, lapply(.SD, mean), by = month, .SDcols = c("arr_delay", "dep_delay")]
+```
+
+```
+##     month arr_delay dep_delay
+##  1:     1      13.0       5.5
+##  2:     2       2.0      -3.0
+##  3:     3      25.0      -7.0
+##  4:     4     -17.0      -8.0
+##  5:     5     -16.5      21.0
+##  6:     6      -9.0      -9.5
+##  7:     7      -8.0      -4.5
+##  8:     8      25.0       8.0
+##  9:     9     -23.5      -8.0
+## 10:    10     -18.0      -6.0
+```
+
+&lt;br&gt;
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=850px&gt;&lt;/html&gt;
+
+&lt;br&gt;
+
+You cannot use `.(variable name 1, variable name 1, ...)` for `.SDcols`. This would fail:
+
+
+```r
+flights_mini[, lapply(.SD, mean), by = month, .SDcols = .(arr_delay, dep_delay)]
+```
+
+```
+## Error in .(arr_delay, dep_delay): could not find function "."
+```
+
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[maximum]
+
+A very important use case of `.SD` is identifying the observation with the maximum value of a variable by group. 
+
+**Example**: suppose you are trying to identify the optimal nitrogen rate that maximize the profit of corn production at different corn prices. 
+
+Here, let's identify the flight that had the longest arrival delay by month-carrier. 
+
+
+```r
+flights[, .SD[which.max(arr_delay), ], by = .(carrier, month)]
+```
+
+```
+##      carrier month year day dep_delay arr_delay origin
+##   1:      AA     1 2014   8       358       367    EWR
+##   2:      AS     1 2014  11       102        62    EWR
+##   3:      B6     1 2014   2       577       626    JFK
+##   4:      DL     1 2014   2       973       996    LGA
+##   5:      EV     1 2014  15       475       499    EWR
+##  ---                                                  
+## 130:      WN    10 2014   6       326       300    EWR
+## 131:      UA    10 2014  31       427       393    EWR
+## 132:      OO    10 2014  10       207       221    LGA
+## 133:      US    10 2014  10       441       457    EWR
+## 134:      HA    10 2014  23        58        27    JFK
+##      destination air_time distance hour above_average_dealy
+##   1:         MIA      175     1085   12                TRUE
+##   2:         SEA      329     2402   20                TRUE
+##   3:         RDU       86      427    3                TRUE
+##   4:         MIA      156     1096   11                TRUE
+##   5:         JAX      142      820   19                TRUE
+##  ---                                                       
+## 130:         BNA      116      748   23                TRUE
+## 131:         ORD      100      719   21                TRUE
+## 132:         ORD      122      733   17                TRUE
+## 133:         CLT       85      529   17                TRUE
+## 134:         HNL      599     4983   10                TRUE
+```
+
+Remember that `.SD` is a list of `data.table`s grouped by carrier and month. `.SD[which.max(arr_dealy), ]` will find the row where the `arr_delay` is the highest by group (month-carrier).
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+]
+
+&lt;!-- panel set ends here --&gt;
+
+&lt;!-- 
+#=========================================
+# Reshaping  
+#=========================================
+--&gt;
+
+---
+
+class: inverse, center, middle
+name: reshaping
+
+# Reshaping datasets 
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
+
+---
+
+
+# Reshaping datasets 
+
+.panelset[ 
+
+.panel[.panel-name[prep]
+
+Create the following datasets in the long format:
+
+
+```r
+(
+yield_data_long &lt;- data.table(
+  state = c("Kansas", "Nebraska", "Iowa", "Illinois") %&gt;% rep(each = 2),
+  year = c(2019, 2020) %&gt;% rep(4),
+  yield = c(200, 240, 210, 220, 220, 230, 190, 150)
+  )
+)
+```
+
+```
+##       state year yield
+## 1:   Kansas 2019   200
+## 2:   Kansas 2020   240
+## 3: Nebraska 2019   210
+## 4: Nebraska 2020   220
+## 5:     Iowa 2019   220
+## 6:     Iowa 2020   230
+## 7: Illinois 2019   190
+## 8: Illinois 2020   150
+```
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[long to wide]
+
+You can use `dcast()` function to make a long dataset wide:
+
+**Syntax**
+
+
+```r
+#--- NOT RUN ---#  
+dcast(data.table, A ~ B, value.var = C)
+```
+
+Using the `pivot_wider()` language, 
+
++ `B` is equivalent to variables you specify for `names_from` 
++ `C` is equivalent to variables you specify for `values_from` 
++ A are all the variables except B and C.
+
+&lt;br&gt;
+
+**Example**
+
+.left4[
+
+Original long data:
+
+
+```r
+yield_data_long
+```
+
+```
+##       state year yield
+## 1:   Kansas 2019   200
+## 2:   Kansas 2020   240
+## 3: Nebraska 2019   210
+## 4: Nebraska 2020   220
+## 5:     Iowa 2019   220
+## 6:     Iowa 2020   230
+## 7: Illinois 2019   190
+## 8: Illinois 2020   150
+```
+]
+
+.right6[
+
+Wide data: 
+
+
+```r
+(
+yield_data_wide &lt;- dcast(yield_data_long, state ~ year, value.var = "yield")
+)
+```
+
+```
+##       state 2019 2020
+## 1: Illinois  190  150
+## 2:     Iowa  220  230
+## 3:   Kansas  200  240
+## 4: Nebraska  210  220
+```
+
+]
+
+  ]
+
+&lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[wide to long]
+
+You can use `melt()` function to make a wide dataset long:
+
+**Syntax**
+
+
+```r
+melt(data.table, id.vars = "state")  
+```
+
++ `id.vars` are the variables except those that will be melt into long format
+
+&lt;br&gt;
+
+**Example**
+
+.left4[
+
+Original wide data:
+
+
+```r
+yield_data_wide 
+```
+
+```
+##       state 2019 2020
+## 1: Illinois  190  150
+## 2:     Iowa  220  230
+## 3:   Kansas  200  240
+## 4: Nebraska  210  220
+```
+]
+
+.right6[
+
+Long data:
+
+```r
+melt(yield_data_wide, id.vars = "state")
+```
+
+```
+##       state variable value
+## 1: Illinois     2019   190
+## 2:     Iowa     2019   220
+## 3:   Kansas     2019   200
+## 4: Nebraska     2019   210
+## 5: Illinois     2020   150
+## 6:     Iowa     2020   230
+## 7:   Kansas     2020   240
+## 8: Nebraska     2020   220
+```
+
+]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+]
+
+---
+
+# Reshaping datasets: multiple columns 
+
+.panelset[ 
+
+.panel[.panel-name[prep]
+
+.left5[
+
+**Long data**
+
+
+```r
+yield_data_long &lt;- data.table(
+  state = c("Kansas", "Nebraska", "Iowa", "Illinois") %&gt;% rep(each = 2),
+  year = c(2019, 2020) %&gt;% rep(4),
+  yield = c(200, 240, 210, 220, 220, 230, 190, 150),
+  rainfall = c(14, 15, 15, 16, 20, 21, 24, 15)
+  ) 
+```
+
+
+```
+##       state year yield rainfall
+## 1:   Kansas 2019   200       14
+## 2:   Kansas 2020   240       15
+## 3: Nebraska 2019   210       15
+## 4: Nebraska 2020   220       16
+## 5:     Iowa 2019   220       20
+## 6:     Iowa 2020   230       21
+## 7: Illinois 2019   190       24
+## 8: Illinois 2020   150       15
+```
+
+This data has multiple rows to be spread: `yield` and `rainfall`.
+
+]
+
+.right5[
+
+**Wide data**
+
+
+```r
+yield_data_wide &lt;- yield_data_long %&gt;% 
+  pivot_wider(
+    names_from = year, 
+    values_from = c(yield, rainfall)
+  ) %&gt;% 
+  data.table()  
+```
+
+
+```
+##       state yield_2019 yield_2020 rainfall_2019 rainfall_2020
+## 1:   Kansas        200        240            14            15
+## 2: Nebraska        210        220            15            16
+## 3:     Iowa        220        230            20            21
+## 4: Illinois        190        150            24            15
+```
+
+This data has multiple sets of columns to be melted: `yield_*` and `rainfall_*`.
+
+]
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[long to wide]
+
+It is easy to cast multiple variables to make a long data wide. You just need to give a list of variable names to the `value.var` option.
+
+
+
+```r
+yield_data_long %&gt;% 
+  dcast(state ~ year, value.var = c("yield", "rainfall"))   
+```
+
+```
+##       state yield_2019 yield_2020 rainfall_2019 rainfall_2020
+## 1: Illinois        190        150            24            15
+## 2:     Iowa        220        230            20            21
+## 3:   Kansas        200        240            14            15
+## 4: Nebraska        210        220            15            16
+```
+    ] 
+  
+&lt;!-- panel ends here --&gt;  
+
+.panel[.panel-name[wide to long]
+
+It is not as simple to make a wide data with multiple sets of columns to long.
+
+You can provide a list of sets of variables names to `melt()` to tell R which variables are belong to the same group using the `measure()` option.
+
+
+```r
+#--- yield group ---#
+colA &lt;- paste("yield_", 2019:2020, sep = "")
+
+#--- rainfall group ---#
+colB &lt;- paste("rainfall_", 2019:2020, sep = "")
+
+#--- wide to long ---#
+yield_data_long &lt;- melt(yield_data_wide, measure = list(colA, colB), value.name = c("yield", "rainfall")) 
+```
+
+Note however that year information from the variable names are lost. In the resulting dataset, `variable == 1` and `variable == 2` correspond to 2019 and 2020, respectively. So, you need an additional step to recover the original long data format. 
+
+Alternatively, it is probably better to follow the multi-step approach we took we used when we use `pivot_*()` in `dplyr`.
+
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+.panel[.panel-name[better alternative]
+
+The strategy here is to 
+
++ first make the data long ignoring the fact we want `yield_*` and `rainfall_*` to be separate variables eventually
++ split variable names into two: variable meaning and year (done by `tstrsplit()`)  
++ and then use `dcast()` to make it wider
+
+
+```r
+(
+yield_data_wide %&gt;% 
+  melt(id.var = "state") %&gt;% 
+  .[, c("type", "year") := tstrsplit(variable, "_", fixed = TRUE)] %&gt;% 
+  .[, variable := NULL] %&gt;% 
+  dcast(state + year ~ type, value.var = "value")
+)
+```
+
+```
+##       state year rainfall yield
+## 1: Illinois 2019       24   190
+## 2: Illinois 2020       15   150
+## 3:     Iowa 2019       20   220
+## 4:     Iowa 2020       21   230
+## 5:   Kansas 2019       14   200
+## 6:   Kansas 2020       15   240
+## 7: Nebraska 2019       15   210
+## 8: Nebraska 2020       16   220
+```
+  ] 
+
+  &lt;!-- panel ends here --&gt;
+
+]
+
+&lt;!-- panel set ends here --&gt;
+
+---
+
+# Merging
+
+You can use `merge()` function to merge two datasets.
+
+
+
+# Key
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

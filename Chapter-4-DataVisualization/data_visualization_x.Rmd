@@ -1,0 +1,5408 @@
+---
+title: "Data visualization with `ggplot2`"
+author: "AECN 396/896-002"
+output:
+  xaringan::moon_reader:
+    # css: [default, metropolis, metropolis-fonts] 
+    css: xaringan-themer.css 
+    self_contained: true
+    nature:
+      ratio: 16:10
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, child = './../setup.Rmd'}
+```
+
+```{r, include = F, cache = F}
+suppressMessages(library(nycflights13)) 
+suppressMessages(library(extrafont)) 
+suppressMessages(library(data.table)) 
+suppressMessages(library(patchwork))
+```
+
+# Before you start
+
+## Learning objectives
+
+The objectives of this chapter is to learn how to use the `ggplot2` package to create figures for effective communication 
+
+## Table of contents
+
+1. [`ggplot2` basics](#ggplot2-basics)
+2. [Different types of figures](#dif-geoms)
+3. [Placing more information in one figure](#more-info)
+4. [Faceted figures](#faceting)
+5. [Other supplementary `geom_*()`](#other-geoms)
+6. [Make your figures presentable to others](#fine-tune)
+7. [Tips](#tips)
+8. [Gallery of other type of figures](#gallery)
+9. [Animated figures](#animated)
+
+<br>
+
+<span style="color:red"> Tips: </span>hitting letter "o" key will give you a panel view of the slides
+
+
+---
+
+# `ggplot2` package
+
+.left-full[
+
+Install the package if you have not.
+
+```{r ggplot2-install, eval = FALSE}
+install.packages('ggplot2')
+```
+
+When you load the `tidyverse` package, it automatically load it. 
+
+```{r tidyverse, message = TRUE}
+#--- load ggplot2 along with others in the tidyverse package ---#
+library(tidyverse)
+
+#--- or ---#
+library(ggplot2) #<<
+```
+
+]
+
+---
+
+# The datasets we use
+
+```{r eval = F, echo = F}
+setwd("~/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-4-DataVisualization") 
+```
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+Go [here](https://www.dropbox.com/sh/63rlp4ydmyjm1ui/AACYSeN0f_WAgKPQKzgpGVe0a?dl=0) and download **county_yield.rds** and then read the file onto R:
+  ]
+
+.panel[.panel-name[R Code]
+```{r dataset, results = "hide", cache = F}
+county_yield <- readRDS("county_yield.rds") %>% 
+  dplyr::select(soy_yield, corn_yield, year, county_code, state_name, d0_5_9, d1_5_9, d2_5_9, d3_5_9, d4_5_9) %>% 
+    filter(state_name %in% c("Nebraska", "Kansas", "Colorado"))
+```
+  ]
+
+.panel[.panel-name[Output]
+
+```{r echo = F}
+county_yield
+```
+
+  ]
+
+.panel[.panel-name[Variable Definitions]
++ `soy_yield`: soybean yield (bu/acre)
++ `corn_yield`: corn yield (bu/acre)
++ `d0_5_9`: ratio of weeks under drought severity of 0 from May to September
++ `d1_5_9`: ~ drought severity of 1 from May to September   
++ `d2_5_9`: ~ drought severity of 2 from May to September   
++ `d3_5_9`: ~ drought severity of 3 from May to September   
++ `d4_5_9`: ~ drought severity of 4 from May to September   
+  ]
+]
+
+<!-- 
+#=========================================
+# ggplot2 Basics
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: ggplot2-basics
+
+# `ggplot2` basics
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+```{r taste, cache = F, include = F}
+county_yield %>% #BREAK
+  ggplot(data = .) + #BREAK
+  aes(x = factor(year)) + #BREAK 
+  aes(y = corn_yield) + #BREAK 
+  geom_boxplot() + #BREAK 
+  aes(fill = state_name) + #BREAK
+  facet_grid(state_name ~ .) + #BREAK
+  xlab("Year") + #BREAK
+  ylab("Corn Yield (bu/acre)") + #BREAK
+  ylim(c(100, 200)) + #BREAK
+  scale_fill_viridis_d(
+    name = "State", 
+    guide = guide_legend(
+      title.position = "left"
+    )
+  ) + #BREAK
+  theme_bw() + #BREAK
+  theme(axis.text.x = element_text(angle = 90, size = 6)) + #BREAK
+  theme(axis.text.y = element_text(size = 6)) + #BREAK
+  theme(legend.position = "bottom") + #BREAK 
+  theme(
+    legend.title = element_text(size = 6),
+    legend.text = element_text(size = 6)
+  ) + #BREAK
+  labs(title = "Corn Yield (bu/acre) by State") + #BREAK
+  labs(caption = "Design: Taro Mieno") + #BREAK
+  labs(subtitle = "Data Source: USDA-NASS")
+
+```
+
+`r chunk_reveal(
+  chunk_name = "taste", 
+  title = "# Taste of ggplot2",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+# Basics
+
+.panelset[ 
+
+.panel[.panel-name[Step 1]
+
+.left-full[
+
+The very first job you need to do to create a figure using the `ggplot2` package is to let R know the dataset you are trying to visualize, which can be done using `ggplot()` as follows:
+
+```{r g_fig_base}
+g_fig <- ggplot(data = county_yield)
+```
+
+When you create a figure using the `ggplot2` package, `ggplot()` is always the function you call first.
+
+]
+
+  ]
+
+.panel[.panel-name[g_fig]
+
+.left-code[
+Let's now see what is inside `g_fig`:
+
+```{r g-fig, eval = F}  
+g_fig
+```
+
+Well, it's blank. Obviously, `g_fig` still does not have enough information to create any kind of figures. You have not told R anything specific about how you would like to use the information in the dataset.
+]
+
+.right-plot[
+```{r ref.label = "g-fig", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[Step 2]
+
+.left-full[
+
+So, the next thing you need to do is tell `g_fig` what type of figure you want by `geom_*()` functions. 
+
+For example, we use `geom_point()` to create a scatter plot. 
+
+To create a scatter plot, R needs to know which variables should be on the y-axis and x-axis. 
+
+These information can be passed to `g_fig` by the following code:
+
+```{r g_fig_point}
+g_fig_scatter <- g_fig + geom_point(aes(x = d3_5_9, y = corn_yield))
+```
+
+Here, 
+
++ `geom_point()` was added to `g_fig` to declare that you want a scatter plot 
++ `aes(x = d3_5_9, y = corn_yield)` inside `geom_point()` tells R that you want to create a scatter plot where you have `d3_5_9` on the x-axis and `corn_yield` on the y-axis
+
+]
+
+  ]
+
+.panel[.panel-name[Output]
+
+.left-code[
+
+This is what `g_fig_scatter` looks:
+
+```{r g-fig-scatter, eval = F}  
+g_fig_scatter
+```
+]
+
+.right-plot[
+```{r scatter-plot, ref.label = "g-fig-scatter", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[`aes()`]
+
+.left-full[
+Going back to the code,
+
+```{r }
+g_fig_scatter <- g_fig + geom_point(aes(x = d3_5_9, y = corn_yield))
+```
+
+Note that `x = d3_5_9`, `y = corn_yield` are inside `aes()`. 
+
+<span style="color:red"> Important:</span> `aes()` is used to make the <span style='color:red'>aes</span>thetic of the figure to be a function of variables in the dataset that you told `ggplot` to use (here, `county_yield`). 
+
+`aes(x = d3_5_9, y = corn_yield)` is telling `ggplot` to use `d3_5_9` and `corn_yield` variables in the `county_yield` dataset for the x-axis and y-axis, respectively. 
+
+If you do not have `x = d3_5_9`, `y = corn_yield` inside `aes()`, R is going to look for `d3_5_9` and `corn_yield` themselves (but not in `county_yield`), which you have not defined.
+
+Try
+
+```{r eval = F}
+g_fig + geom_point(x = d3_5_9, y = corn_yield)
+```
+]
+
+
+  ]
+
+.panel[.panel-name[summary]
+
+.left-full[
++ `ggplot(data = dataset)` to initiate the process of creating a figure
+
++ add `geom_*()` to declare what kind of figure you would like to make 
+
++ specify what variables in the dataset to use and how they are used inside `aes()` 
+
++ place the `aes()` you defined above in the `geom_*()` you specified above
+
+]
+
+  ]
+
+]
+
+
+<!-- 
+#=========================================
+# Different types of figures
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: dif-geoms
+
+# Different types of figures
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Different types of figures
+
+.panelset[ 
+
+.panel[.panel-name[Figure types]
+
+<br>
+
+`ggplot2` lets you create lots of different kinds of figures via various `geom_*()` functions.
+
++ `geom_histogram()`/`geom_density()`
++ `geom_line()`
++ `geom_boxplot()`
++ `geom_bar()`
+
+How to specify aesthetics vary by `geom_*()`.
+
+  ]
+
+.panel[.panel-name[Histogram]
+
+.left-code[
+```{r eval = F}  
+g_fig + 
+  geom_histogram(
+    aes(x = corn_yield)
+  )
+```
+
+`geom_histogram()` only needs `x`.
+]
+
+.right-plot[
+```{r hist-ex, echo = F, out.width = "90%"}  
+g_fig + 
+  geom_histogram(
+    aes(x = corn_yield)
+  )
+```
+]
+
+  ]
+
+.panel[.panel-name[Density Plot]
+
+.left-code[
+```{r density_type, eval = F}  
+g_fig + 
+  geom_density(
+    aes(x = corn_yield)
+  )
+```
+
+`geom_density()` only needs `x`.
+]
+
+.right-plot[
+```{r density-ex, ref.label = "density_type", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[Line plot]
+
+.left-code[
+
+Create a dataset first:
+
+```{r }  
+mean_yield <- county_yield %>% 
+  group_by(year) %>% 
+  summarize(
+    corn_yield = mean(corn_yield, na.rm = TRUE)
+  ) %>% 
+  filter(!is.na(year))
+```
+
+Create a line plot:
+
+```{r line_type, eval = F}
+ggplot(data = mean_yield) + 
+  geom_line(aes(x = year, y = corn_yield))
+
+```
+
++ `geom_line()` needs `x` and `y`.
+
+]
+
+.right-plot[
+```{r line-ex, ref.label = "line_type", echo = F, out.width = "90%"}  
+```
+]
+
+  ]
+
+.panel[.panel-name[Boxplot]
+
+.left-code[
+```{r boxplot_type, eval = F}  
+ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(x = factor(year), y = corn_yield)
+  )
+```
+
++ `geom_boxplot()` needs `x` and `y`
+
+]
+
+.right-plot[
+```{r box-ex, ref.label = "boxplot_type", echo = F, out.width = "90%"}  
+
+```
+]
+  ]
+
+.panel[.panel-name[Bar plot]
+
+.left-code[
+```{r barplot_type, eval = F}  
+ggplot(data = mean_yield) + 
+  geom_bar(
+    aes(
+      x = year, 
+      y = corn_yield
+    ), 
+    stat = "identity"
+  )
+```
+
++ `geom_bar()` needs `x` and `y`
+
+]
+
+.right-plot[
+```{r bar-ex, ref.label = "barplot_type", echo = F, out.width = "90%"}  
+
+```
+]
+  ]
+
+]
+
+---
+
+# Modifying how figures look
+
+.left-full[
+
+All the elements in the figures we have created so far are in black and white.
+
+You can change how figure elements look by providing options inside `geom_*()`.
+
+Here are the list of options to control the aesthetics of figures: 
+
++ fill
++ color
++ size
++ shape
++ linetype
+
+Elements of figures that you can modify differ by `geom` types
+
+The same element name can mean different things based on `geom` types
+
+]
+
+---
+
+```{r fig-scatter-f, cache = F, include = F}
+g_fig + #BREAK
+  geom_point( 
+    aes(x = d3_5_9, y = corn_yield), 
+    color = "red", #BREAK2
+    size = 0.7, #BREAK3
+    shape = 0 #BREAK4
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "fig-scatter-f", 
+  title = "# Scatter Plot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
++ `color = "red"`: makes all the squares red
++ `size = 0.5`: makes the size of the squares smaller 
++ `shape = 0`: change the shape of the points (find other shapes [here](http://www.sthda.com/english/wiki/ggplot2-point-shapes))
+
+---
+
+```{r hist-f, cache = F, include = F}  
+g_fig + #BREAK
+  geom_histogram(
+    aes(x = corn_yield), 
+    color = "blue", #BREAK2
+    fill = "green", #BREAK3
+    size = 2, #BREAK4 
+    shape = 2 #BREAK5 
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "hist-f", 
+  title = "# Histogram",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
++ `color = "blue"`: makes all the boundary of the bars blue
++ `fill = "green"`: makes the fill of the bars green
++ `size = 2`: makes the line width of the boundary of the bars thicker 
++ `shape = 2`: does nothing
+ 
+
+---
+
+
+```{r box-f, cache = F, include = F}
+ggplot(data = county_yield) + #BREAK
+  geom_boxplot(
+    aes(x = factor(year), y = corn_yield),
+    color = "red", #BREAK2
+    fill = "orange", #BREAK3
+    size = 0.2, #BREAK4
+    shape = 1 #BREAK5
+    )
+```
+
+`r chunk_reveal(
+  chunk_name = "box-f", 
+  title = "# Box Plot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
++ `color = "blue"`: makes all the boundary of the boxes red
++ `fill = "orange"`: makes the fill of the boxes orange
++ `size = 0.2`: makes the line width of the boundary of the boxes thinner 
++ `shape = 1`: does nothing
+
+---
+
+```{r line-f, cache = F, include = F}
+ggplot(data = mean_yield) + #BREAK1
+  geom_line(
+    aes(x = year, y = corn_yield), 
+    color = "blue", #BREAK2
+    size = 1.5, #BREAK3
+    fill = "red", #BREAK4  
+    linetype = "dotted", #BREAK5
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "line-f", 
+  title = "# Line Plot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
++ `color = "blue"`: makes the line blue
++ `size = 1.5`: makes the line thicker 
++ `fill = "red"`: does nothing
++ `linetype = "dotted"`: makes the line dotted
+
+---
+
+# Exercises
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+This exercise use the `diamonds` dataset from the `ggplot2()` package. First, load the dataset and extract observations with `Premium` cut whose color is one of `E`, `I`, and `F`:
+
+```{r diamond, cache=TRUE}
+data('diamonds')
+premium <- diamonds %>%
+  filter(
+    cut=='Premium' & color %in% c('E','I','F')
+    )
+
+#--- take a look ---#
+premium
+```
+
+  ]
+
+.panel[.panel-name[Exercise 1]
+
+<br>
+
+Using `carat` and `price` variables from `premium`, generate the figure below:
+
+```{r diamond_fig_1, echo = FALSE, cache = TRUE, out.width = "50%"}
+ggplot(data=premium) +
+  geom_point(aes(x = carat, y = price), color = 'red')
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+<br>
+
+Using `price` variables from `premium`, generate a histogram of `price` shown below:
+
+```{r diamond_fig_2, echo = FALSE, cache = TRUE, out.width = "50%"}
+ggplot(data=premium) +
+  geom_histogram(aes(x = price), fill = 'white', color = 'blue')
+```
+
+  ]
+
+]
+
+
+<!-- 
+#=========================================
+# Placing more information
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: more-info
+
+# Placing more information in one figure
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Placing more information in one figure 
+
+.panelset[ 
+
+.panel[.panel-name[Motivation]
+
+<br>
+
+So far, we have learned how to create popular types of figures. 
+
+We can make a figure much more informative by making its aesthetics data-dependent.
+
+For example, suppose you are interested in comparing the history of irrigated corn yield by state in a line plot.
+
+So, you want to create a line for each state and make the lines distinguishable so the readers know which line is for which state like this:   
+
+   
+```{r more-info, echo = F, out.width = "60%", fig.dim = c(6, 3)}
+county_yield_mean <- county_yield %>% 
+  group_by(state_name, year) %>% 
+  summarize(corn_yield = mean(corn_yield, na.rm = T))
+
+ggplot(data = county_yield_mean) +
+  geom_line(
+    aes(y = corn_yield, x = year, color = state_name)
+  )  
+```
+
+  ]
+
+.panel[.panel-name[How]
+
+.left-full[
+
+We can make the aesthetics of a figure data-dependent by specifying which variable you use for aesthetics differentiation <span style="color:red"> INSIDE </span>`aes()`.
+
+Here is an example:
+
+```{r how-dif, include = F}
+ggplot(data = county_yield_mean) +
+  geom_line(
+    aes(y = corn_yield, x = year, color = state_name)
+  )   
+```
+
+```{r how-dif-flair, echo = F}
+decorate("how-dif", eval = F) %>% 
+  flair("color = state_name") %>% 
+  knit_print.with_flair()
+```
+
+In this code, `color = state_name` is inside `aes()` and it tells R to divide the data into the groups of State and draw a line by `state_name` (by state) where the lines are color-differentiated.
+
+A legend is automatically generated.
+
+]
+
+  ]
+
+.panel[.panel-name[Let's do it]
+
+<br>
+
+.left-code[
+
+Create a data set of corn yield by state-year first:
+
+```{r }  
+county_yield_mean <- county_yield %>% 
+  group_by(state_name, year) %>% 
+  summarize(corn_yield = mean(corn_yield, na.rm = T))
+```
+
+Create a plot:
+
+```{r corn-color-dif, eval = F}
+ggplot(data = county_yield_mean) +
+  geom_line(
+    aes(
+      y = corn_yield, 
+      x = year, 
+      color = state_name #<<
+    )
+  )
+```
+
+]
+
+.right-plot[
+```{r do-it, ref.label = "corn-color-dif", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+]
+
+---
+
+
+```{r density-more, cache = F, include = F}
+ggplot(data = county_yield_mean) + #BREAK
+  geom_density(
+    aes(
+      x = corn_yield, 
+      fill = state_name #BREAK2 
+    ),
+    alpha = 0.3
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "density-more", 
+  title = "# More examples: Density Plot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+
+```{r box-more, cache = F, include = F}
+county_yield %>% 
+  filter(state_name %in% c("Nebraska", "Kansas")) %>% 
+  ggplot(data = .) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield,  
+      fill = state_name #BREAK2
+    )
+  )
+
+```
+
+`r chunk_reveal(
+  chunk_name = "box-more", 
+  title = "# More examples: Boxplot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+
+```{r scatter-more, cache = F, include = F}
+county_yield %>% 
+  filter(state_name %in% c("Nebraska", "Kansas")) %>%
+  ggplot(data = .) + #BREAK
+  geom_point(
+    aes(
+      x = d3_5_9, 
+      y = corn_yield, 
+      color = state_name, #BREAK2 
+      shape = state_name #BREAK3 
+    ),
+    size = 0.7
+  )
+
+```
+
+`r chunk_reveal(
+  chunk_name = "scatter-more", 
+  title = "# More examples: Scatter Plot",
+  break_type = "non_seq", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+# Exercises
+
+.panelset[ 
+
+
+.panel[.panel-name[Exercise 1]
+
+<br>
+
+Using `premium`, create a scatter plot of `price` (y-axis) against `depth` (x-axis) by `clarity` as shown below:
+
+```{r ex_2_1, echo = FALSE, cache = TRUE, out.width = "60%", fig.dim = c(6, 4)}
+ggplot(data = premium) +
+  geom_point(aes(y = price, x = depth, color = clarity))
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+<br>
+
+Using `premium`, create density plots of `carat` by `color` as shown below (set `alpha` to 0.5):
+
+```{r ex_2_2, echo = FALSE, cache = TRUE, out.width  =  "60%", fig.dim = c(6, 4)}
+ggplot(data = premium) +
+  geom_density(aes(x = carat, fill = color), alpha = 0.5)
+```
+
+  ]
+
+]
+
+<!-- 
+#=========================================
+# Faceting
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: faceting
+
+# Faceting  
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Faceting: Basics
+
+.panelset[ 
+
+
+.panel[.panel-name[Motivation]
+
+Sometimes, you would like to visualize information across groups on separate panels. 
+
+.left5[
+
+Too much information in one panel?
+
+```{r box_all, echo = F, cache=TRUE}
+ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  )
+```
+]
+
+.right5[
+
+On separate panels (faceting)?
+
+```{r box-faceted-1, echo = F, cache = TRUE}  
+ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield 
+    )
+  ) +
+  facet_wrap(state_name ~ ., nrow = 3)
+```
+]
+
+  ]
+
+.panel[.panel-name[How]
+
+.left-full[
+
+We can make faceted figures by adding either `facet_wrap` or `facet_grid()` in which you specify which variable to use for faceting. 
+
+Here is an example:
+
+```{r how-facet, include = F}
+ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(x = factor(year), y = corn_yield)
+  ) +
+  facet_wrap(state_name ~ .)
+```
+
+```{r echo = F}
+decorate("how-facet", eval = F) %>% 
+  flair("facet_wrap(state_name ~ .)") %>% 
+  knit_print.with_flair()
+```
+
+In this code, `facet_wrap(state_name ~ .)` is added to a simple boxplot, which tells R to make a boxplot by `state_name` (state).
+
+What does `~ .` do?
+
+]
+
+  ]
+
+]
+
+---
+
+
+```{r facet-ex, cache = F, include = F}
+ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(x = factor(year), y = corn_yield)
+  ) + #BREAK
+  facet_wrap(state_name ~ .) 
+```
+
+`r chunk_reveal(
+  chunk_name = "facet-ex", 
+  title = "# Faceting: an Example",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+# Faceting: Two-way
+
+.panelset[ 
+
+.panel[.panel-name[two-way faceting]
+
+.left-full[
+Two-way faceting will 
+
++ divide the data into groups where each group has a unique combination of the two faceting variables  
+
++ create a plot for each group
+
+```{r two-facet, eval = F}
+ggplot(data = county_yield) + 
+  geom_histogram(
+    aes(x = corn_yield)
+  ) +
+  facet_wrap(state_name ~ year) #<<
+```
+
+This code will create a histogram of corn yield for each of the unique state-year combination.
+
+]
+
+
+ ]
+
+.panel[.panel-name[Figure 2]
+
+.left-code[
+
+Filter `county_yield` to those in 2017 and 2018.
+
+```{r }
+county_yield_s <- county_yield %>% 
+  filter(year %in% c(2017, 2018))
+```
+
+Create a faceted density plots.
+
+```{r two-ex, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(
+    aes(x = corn_yield)
+  ) +
+  facet_wrap(state_name ~ year)  
+```
+]
+
+.right-plot[
+```{r two-ex-fig, ref.label = "two-ex", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+]
+
+---
+
+
+# Faceting with `facet_grid()`
+
+.panelset[ 
+
+.panel[.panel-name[compare]
+
+.left5[
+
+`facet_wrap`
+
+```{r wrap-ex-1, fig.dim = c(4,3)}
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_wrap(state_name ~ year)  
+```
+]
+
+.right5[
+
+`facet_grid`
+
+```{r frig-ex-1, fig.dim = c(4,3)}
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(state_name ~ year)  
+```
+]
+
+
+  ]
+
+.panel[.panel-name[facet_grid()]
+
+.left-code[
+
+Unlike `facet_wrap()`, which side you put faceting variables matters a lot. 
+
++ left hand side: rows 
++ right hand side: columns 
+
+```{r grid-ex-2, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(state_name ~ year)
+```
+
+In the code above, `state_name` values become the rows, and `year` values become columns.
+]
+
+.right-plot[
+```{r grid-matter, ref.label = "grid-ex-2", echo = F, out.width = "90%", out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[order]
+
+.left5[
+```{r wrap-left, ref.label = "grid-ex-2"}
+  
+```
+]
+
+.right5[
+```{r grid-right}
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(year ~ state_name) 
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[scale]
+
+.left-full[
+
+`facet_grid()` allows 
+
++ the figures in different columns to have different scales for the x-axis (figures in the same column have the same scale for the x-axis)
+
++ the figures in different rows to have different scales for the y-axis (figures in the same rows have the same scale for the x-axis)
+
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[free x]
+
+.left-code[
+```{r free-x, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    scales = "free_x" #<<
+  )
+```
+
+]
+
+.right-plot[
+```{r free-x-fig, ref.label = "free-x", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[free y]
+
+.left-code[
+```{r free-y, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    scales = "free_y" #<<
+  )  
+```
+
+]
+
+.right-plot[
+```{r free-y-fig, ref.label = "free-y", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[both free]
+
+.left-code[
+```{r free, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    scales = "free" #<<
+  )  
+```
+
+]
+
+.right-plot[
+```{r both-free-fig, ref.label = "free", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[strip label]
+
+.left-code[
+
+You can change strip labels using the `labeller = ` option inside `facet_grid()` (or `facet_wrap()`). 
+
+To do this, you need to create a vector of labels you want where its element names are the corresponding values of the faceting variables.
+
+Define labels first:
+
+```{r }
+#--- the vector values are new strip labels ---#
+year_labels <- paste("Year = ", c(2017, 2018))
+
+#--- the element names are the values to replace  ---#
+names(year_labels) <- c("2017", "2018")
+```
+
+Create a faceted figure with new labels:
+
+```{r strip-label, eval = F}  
+ggplot(data = county_yield_s) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    labeller = labeller(year = year_labels) #<<
+  )  
+```
+
+By `year = year_labels`, you are applying `year_labels` to the faceting variable `year`.
+
+]
+
+.right-plot[
+```{r strip-label-fig, ref.label = "strip-label", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] 
+
+  <!-- panel ends here -->
+
+.panel[.panel-name[or]
+
+
+.left-code[
+Or, you could just create a variable that has the values you want to use as labels and use it as a faceting variable:
+
+```{r alt-strip-label, eval = F}  
+county_yield_s %>% 
+  mutate(
+    year_text = paste0("Year = ", year) #<<
+  ) %>% 
+  ggplot(data = .) + 
+    geom_histogram(aes(x = corn_yield)) +
+    facet_grid(
+      state_name ~ year_text #<<
+    ) 
+```
+
+]
+
+.right-plot[
+```{r alt-strip-label-f, ref.label = "alt-strip-label", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+
+  ] 
+
+  <!-- panel ends here -->
+]
+
+
+---
+
+# Exercises
+
+.panelset[ 
+
+.panel[.panel-name[Exercise 1]
+
+<br>
+
+Using `premium`, create scatter plots of `price` (y-axis) against `carat` (x-axis) by `color` on separate panels as shown below:
+
+```{r ex_3_1, echo = FALSE, cache = TRUE, out.width = "50%"}
+ggplot(data=premium) +
+  geom_point(aes(x=carat,y=price)) +
+  facet_grid(color~.)
+```
+
+  ]
+
+.panel[.panel-name[Exercise 2]
+
+<br>
+
+Using premium, create histogram of `carat` by `color` and `clarity` on separate panels as shown below:
+
+```{r ex_3_2, echo = FALSE, cache = TRUE, out.width = "50%"}
+ggplot(data=premium) +
+  geom_histogram(aes(x=carat)) +
+  facet_grid(color~clarity)
+```
+
+  ]
+
+]
+
+---
+
+# Density plot, histogram, boxplot 
+
+.panelset[ 
+
+.panel[.panel-name[density-histogram]
+
+Density plots and histograms convey basically the same information. 
+
+.content-box-green[**Key difference**]:
+
++ Density plots are normalized version of histograms so that the area under them are 1.
++ Histograms convey the information about the number of observations in addition to the distribution 
+
+
+.left5[
+```{r echo = F, out.width = "80%"}
+ggplot(county_yield) +
+  geom_density(
+    aes(x = corn_yield, fill = state_name), 
+    alpha = 0.4
+  )
+```
+]
+
+.right5[
+
+```{r echo = F, out.width = "80%"}
+ggplot(county_yield) +
+  geom_histogram(
+    aes(x = corn_yield, fill = state_name), 
+    alpha = 0.4, position = "identity"
+  )
+```
+]
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[density-box]
+
+
+.content-box-green[**Key difference**]:
+
++ a density-plot provides complete information about the distribution of a single variable, but important summary statistics like mean or media are not present 
++ a box in box-plot provides incomplete information about the distribution of a single variable, but it takes up much less space in a figure
+
+.left3[
+
+For this reason, boxplots are particularly useful when it is desirable to place the distribution information of a single variable across groups and over time in a single panel (see the figure to the right as an example).  
+
+You can convey similar information using density plots faceted by year. But, it is often the case that full distribution information is not necessary.
+
+]
+
+.right7[
+
+```{r echo = F, out.width = "80%"}
+county_yield %>% 
+  filter(year>=2014) %>% 
+  ggplot(.) +
+    geom_boxplot(
+      aes(y = corn_yield, x = factor(year), fill = state_name), 
+      alpha = 0.4
+    )  
+```
+]
+
+  ]
+
+<!-- panel ends here -->
+
+]
+
+<!-- panel set ends here -->
+
+---
+
+# Preparing datasets 
+
+.left-full[
+ 
+We have seen 
+
++ figures where its main elements (points, lines, boxes, etc) are made color differentiated (e.g., with `aes(color = var)` inside the `geom_*()` function)
++  faceted figures  
+
+.content-box-blue[.red[Important]: the dataset has to be in long format to create these types of figures!!]
+
+<br>
+
+For example consider the following dataset in a wide format:
+
+```{r echo = F}
+county_yield[, .(county_code, corn_yield, year, state_name)] %>% 
+  filter(year %in% c(2000, 2001)) %>% 
+  dcast(county_code + state_name ~ year, value.var = "corn_yield")  
+```
+
+This dataset has county-level yields for Nebraska, Colorado, and Kansas stored in variables named `2000` and `2001` (they themselves represent years).
+
+Imagine creating boxplots of corn yield fill color-differentiated by state and faceted by year.
+
+You will have trouble with specifying `facet_grid()` because you do not have a single variable that represents `year`.
+
+You will find that reshaping wide datasets using `pivot_longer()` is very useful in creating figures.
+
+ ] 
+
+<!-- 
+#=========================================
+# Other useful geom_* 
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: other-geoms
+
+# Other supplementary `geom_*()`  
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Other supplementary `geom_*()`  
+
+.panelset[ 
+
+.panel[.panel-name[geom_*]
+
+.left-full[
+
+Here are the list of useful **geom_**.
+
++ `geom_vline()`: draw a vertical line
++ `geom_hline()`: draw a horizontal line
++ `geom_abline()`: draw a line with the specified intercept and slope
++ `geom_smooth()`: draw an OLS-estimated regression line (other regression methods available)
++ `geom_ribbon()`: create a shaded area
++ `geom_text()` and `annotate()`: add texts in the figure
+
+We will use `g_fig_scatter` to illustrate how these functions work.
+
+]
+
+  ]
+
+.panel[.panel-name[vline and hline]
+
+.left-code[
+```{r hv-line, eval = F}  
+g_fig_scatter +
+  geom_vline(
+    xintercept = 10, 
+    color = "blue"
+  ) +
+  geom_hline(
+    yintercept = 100, 
+    color = "red"
+  ) 
+```
+]
+
+.right-plot[
+```{r hv-line-fig, ref.label = "hv-line", echo = F, out.width = "90%"}  
+```
+]
+
+  ]
+
+.panel[.panel-name[abline]
+
+.left-code[
+
+
+```{r ab-line, eval = F}  
+g_fig_scatter +
+  geom_abline(
+    #--- a ---#
+    intercept = 50, 
+    #--- b ---#
+    slope = 4,
+    color = "blue"
+  )  
+```
+
+$$y = a + b\times x$$
+
++ `intercept`: $a$
++ `slope`: $b$
+
+]
+
+.right-plot[
+```{r ab-line-fig, ref.label = "ab-line", echo = F, out.width = "90%"}  
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[smooth]
+
+.left-code[
+```{r smooth, eval = F}  
+g_fig_scatter +
+  geom_smooth(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9
+    )
+  )
+```
+
+Also try
+
+```{r , eval = F}  
+g_fig_scatter +
+  geom_smooth(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9
+    ),
+    method = "lm"
+  )
+```
+
+]
+
+.right-plot[
+```{r smooth-fig, ref.label = "smooth", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[ribbon]
+
+.left-code[
+```{r ribbon, eval = F}  
+g_fig_scatter +
+  geom_ribbon(
+    aes(
+      x = d3_5_9, 
+      ymin = 100,
+      ymax = 200
+    ),
+    fill = "green",
+    alpha = 0.3
+  )
+
+```
+
++ `ymin`: lower bound of the ribbon
++ `ymax`: upper bound of the ribbon
+
+Useful when drawing confidence intervals.
+
+]
+
+.right-plot[
+```{r ribbon-fig, ref.label = "ribbon", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[text]
+
+.left-code[
+```{r text-ex, eval = F}  
+g_fig_scatter +
+  geom_text(
+    aes(
+      x = d3_5_9,
+      y = corn_yield,
+      label = state_name,
+    )
+  )
+```
++ `x`, `y`: position of where texts are placed
++ `label`: variable to print
+
+]
+
+.right-plot[
+```{r text-ex-fig, ref.label = "text-ex", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+
+.panel[.panel-name[annotate]
+
+.left-code[
+```{r annotate, eval = F}  
+g_fig_scatter +
+  annotate(
+    'text',
+    x = 10,
+    y = 50,
+    label = 'Drought hurts \n a lot!!',
+    size = 3,
+    color = "red"
+  )
+```
+
++ `x`: where on x-axis
++ `y`: where on y-axis
++ `label`: text to print (\n break the line)
++ size: font size
+
+]
+
+.right-plot[
+```{r annotate-fig, ref.label = "annotate", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+
+
+# Multiple datasets in one figure
+
+.panelset[ 
+
+.panel[.panel-name[multiple datasets]
+
+.left-full[
+
+<span style="color:red">Important: </span>`data = county_yield` declared inside `ggplot()` applies to ALL the subsequent `geom_*()`s unless overwritten locally inside individual `geom_*()`s.
+
+Try this:
+
+```{r eval = F}
+ggplot() + 
+  geom_point(data = county_yield, aes(y = corn_yield, x = d3_5_9)) +
+  geom_smooth(aes(y = corn_yield, x = d3_5_9))
+```
+
+It is easy to use multiple datasets inside a single `ggplot` object (or a figure). 
+
+You just need to specify what dataset to use locally inside individual `geom_*()`s.
+
+Let's see how this works using an example of drawing the  confidence intervals around the regression lie of the following regression:
+
+<br>
+
+$$corn\_yield = \beta_0 + \beta_1 d3\_5\_9 + v$$
+
+]
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+.left-full[
+
+```{r }
+#--- regression ---#
+reg <- lm(corn_yield ~ d3_5_9, data = county_yield)
+
+#--- find confidence interval ---#
+min_d3 <- county_yield$d3_5_9 %>% min(na.rm = TRUE) # minimum d3 observed
+max_d3 <- county_yield$d3_5_9 %>% max(na.rm = TRUE) # maximum d3 observed
+
+eval_points <- data.frame(d3_5_9 = seq(min_d3, max_d3, length = 1000)) # evaluation points
+
+ci_bound <- predict(reg, newdata = eval_points, interval = "confidence", level = 0.9) # upper and lower bound
+
+ci_bound_data <- cbind(eval_points, ci_bound) # combine evaluation points and ci
+```
+
+```{r }
+head(ci_bound_data) 
+```
+]
+
+  ] 
+
+<!-- panel ends here -->
+
+]
+
+---
+
+
+```{r mult-geom, cache = F, include = F}
+ggplot() + 
+  #--- scatter plot ---#
+  geom_point(
+    data = county_yield, 
+    aes(y = corn_yield, x = d3_5_9)
+  ) + #BREAK
+  #--- regression line ---#
+  geom_line(
+    data = ci_bound_data, 
+    aes(x = d3_5_9, y = fit),
+    color = "blue",
+    size = 1.2
+  ) + #BREAK
+  #--- confidence interval ---#
+  geom_ribbon(
+    data = ci_bound_data,
+    aes(x = d3_5_9, ymin = lwr, ymax = upr),
+    fill = "red",
+    alpha = 0.4
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "mult-geom", 
+  title = "# Multiple datasets in one figure",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+<!-- 
+#=========================================
+# Make your figures presentable to others    
+#=========================================
+-->
+
+text.html.markdown.rmarkdown meta.block-level.markdown markup.heading.1.markdown 
+  
+---
+
+class: inverse, center, middle
+name: fine-tune
+
+# Make your figures presentable to others 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Make your figures presentable to others 
+
+
+.panelset[ 
+
+.panel[.panel-name[Motivation]
+
+.left-full[
+
++ Figures we have created so far cannot be used for formal presentations or publications. They are simply too crude.
+
++ We need fine-tune raw figures before they are publishable. 
+
++ You can control virtually every element of a figure under the `ggplot2` framework.
+
++ Take a look at [here](https://ggplot2.tidyverse.org/reference/theme.html) for the complete list of options you can use to modify the theme of figures
+
+<span style="color:red"> Key:</span> The most important thing is actually to know which part of a figure a theme option refers to (e.g., `axis.text`)
+
+]
+
+  ]
+
+.panel[.panel-name[two types]
+
+.left-full[
+
+## Two types of operations
+
+Operations to make your figures presentable can be categorized into two types:
+
++ Content-altering
++ Theme-altering
+ 
+They are two separate things.
+
+## Examples:
+
+For the y-axis title,
+
++ The axis title text itself (say "Corn Yield (bu/acre)") falls under the **content** category.   
+
++ The position of or the font size of the axis-title fall under the **theme** category
+
+The content itself does not change when theme is altered.
+
+]
+ 
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[content-altering]
+
+```{r echo = F}
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+
+g_box <- ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  )
+```
+
+.left5[
+
+Original
+
+```{r original-f, echo = F}
+g_box 
+```
+]
+
+.right5[
+
+Altered
+
+```{r altered-f, echo = F}
+g_box +
+  xlab("Year") +
+  ylab("Corn Yield (bu/acre)") +
+  scale_fill_viridis_d()
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[theme-altering]
+
+.left5[
+
+Original
+
+```{r t-original-f, echo = F}
+g_box 
+```
+]
+
+.right5[
+
+Altered
+
+```{r t-altered-f, echo = F}
+g_box +
+  theme(
+    axis.title = element_text(size = 20)
+  )
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[Note]
+
+.left-full[
+
+<br>
+
++ Distinctions between the two types of actions are not always clear
+
++ But, typically, you use 
+  * `scale_*()` function series to alter contents
+  * `theme()` function to alter the theme
+
++ Note that there are shorthand convenience functions to alter figure contents for commonly altered parts of figures
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+# Axes content
+
+.panelset[ 
+
+.panel[.panel-name[Preparation]
+
+We are going to build on this figure in this section:
+
+.left-code[
+
+```{r g-box, results = "hide"}  
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+
+g_box <- ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  )
+```
+]
+
+.right-plot[
+```{r g-box-f-a, echo = F, out.width = "90%"}  
+g_box
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[How]
+
+.left-full[
+We can use 
+
++ `scale_x_discrete()`/`scale_x_continuous()` for x-axis
++ `scale_y_discrete()`/`scale_y_continuous()` for y-axis
+
+to control the following elements of axes:
+
++ `name`: an axis title 
++ `limit`: the range of an axis
++ `breaks`: axis ticks positions
++ `label`: axis texts at ticks
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+We use `scale_x_discrete()` if `x` is a discrete variable (not numeric) and `scale_x_continuous()` if `x` is a continuous variable (numeric).
+
+The same applies for `y`.
+
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[axis title]
+
+.left5[
+
+
+```{r axis-title, eval = F}  
+g_box + 
+  scale_x_discrete(name = "Year") + #<<
+  scale_y_continuous(name = "Corn Yield (bu/acre)") #<< 
+```
+
+Or just this,
+
+```{r eval = F}
+g_box + 
+  xlabel("Year") + #<<
+  ylabel("Corn Yield (bu/acre)") #<< 
+```
+
+]
+
+.right5[
+```{r ref.label = "axis-title", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[limit]
+
+.left5[
+```{r axis-limit, eval = F}  
+g_box + 
+  scale_x_discrete(
+    name = "Year" 
+  ) +
+  scale_y_continuous(
+    name = "Corn Yield (bu/acre)",
+    #--- first min, second max ---#
+    limit = c(100, 200) #<<
+  ) 
+```
+
+Or just,
+
+```{r eval = F}
+g_box + 
+  xlabel("Year") +
+  ylabel("Corn Yield (bu/acre)") +
+  ylim(100, 200) #<<
+     
+```
+
+Or,
+
+You can filter the data first and then use the filtered data.
+
+]
+
+.right5[
+```{r ref.label = "axis-limit", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ]
+
+.panel[.panel-name[breaks and labels]
+
+.left5[
+```{r axis-breaks, eval = F}  
+g_box + 
+  scale_x_discrete(
+    name = "Year",
+    label = gsub("20", "", as.character(2000:2018)) #<<
+  ) +
+  scale_y_continuous(
+    name = "Corn Yield (bu/acre)",
+    limit = c(100, 200),
+    breaks = seq(100, 200, by = 10) #<<
+  ) 
+```
+
+<br>
+
++ `breaks`: determines where the ticks are located
++ `labels`: defines the texts at the ticks
+
+]
+
+.right5[
+```{r ref.label = "axis-breaks", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+# Exercise 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-code[
+
+Run the following code to create `gg_delay`, which you will build on.
+
+```{r prep-ex-axes}  
+library(nycflights13)
+
+gg_delay <- flights %>% 
+  group_by(origin, month) %>% 
+  summarize(mean_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% 
+  ggplot(.) +
+    geom_line(aes(y = mean_arr_delay, x = month, color = origin))
+```
+]
+
+.right-plot[
+```{r prep-ex-axes-f, echo = F}  
+gg_delay
+```
+]
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[Exercise 1]
+
+.left5[
+
+Change the axes content to create the figure on the right using `scale_x_continuous()` and `scale_y_continuous()`. 
+
+Here are the list of changes you need to make:
+
++ x-axis 
+  * change the x-axis title to "Month"
+  * change the limit of the x-axis title to 4 through 8
+  * change the the breaks and their labels of the x-axis ticks (breaks) to 4 through 8 
++ y-axis 
+  * change the y-axis title to "Average Arrival Delay (minutes)"
+  * change the limit of the y-axis title to 0 through 25
+
+]
+
+.right5[
+
+```{r g-ex-1, echo = F, out.width = "90%"}
+gg_delay + 
+  scale_x_continuous(
+    name = "Month",
+    limit = c(4, 8),
+    breaks = 4:8
+  ) +
+  scale_y_continuous(
+    name = "Average Arrival Delay (minutes)",
+    limit = c(0, 25)
+  ) 
+```
+
+]
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[Exercise 2]
+
+.left5[
+
+Change the axes content to create the figure on the right. But, use `scale_x_continuous()` only for changing the x-axis breaks. 
+
+Here are the list of changes you need to make:
+
++ x-axis 
+  * change the x-axis title to "Month"
+  * change the limit of the x-axis title to 4 through 8
+  * change the the breaks and their labels of the x-axis ticks (breaks) to 4 through 8 
++ y-axis 
+  * change the y-axis title to "Average Arrival Delay (minutes)"
+  * change the limit of the y-axis title to 0 through 25
+
+]
+
+.right5[
+
+```{r g-ex-2, echo = F, out.width = "90%"}
+gg_delay + 
+  scale_x_continuous(
+    name = "Month",
+    limit = c(4, 8),
+    breaks = 4:8
+  ) +
+  scale_y_continuous(
+    name = "Average Arrival Delay (minutes)",
+    limit = c(0, 25)
+  ) 
+```
+
+]
+  ] 
+
+  <!-- panel ends here -->
+]
+
+<!-- panel set ends here -->
+
+
+---
+
+# Legends content
+
+.panelset[ 
+
+.panel[.panel-name[Preparation]
+
+We are going to build on this figure in this section:
+
+.left-code[
+```{r start-leg-content, results = "hide"}  
+g_axis <- g_box + 
+  scale_x_discrete(
+    name = "Year",
+    label = gsub("20", "", as.character(2000:2018))
+  ) +
+  scale_y_continuous(
+    name = "Corn Yield (bu/acre)",
+    limit = c(100, 200),
+    breaks = seq(100, 200, by = 10)
+  )
+```
+]
+
+.right-plot[
+```{r start-leg-content-f, echo = F, out.width = "90%"}  
+g_axis
+```
+]
+
+ 
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[title]
+
+
+.left-code[
+
+```{r l-title, eval = F}  
+g_axis + 
+  scale_fill_brewer(name = "State") #<<
+```
+
+Or,
+
+```{r , eval = F}  
+g_axis + 
+  labs(fill = "State") #<<
+```
+
+]
+
+.right-plot[
+```{r ref.label = "l-title", echo = F, dependson = "starting-point", out.width = "90%"}  
+
+```
+]
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[fill color]
+
+.left-code[
+
+```{r l-fill, eval = F}  
+g_axis + 
+  scale_fill_brewer(
+    name = "state", 
+    palette = "Set1" #<<
+    )
+```
+
+<span style="color:red"> We are going to spend lots of time on color scheme later. </span>
+
+]
+
+.right-plot[
+```{r ref.label = "l-fill", echo = F, dependson = "starting-point", out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[title position]
+
+.left-code[
+
+```{r l-title-pos, eval = F}  
+g_axis + 
+  scale_fill_brewer(
+    name = "state", 
+    palette = "Set1",
+    guide = guide_legend( #<<
+      title.position = "left" #<<
+    ) #<<
+  )
+```
+
+]
+
+.right-plot[
+```{r ref.label = "l-title-pos", echo = F, dependson = "starting-point", out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[wrapping]
+
+.left-code[
+
+```{r l-wrapping, eval = F}  
+g_axis + 
+  scale_fill_brewer(
+    name = "state", 
+    palette = "Set1",
+    guide = guide_legend(
+      title.position = "left",
+      nrow = 2 #<<
+    )
+  )
+```
+
+]
+
+.right-plot[
+```{r ref.label = "l-wrapping", echo = F, dependson = "starting-point", out.width = "90%"}  
+
+```
+]
+
+  ] <!-- panel ends here --> 
+]
+
+---
+
+# Exercise   
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-code[
+
+Run the following code to create `gg_delay`, which you will build on.
+
+```{r prep-ex-legends}  
+library(nycflights13)
+
+gg_delay <- flights %>% 
+  group_by(origin, month) %>% 
+  summarize(mean_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% 
+  ggplot(.) +
+    geom_line(aes(y = mean_arr_delay, x = month, color = origin))
+```
+]
+
+.right-plot[
+```{r prep-ex-legends-f, echo = F}  
+gg_delay
+```
+]
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[Exercise]
+
+.left5[
+
+Change the legend contents to create the figure on the right. Using `scale_*_brewer()`. You need to identify what goes into `*` in `scale_*_brewer()`.
+
+Here are the list of changes you need to make:
+
+* change the legend title to "Airports in NY"
+* change the the legend title position to "bottom"
+* change the legend items to be spread in 3 columns
+
+]
+
+.right5[
+
+```{r g-ex-legend-1, echo = F, out.width = "90%"}
+gg_delay + 
+  scale_color_brewer(
+    name = "Airports in NY",
+    palette = "Set2",
+    guide = guide_legend(
+      title.position = "bottom",
+      ncol = 3
+    )
+  ) 
+```
+
+]
+  ]
+
+<!-- panel ends here -->
+
+]
+
+<!-- panel set ends here -->
+
+
+---
+
+
+# Theme
+
+.panelset[ 
+
+.panel[.panel-name[Naming rules]
+
+.left-full[
+
+When specifying the theme of figure elements, it is good to know the naming convention of figure elements:
+
+For example:
+
++ `axis.title` 
+
+This refers to the title of both x- and y-axis. Any aesthetic theme you apply to this element will be reflected on the title of both x- and y-axis.  
+
++ `axis.title.x` 
+
+This refers to the title of only x-axis. Any aesthetic theme you apply to this element will be reflected on the title of only x-axis.
+
+So, basically appending `.name` narrows down the scope of the figure elements the element name refers to.
+
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[Common functions]
+
+.left-full[
+
+There are common functions we use to specify the aesthetic nature of figure elements based on the type of the elements:
+
+<br>
+
++ `element_text()`: for text elements like `axis.text`, `axis.title`, `legend.text`
+
+Inside the function, you specify things like font size, font family, angle, etc.
+
++ `element_rect()`: for box-like elements like `legend.background`, `plot.background`, `strip.background`
+
+Inside the function, you specify things like font background color, border line color, etc.
+
++ `element_line()`: for line elements like `panel.grid.major`, `axis.line.x`
+
+Inside the function, you specify things like line thickness, line color, etc.
+
++ `element_blank()`: any components
+
+It makes the specified component disappear.
+
++ `unit()`: for attributes of figure elements like `legend.key.width`, `legend.box.spacing` 
+]
+
+  ]
+
+]
+
+---
+
+# Axis theme 
+
+.panelset[ 
+
+.panel[.panel-name[Preparation]
+
+We are going to build on this figure in this section:
+
+.left-code[
+```{r start-axis-theme, eval = F}  
+g_axis
+```
+]
+
+.right-plot[
+```{r start-axis-theme-f, echo = F, out.width = "90%"}  
+g_axis
+```
+]
+
+  ]
+
+.panel[.panel-name[title and text]
+
+.left5[
+```{r at-font, eval = F}
+g_axis +
+  theme(
+    axis.title.x = element_text(size = 8, color = "red"), #<<
+    axis.text = element_text(size = 14, family = "Times") #<<
+  )
+```
+]
+
+.right5[
+```{r at-font-f, ref.label = "at-font", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+.panel[.panel-name[line]
+
+.left5[
+```{r at-line, eval = F}
+g_axis +
+  theme(
+    axis.title.x = element_text(size = 8, color = "red"),
+    axis.text = element_text(size = 14, family = "Times"),
+    axis.line.y = element_line(size = 2, color = "blue") #<<
+  )
+```
+
+]
+
+.right5[
+```{r at-line-f, ref.label = "at-line", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+.panel[.panel-name[ticks]
+
+.left5[
+```{r at-ticks, eval = F}
+g_axis +
+  theme(
+    axis.title.x = element_text(size = 8, color = "red"),
+    axis.text = element_text(size = 14, family = "Times"),
+    axis.line.y = element_line(size = 2, color = "blue"),
+    axis.ticks.length.x = unit(2, "cm") #<<
+  )
+```
+]
+
+.right5[
+```{r at-ticks-f, ref.label = "at-ticks", echo = F, out.width = "90%"}
+
+```
+]
+
+
+  ]
+
+  <!-- panel ends here -->
+
+]
+
+
+---
+
+
+# Legends theme
+
+.panelset[ 
+
+
+.panel[.panel-name[How]
+
+<br>
+
+We can use `them()` to change the aesthetics of legends. Some of the elements include
+
++ title
++ position
++ key 
++ text
++ direction
++ background
+
+See [here](https://ggplot2.tidyverse.org/reference/theme.html) for the full list of options related to legends.
+
+We will discuss how to change the color scheme of legends later in much detail.
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+This is what we will build on: 
+
+.left-code[
+```{r starting-point}  
+g_l <- g_axis +
+  scale_fill_brewer(
+    palette = "Paired",
+    guide = guide_legend(
+      title.position = "left",
+      nrow = 2
+    )
+  )
+```
+]
+
+.right-plot[
+```{r starting-point-f, echo = F, dependson = "starting-point", out.width = "90%"}  
+g_l
+```
+]
+
+  ] 
+
+.panel[.panel-name[position]
+
+.left-code[
+```{r l-position, eval = F}  
+g_l +
+  labs(fill = "State") +
+  theme( #<<
+    legend.position = "bottom" #<<
+  ) #<<
+```
+
+]
+
+.right-plot[
+```{r l-position-f, ref.label = "l-position", echo = F, dependson = "starting-point", out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[key]
+
+.left-code[
+```{r key, eval = F}  
+g_l +
+  labs(fill = "State") +
+  theme(
+    legend.position = "bottom",
+    legend.key.height = unit(0.5, "cm"), #<<
+    legend.key.width = unit(2, "cm") #<<
+  ) 
+```
+
+]
+
+.right-plot[
+```{r l-key-f, ref.label = "key", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[font]
+
+.left-code[
+```{r font, eval = F}  
+g_l +
+  labs(fill = "State") +
+  theme(
+    legend.position = "bottom",
+    legend.key.height = unit(0.5, "cm"),
+    legend.key.width = unit(2, "cm"),
+    legend.text = element_text( #<<
+      size = 16, #<<
+      family = "Times" #<<
+    ), 
+    legend.title = element_text( #<<
+      size = 6, #<<
+      family = "Courier", #<<
+      color = "red" #<<
+    ), 
+  ) 
+```
+]
+
+.right-plot[
+```{r l-font-f, ref.label = "font", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[background]
+
+.left-code[
+```{r background, eval = F}  
+g_l +
+  labs(fill = "State") +
+  theme(
+    legend.position = "bottom",
+    legend.key.height = unit(0.5, "cm"),
+    legend.key.width = unit(2, "cm"),
+    legend.text = element_text(
+      size = 16, 
+      family = "Times"
+    ),
+    legend.title = element_text(
+      size = 6, 
+      family = "Courier",
+      color = "red"
+    ),
+    legend.background = element_rect( #<<
+      fill = "lightblue", #<<
+      linetype = "solid" #<<
+    ) #<<
+  ) 
+```
+]
+
+.right-plot[
+```{r l-bcg-f, ref.label = "background", echo = F, out.width = "90%"}  
+
+```
+]
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+
+# Pre-made themes
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+There are a bunch of pre-made themes from the `ggplot2` and `ggthemes` packages that can quickly change how figures look.
+
+Install and library  `ggthemes` package first:
+
+```{r eval = F}
+#--- install ---#
+install.packages("ggthemes") 
+
+#--- library ---#
+library("ggthemes") 
+```
+
+See the full list of pre-made themes [here](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/).
+
+]
+
+  ]
+
+.panel[.panel-name[bw]
+
+.left-code[
+```{r bw, eval = F}  
+g_axis +
+  theme_bw()
+```
+]
+
+.right-plot[
+```{r bw-f, ref.label = "bw", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[void]
+
+.left-code[
+```{r void, eval = F}  
+g_axis +
+  theme_void()
+```
+]
+
+.right-plot[
+```{r void-f, ref.label = "void", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[stata]
+
+.left-code[
+```{r stata, eval = F}  
+g_axis +
+  theme_stata()
+```
+]
+
+.right-plot[
+```{r stata-f, ref.label = "stata", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[gdocs]
+
+.left-code[
+```{r gdocs, eval = F}  
+g_axis +
+  theme_gdocs()
+```
+]
+
+.right-plot[
+```{r gdocs-f, ref.label = "gdocs", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[economist]
+
+.left-code[
+```{r economist, eval = F}  
+g_axis +
+  theme_economist()
+```
+]
+
+.right-plot[
+```{r economist-f, ref.label = "economist", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[excel]
+
+.left-code[
+```{r excel, eval = F}  
+g_axis +
+  theme_excel()
+```
+]
+
+.right-plot[
+```{r excel-f, ref.label = "excel", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+]
+
+---
+
+# Panel (build on a pre-made theme)
+
+.panelset[ 
+
+.panel[.panel-name[How]
+
+.left-full[
+
+## Build on pre-made theme
+You can simply override parts of the pre-made theme by adding theme options like this (see more on this [here](#custom-theme)):
+
+```{r eval = F}
+g_axis +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_blank()
+  )
+```
+
+So, you can pick the pre-made theme that looks the closest to what you would like, and then add on theme elements to the part you do not like.
+
+]
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+.left-code[
+This is what we will be building on:
+
+```{r start-panel, eval = F}  
+g_axis +
+  theme_bw()  
+```
+]
+
+.right-plot[
+```{r start-panel-f, ref.label = "start-panel", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[minor grid]
+
+
+.left-code[
+```{r panel-grid-minor, eval = F}
+g_axis +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_blank() #<<
+  )
+```
+
+]
+
+.right-plot[
+```{r panel-grid-minor-f, ref.label = "panel-grid-minor", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+.panel[.panel-name[major grid]
+
+.left-code[
+```{r panel-grid-major, eval = F}
+g_axis +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(), #<<
+    panel.grid.major.y = element_line( #<<
+      size = 1,  #<<
+      color = "blue", #<< 
+      linetype = "dotted" #<<
+    ) #<<
+  )
+```
+
+See [here](http://sape.inf.usi.ch/quick-reference/ggplot2/linetype) for the line types available.
+
+]
+
+.right-plot[
+```{r panel-grid-major-f, ref.label = "panel-grid-major", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+]
+
+---
+
+
+# Faceted figure theme 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+<br>
+
+Faceted figures have `strip` elements that do no exist for non-faceted figures like
+
++ `strip.background`
++ `strip.placement`
++ `strip.text`
++ `panel.spacing`
+
+We learn how to modify these elements. 
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+.left-code[
+
+Create a dataset for this section:
+
+```{r }
+county_yield_f <- county_yield %>% 
+  filter(state_name %in% c("Nebraska", "Colorado", "Kansas")) %>% 
+  filter(year %in% c(2005, 2006))  
+```
+
+Create a faceted figure we will build on:
+
+```{r f-prep, echo = F}
+g_f <- ggplot(data = county_yield_f) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    scales = "free_x"
+  )
+```
+
+]
+
+.right-plot[
+```{r f-prep-f, echo = F, out.width = "90%"}  
+g_f
+```
+]
+
+  ] 
+
+.panel[.panel-name[text]
+
+.left-code[
+```{r st-text, eval = F}
+g_f +
+  theme(
+    strip.text.x = element_text( #<<
+      size = 12, #<<
+      family = "Times", #<< 
+      color = "red" #<<
+    ), #<<
+    strip.text.y = element_text( #<<
+      angle = 0, #<< 
+      size = 6, #<<
+      color = "blue" #<<
+    ) #<<
+  )
+```
+
+]
+
+.right-plot[
+```{r st-text-f, ref.label = "st-text", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+.panel[.panel-name[background]
+
+.left-code[
+```{r st-background, eval = F}
+g_f +
+  theme(
+    strip.text.x = element_text(
+      size = 12, 
+      family = "Times", 
+      color = "red"
+    ),
+    strip.text.y = element_text(
+      angle = 0, 
+      size = 6, 
+      color = "blue"
+    ),
+    strip.background.x = element_rect( #<<
+      color = "blue" #<<
+    ), #<<
+    strip.background.y = element_blank() #<<
+  ) 
+```
+
+]
+
+.right-plot[
+```{r st-background-f, ref.label = "st-background", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] 
+
+.panel[.panel-name[panel spacing]
+
+
+.left-code[
+```{r p-spacing, eval = F}
+g_f +
+  theme(
+    strip.text.x = element_text(
+      size = 12, 
+      family = "Times", 
+      color = "red"
+    ),
+    strip.text.y = element_text(
+      angle = 0, 
+      size = 6, 
+      color = "blue"
+    ),
+    strip.background.x = element_rect(
+      color = "blue"
+    ),
+    strip.background.y = element_blank(),
+    panel.spacing.x = unit(2, "cm"), #<<
+    panel.spacing.y = unit(0.01, "cm") #<<
+  ) 
+```
+
+]
+
+.right-plot[
+```{r p-spacing-f, ref.label = "p-spacing", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+
+# More font families 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
+You can use more font families by taking advantage of the `extrafont` package. 
+
+Install and library the package, and then run `font_import()` to import font families (you need to do this only once). 
+
+```{r eval = F}
+install.packages(extrafont)
+
+library(extrafont)
+
+font_import()
+```
+
+Next time around, just run 
+
+```{r }
+library(extrafont)
+
+#--- load fonts ---#
+loadfonts()
+```
+
+]
+
+  ]
+
+.panel[.panel-name[font families]
+
+You can use `fonttable()` to see the list of fonts available:
+
+```{r }
+fonttable() %>% 
+  dplyr::select(FontName, Bold,  Italic) %>% 
+  head(20)  
+```
+
+  ]
+
+.panel[.panel-name[try a family]
+
+
+.left-code[
+```{r f-fam, eval = F}
+g_f +
+  theme(
+    strip.text.y = element_text(
+      family = "Georgia", #<<
+      color = "red"
+    )
+  )
+```
+]
+
+.right-plot[
+```{r f-fam-f, ref.label = "f-fam", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+# More flexible color options with HEX 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+Instead of naming the color you want to use, you can use **HEX color codes** instead.
+
+<span style="color:red"> Direction: </span>
+
++ Visit [here](https://www.color-hex.com/)
++ Click on any color you like
++ Then you will see two sets of color gradients (thicker and lighter from the color you picked)
++ Pick the color you like from the color bar and copy the HEX color code beneath the color you picked
+
+You could alternatively use the RGB codes, but I do not see any reasons to do so because the use of HEX codes is sufficient. 
+
+]
+
+  ]
+
+.panel[.panel-name[Example]
+
+
+.left-code[
+```{r color-hex, eval = F}
+ggplot(data = county_yield) +
+  geom_point(
+    aes(y = corn_yield, x = d3_5_9), 
+    color = "#824283" #<<
+  ) 
+```
+
+You can use HEX color codes for any color-related elements in a figure.
+
+]
+
+.right-plot[
+```{r color-hex-f, ref.label = "color-hex", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+]
+
+
+---
+
+# Color scale
+
+.panelset[ 
+ 
+.panel[.panel-name[Intro 1]
+
+.left-full[
+
+The choice of color schemes for your figures are very important (not so much for academic journals ...)
+
+We use `scale_A_B()` functions to for color specification:
+
++ **A** is the name of aesthetic (`color` or `fill`)
++ **B** is the type of color specification method
+
+]
+
+   ]
+ 
+.panel[.panel-name[Intro 2]
+
+.left-full[
+
+For example, consider the following code:
+
+```{r color-aes, eval = F, echo = F}
+ggplot(data = county_yield) +
+  geom_point(aes(y = corn_yield, x = d3_5_9, color = corn_yield))
+```
+
+```{r echo = F}
+decorate("color-aes", eval = F) %>% 
+  flair("color = corn_yield") %>%
+  knit_print.with_flair()
+```
+
+Since it is the `color` aesthetic that we want to work on, **A** = `color`.
+
+There are many options for **B**. Indeed, there are so many that, it gets confusing!
+
++ `scale_color_brewer()` (discrete)
++ `scale_color_distiller()` (continuous)
++ `scale_color_viridis_d()` (discrete)
++ `scale_color_viridis_c()` (continuous)
++ `scale_color_continuous()` (continuous)
++ `scale_color_discrete()` (discrete)
++ `scale_color_hue()` (discrete)
+
+One thing to remember is that you need to be aware of whether the aesthetic variable (here, `corn_yield`) is numeric or not as that determines acceptable type of **B**.
+
+]
+
+
+   ]
+ 
+ ]
+  
+---
+
+# Viridis 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+<br>
+
+We have four `scale` functions for Viridis color map:
+
++ `scale_color_viridis_c()`: for `color` aesthetic with a continuous variable
++ `scale_color_viridis_d()`: for `color` aesthetic with a discrete variable
++ `scale_fill_viridis_c()`: for `fill` aesthetic with a continuous variable
++ `scale_fill_viridis_d()`: for `fill` aesthetic with a discrete variable
+
+There are five color scheme types under the Viridis color map:
+
++ magma
++ inferno
++ plasma
++ viridis
++ civiris
+
+You can use `option` to specify which one of them you want to use inside the `scale` functions.
+
+These color schemes are color-blind sage.
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[types]
+
+```{r viridis-ex, echo = F, fig.dim = c(6, 3.5), out.width = "80%"}
+data("geyser", package = "MASS")
+
+ggplot(geyser, aes(x = duration, y = waiting)) +
+  xlim(0.5, 6) + ylim(40, 110) +
+  stat_density2d(aes(fill = ..level..), geom="polygon") +
+  theme_bw() +
+  theme(panel.grid=element_blank()) -> gg
+
+((gg + scale_fill_viridis_c(option="A") + labs(x="magma (option A)", y=NULL)) |
+(gg + scale_fill_viridis_c(option="B") + labs(x="inferno (option B)", y=NULL)))/ 
+((gg + scale_fill_viridis_c(option="C") + labs(x="plasma (option C)", y=NULL)) |
+(gg + scale_fill_viridis_c(option="D") + labs(x="viridis (default)", y=NULL)))
+
+```
+
+  ]
+
+.panel[.panel-name[Example 1]
+
+
+.left-code[
+```{r viridis-ex-1, eval = F}
+ggplot(data = filter(county_yield, corn_yield > 50)) +
+  geom_point(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9, 
+      color = corn_yield
+    )
+  ) +
+  scale_color_viridis_c() #<<
+```
+
+]
+
+.right-plot[
+```{r viridis-ex-1-f, ref.label = "viridis-ex-1", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+.panel[.panel-name[Example 2]
+
+.left-code[
+```{r viridis-ex-2, eval = F}
+ggplot(data = filter(county_yield, corn_yield > 50)) +
+  geom_point(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9, 
+      color = corn_yield
+    )
+  ) +
+  scale_color_viridis_c(option = 2) #<<
+```
+
+]
+
+.right-plot[
+```{r viridis-ex-2-f, ref.label = "viridis-ex-2", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[reverse]
+
+.left-code[
+```{r viridis-reverse, eval = F}
+ggplot(data = filter(county_yield, corn_yield > 50)) +
+  geom_point(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9, 
+      color = corn_yield
+    )
+  ) +
+  scale_color_viridis_c(
+    option = 2, 
+    direction = - 1 #<<
+  )
+```
+
+]
+
+.right-plot[
+```{r viridis-reverse-f, ref.label = "viridis-reverse", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+# RColorBrewer 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+`RColorBrewer` package provides a number of color palettes of three types:
+
++ **sequential**: suitable for a variable that has ordinal meaning (e.g., temperature, precipitation)
++ **diverging**: suitable for variables that take both negative and positive values (e.g., changes in groundwater level)
++ **qualitative**: suitable for qualitative or categorical variable
+
+These palettes are particularly suitable for maps.
+
+<span style="color:red"> Direction: </span>visit [here](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3). 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+We use two types of scale functions for the palettes:
+
++ `scale_A_brewer()`: for discrete aesthetic variable
++ `scale_A_distiller()`: for continuous aesthetic variable 
+ 
+]
+
+  ]
+
+.panel[.panel-name[sequential]
+
+```{r seq-s, out.width = "60%", fig.dim = c(6, 5)}
+display.brewer.all(type = "seq")  
+```
+
+  ]
+
+.panel[.panel-name[diverging]
+
+```{r div-s, out.width = "60%", fig.dim = c(6, 4)}
+display.brewer.all(type = "div")  
+```
+
+  ]
+
+.panel[.panel-name[qualitative]
+
+```{r qua-s, out.width = "60%", fig.dim = c(6, 4)}
+display.brewer.all(type = "qual")  
+```
+
+  ]
+
+.panel[.panel-name[Example 1]
+
+
+.left-code[
+
+Generate a dataset for visualization:
+
+```{r , results = "hide"}  
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+```
+
+Create a figure:
+
+```{r rb-ex-1, eval = F}
+ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  ) +
+  scale_fill_brewer(palette = "Set2") #<<
+```
+
+]
+
+.right-plot[
+```{r rb-ex-1-f, ref.label = "rb-ex-1", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[Example 2]
+
+.left-code[
+
+```{r rb-ex-2, eval = F}
+ggplot(data = filter(county_yield, corn_yield > 50)) +
+  geom_point(
+    aes(
+      y = corn_yield, 
+      x = d3_5_9, 
+      color = corn_yield
+    )
+  ) +
+  scale_color_distiller(palette = "RdYlGn") #<<
+```
+
+]
+
+.right-plot[
+```{r rb-ex-2-f, ref.label = "rb-ex-2", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+---
+
+
+# Set discrete color scale manually 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
+Sometimes, you just want to pick colors yourself. In that case, you can use 
+
++ `scale_color_manual()`
++ `scale_fill_manual()`
+
+Inside the `scale_*_manual()` function, you provide a named vector where a sequence of group names and their corresponding colors are specified to the `scale` function via the `values` option.
+
+For example, consider the box plot of corn yield for four states: Colorado, Kansas, Nebraska, and South Dakota. Then, a sample named vector looks like this:
+
+```{r eval = F}
+(
+cols <- c("Colorado" = "red", "Nebraska" = "blue", "Kansas" = "orange", "South Dakota" = "#ff0080")
+)
+```
+
+Now that a named vector is created, you can do the following to impose the color scheme you just defined.
+
+```{r eval = F}
+scale_fill_manual(values = cols)
+```
+
+]
+ 
+  ]
+
+.panel[.panel-name[Example]
+
+.left-code[
+
+Define a named color vector:
+
+```{r }
+cols <- c("Colorado" = "red", "Nebraska" = "blue", "Kansas" = "orange", "South Dakota" = "#ff0080")
+```
+
+Create a figure:
+
+```{r manu-ex, eval = F}
+ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  ) +
+  scale_fill_manual(values = cols) #<<
+```
+
+]
+
+.right-plot[
+```{r manu-ex-f, ref.label = "manu-ex", echo = F, out.width = "90%"}
+
+```
+]
+
+
+  ]
+
+]
+
+---
+
+# Set continuous color scale manually 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
+
+.content-box-green[**How**]
+
+You can use `scale_*_gradientn()` to create your own continuous color scale. 
+
+.content-box-green[**Syntax**]
+
+```{r eval = F}
+`scale_*_gradientn(colors, values)`
+```
+    
++ `colors`: a vector of colors 
++ `values`: a vector of numeric numbers ranging from 0 to 1
++ `limits`: define the lower and upper bounds of the scale bar
+
+`n`th value of `colors` is used for the interval defined by `n`th and `n+1`th values in `values`.
+
+]
+ 
+  ]
+
+.panel[.panel-name[Example]
+
+.left4[
+
+Create a figure:
+
+```{r manu-gradient, eval = F}
+ggplot(data = county_yield) + 
+  geom_point(
+    aes(
+      x = d1_5_9, 
+      y = corn_yield,
+      color = corn_yield
+    ),
+    size = 0.3
+  ) +
+  scale_color_gradientn(
+    colors = c("red", "orange", "green", "blue"),
+    values = c(0, 0.1, 0.2, 0.9, 1),
+    limits = c(100, 250)
+  ) 
+```
+
+In this example, green is dominant in the color bar because the interval [0.2, 0.9] is for `"green"` in `colors`, where the interval represents [`r 100 + (250-100)*0.2`, `r 100 + (250-100)*0.9`] 
+([100 + (250-100)\times 0.2, 100 + (250-100)\times 0.9]).
+
+]
+
+.right6[
+```{r manu-gradient-f, ref.label = "manu-gradient", echo = F, out.width = "90%"}
+
+```
+]
+
+  ]
+
+]
+
+
+---
+
+
+# Patchwork (grid of figures)
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-code[
+
+The `patchwork` package allows you to combine and arrange multiple figures (and even tables and texts) like the figure to the right:
+
+```{r eval = F}
+install.packages("patchwork")  
+
+library("patchwork")
+```
+
+See the [`patchwork` package website](https://patchwork.data-imaginist.com/index.html) for a fuller treatment of this package.
+
+]
+
+.right-plot[
+```{r patch-1, echo = F, out.width = "90%"}  
+g_fig_scatter | g_box
+```
+]
+
+  ]
+
+.panel[.panel-name[Preparation]
+
+.left-full[
+
+We are going to use following figures:
+
+```{r gen-ggs}
+g_1 <- ggplot(data = county_yield) + 
+  geom_histogram(aes(x = corn_yield)) +
+  ggtitle("g_1") 
+
+g_2 <- ggplot(data = county_yield) + 
+  geom_boxplot(aes(x = factor(year), y = corn_yield)) +
+  ggtitle("g_2")
+
+g_3 <- ggplot(data = county_yield) + 
+  geom_density(aes(x = corn_yield)) +
+  ggtitle("g_3")
+
+g_4 <- ggplot(data = mean_yield) + 
+  geom_line(aes(x = year, y = corn_yield)) +
+  ggtitle("g_4")
+```
+
+Note: `mean_yield` for `g_4` is created in the **Line Plot** tab in slide 9.
+
+]
+
+  ] 
+
+.panel[.panel-name[+]
+
+```{r plus-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 + g_2 
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[++]
+
+```{r pp-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 + g_2 + g_3 + g_4 
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[/]
+
+```{r v-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 / g_2
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[|]
+
+```{r h-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 | g_2
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[||]
+
+```{r hh-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 | g_2 | g_3 | g_4
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[()]
+
+```{r group-p-1, out.width = "75%", fig.dim = c(8, 5), dependson = "gen-ggs"}
+g_1 | (g_3 / g_4)
+```
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[faceting?]
+
+.left-full[
+
+The difference between faceted figures and panel of independent figures
+
++ `facet_*()`: faceted figures share the same legend   
++ `patchwork`: individual figures can clearly have independent legends    
+
+Faceting is not suitable for presenting multiple distinct variables as they need to share the same legend.
+
+Imagine plotting temperature (in Celsius) and precipitation (in mm) as faceted figures.
+
+<br>
+
+<span style="color:red"> Note: </span>
+
++ Before you use the `patchwork` packages to arrange figures, think a bit if you really need to do it. Can't you just arrange individual figures in WORD or latex? 
++ It is very useful if the destination of the panels of figures is html (e.g., shiny, flex dashboard) because it is not trivial to arrange figures the way the `patchwork` allows you to (you certainly need to know how **css** works).
+
+]
+
+  ] 
+
+]
+
+<!-- 
+#=========================================
+# Random tips    
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: tips
+
+# Tips 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Change the order 
+
+.panelset[ 
+
+.panel[.panel-name[Preparation]
+
+.left-full[
+
+Create a dataset for this section:
+
+```{r }
+county_yield_f <- county_yield %>% 
+  filter(state_name %in% c("Nebraska", "Colorado", "Kansas")) %>% 
+  filter(year %in% c(2005, 2006))  
+```
+
+Create a faceted figure we will work on:
+
+```{r eval = F}
+g_f <- ggplot(data = county_yield_f) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name ~ year, 
+    scales = "free_x"
+  )
+```
+
+]
+
+  ]
+
+.panel[.panel-name[Problem]
+
+<br>
+
++ You want the panels of figures to appear in the order of Nebraska, Kansas, and Colorado.
+
++ But, by default, `ggplot2` orders panels in alphabetical order
+
+```{r problem-f, echo = F, fig.dim = c(8, 4), out.width = "70%"}
+g_f 
+```
+
+  ]
+
+.panel[.panel-name[Solution]
+
+.left-full[
+
+You can turn `state_name` into a factor with the preferred order of state names.
+
+```{r }
+county_yield_f <- county_yield_f %>% 
+  mutate(
+    state_name_f = factor(state_name, level = c("Nebraska", "Kansas", "Colorado")
+  )
+) 
+```  
+
+```{r }
+county_yield_f$state_name_f %>% head()
+```
+
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[Problem solved]
+
+.left-code[
+```{r factor, echo = F, eval = F}
+ggplot(data = county_yield_f) + 
+  geom_histogram(aes(x = corn_yield)) +
+  facet_grid(
+    state_name_f ~ year, 
+    scales = "free_x"
+  )
+```
+
+```{r echo = F}
+decorate("factor", eval = F) %>% 
+  flair("state_name_f") %>%
+  knit_print.with_flair()
+```
+]
+
+.right-plot[
+```{r problem-f-s, ref.label = "factor", echo = F, out.width = "90%"}
+
+```
+]
+
+  ] <!-- panel ends here -->
+
+
+]
+
+---
+
+# More on box plots 
+
+.panelset[ 
+
+.panel[.panel-name[this works]
+
+.left-code[
+
+```{r}
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+```
+
+```{r box-disc, eval = F, echo = F}
+ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = factor(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  ) 
+```
+
+```{r echo = F}
+decorate("box-disc", eval = F) %>% 
+  flair('factor(year)') %>%
+  knit_print.with_flair()
+```
+
++ The `x` variable has to be discrete (character or factor). 
++ `factor(year)` converts `year` into a `factor`
+
+]
+
+.right-plot[
+```{r box-disc-f, ref.label = "box-disc", echo = F, out.width = "90%"}
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[not this]
+
+.left-code[
+
+```{r}
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+```
+
+```{r box-num, eval = F, echo = F}
+ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = year, 
+      y = corn_yield, 
+      fill = state_name
+    )
+  ) 
+```
+
+```{r echo = F}
+decorate("box-num", eval = F) %>% 
+  flair('x = year') %>%
+  knit_print.with_flair()
+```
+
++ The `x` variable has to be discrete (character or factor). 
++ `year` is numeric
+
+]
+
+.right-plot[
+```{r box-num-f, ref.label = "box-num", echo = F, out.width = "90%"}
+```
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[this works]
+
+.left-code[
+
+```{r}
+county_yield_s_b2010 <- county_yield %>% 
+  filter(year >= 2005, year <= 2010)
+```
+
+```{r box-char, eval = F, echo = F}
+ggplot(data = county_yield_s_b2010) + 
+  geom_boxplot(
+    aes(
+      x = as.character(year), 
+      y = corn_yield, 
+      fill = state_name
+    )
+  ) 
+```
+
+```{r echo = F}
+decorate("box-char", eval = F) %>% 
+  flair('x = as.character(year)') %>%
+  knit_print.with_flair()
+```
+
++ The `x` variable has to be discrete (character or factor). 
++ `as.character(year)` converts `year` into a `character` variable
+
+]
+
+.right-plot[
+```{r box-char-f, ref.label = "box-char", echo = F, out.width = "90%"}
+```
+]
+
+
+  ] <!-- panel ends here -->
+
+
+.panel[.panel-name[this?]
+
+
+
+.left-code[
+
+Load the `nycflights13` package to get access to the `weather` dataset.
+
+```{r }
+library(nycflights13)  
+```
+
+Create a box plot of temperature by month:
+```{r weather, eval = F, echo = F}
+ggplot(data = weather) +
+  geom_boxplot(
+    aes(
+      y = temp, 
+      x = as.character(month)
+    )
+  )
+```
+
+```{r echo = F}
+decorate("weather", eval = F) %>% 
+  flair('x = as.character(month)') %>%
+  knit_print.with_flair()
+```
+
++ Remember using `month` (which is a numeric variable) would not have worked
++ Notice that 10 and 11 come after 1 
+
+]
+
+.right-plot[
+```{r weather-f, ref.label = "weather", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ] 
+
+<!-- panel ends here -->
+
+.panel[.panel-name[this works]
+
+.left-code[
+
+Load the `nycflights13` package to get access to the `weather` dataset.
+
+```{r }
+library(nycflights13)  
+```
+
+Create a box plot of temperature by month:
+```{r weather-2, eval = F}
+ggplot(data = weather) +
+  geom_boxplot(
+    aes(
+      y = temp, 
+      x = factor(month) #<<
+    )
+  )
+```
+
+When a factor object is created using `factor()`, the order of its levels are set in alphabetical order for a character variable and in numeric order for a numeric variable (that's why it worked).
+
+]
+
+.right-plot[
+```{r weather-2-f, ref.label = "weather-2", echo = F, out.width = "90%"}  
+```
+]
+
+  ] <!-- panel ends here -->
+]
+
+---
+
+# More on bar charts
+
+.panelset[ 
+
+.panel[.panel-name[data prep]
+
+Create the following data:
+
+```{r }
+mean_yield_sy <- county_yield %>% 
+  filter(year >= 2010) %>% 
+  group_by(state_name, year) %>% 
+  summarize(
+    corn_yield = mean(corn_yield, na.rm = TRUE)
+  ) %>% 
+  filter(!is.na(year))
+```
+
+```{r echo = F}
+mean_yield_sy
+```
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[Default]
+
+.left5[
+
+By default `geom_bar()` creates a bar plot where the height of the bars are proportional to the number of observations in each value of x, meaning you do not need to supply `y` in `aes()`.
+
+```{r bar-1, out.width = "80%"}
+ggplot(data = mean_yield_sy) + 
+  geom_bar(
+    aes(
+      x = year
+    )
+  ) 
+```
+
+]
+
+.right5[
+
+You can make the height of bars to be the value of a variable by adding `y = variable` to `aes()` and add `stat = "identity"` option.
+
+```{r bar-2, out.width = "80%"}
+ggplot(data = mean_yield_sy) + 
+  geom_bar(
+    aes(
+      x = year,
+      y = corn_yield #<<
+    ),
+    stat = "identity"
+  ) 
+```
+
+]
+
+  ]
+
+<!-- panel ends here -->
+
+.panel[.panel-name[geom_col()]
+
+If you would like the height of bars to be the value of a variable, it is better to just use `geom_col()`, which does not ask you to put `stat = "identity"`.
+
+<br>
+
+.left-code[
+```{r bar-col, eval = F}
+ggplot(data = mean_yield_sy) + 
+  geom_col( #<<
+    aes(
+      x = year,
+      y = corn_yield 
+    )
+  ) 
+```
+]
+
+.right-plot[
+```{r bar-col-f, out.width = "80%", ref.label = "bar-col", echo = F}  
+
+```
+]
+
+  ] 
+
+  <!-- panel ends here -->
+
+.panel[.panel-name[position]
+
+You might have wondered why `con_yield` is really high. That's because the value of `corn_yield` is automatically stacked horizontally when there are more than one observations per group (here, year).
+
+.left5[
+
+No action:
+
+```{r position-1, out.width = "70%"}
+ggplot(data = mean_yield_sy) + 
+  geom_col( 
+    aes(
+      x = year,
+      y = corn_yield 
+    )
+  )   
+```
+
+]
+
+.right5[
+
+Fill-color differentiated by `state_name`:
+
+```{r position-2, out.width = "70%"}
+ggplot(data = mean_yield_sy) + 
+  geom_col( 
+    aes(
+      x = year,
+      y = corn_yield,
+      fill = state_name #<<
+    )
+  )   
+```
+
+]
+
+  ] 
+
+  <!-- panel ends here -->
+
+.panel[.panel-name[position]
+
+.left5[
+
+By default, bars are stacked (`position = "stack"`): 
+
+```{r position-s, out.width = "70%"}
+ggplot(data = mean_yield_sy) + 
+  geom_col( 
+    aes(x = year, y = corn_yield, fill = state_name)
+  )   
+```
+
+]
+
+.right5[
+
+You can add `position = "dodge"` to not stack bars vertically:
+
+```{r position-d, out.width = "70%"}
+ggplot(data = mean_yield_sy) + 
+  geom_col( 
+    aes(x = year, y = corn_yield, fill = state_name), 
+    position = "dodge" #<<
+  )   
+```
+
+]
+
+  ] 
+
+  <!-- panel ends here -->
+]
+
+<!-- panel set ends here -->
+
+
+
+---
+name: custom-theme
+
+# Custom theme 
+
+.panelset[ 
+
+.panel[.panel-name[Custom theme]
+
+.left-full[
+
+You can create your own theme, save it, and then use it later. 
+
+Here, I am creating my own theme off of `theme_economist()`, where axis titles and major panel grids are absent.
+
+```{r }
+my_theme <- theme_economist() +
+  theme(
+    axis.title = element_blank(),
+    panel.grid.major = element_blank()  
+  )
+```
+
+You can add `my_theme` like below just like a regular pre-made theme:
+
+```{r eval = F}
+ggplot(data = weather) +
+  geom_boxplot(
+    aes(y = temp, x = factor(month))
+  ) +
+  my_theme
+```
+
+]
+
+  ]
+
+.panel[.panel-name[Compare]
+
+.left5[
+
+```{r t-econ-f, out.width = "80%"}
+ggplot(data = weather) +
+  geom_boxplot(
+    aes(y = temp, x = factor(month))
+  ) +
+  theme_economist() #<<
+```
+]
+
+.right5[
+
+```{r t-econ-custom-f, out.width = "80%"}
+ggplot(data = weather) +
+  geom_boxplot(
+    aes(y = temp, x = factor(month))
+  ) +
+  my_theme #<< 
+```
+]
+
+  ]
+
+.panel[.panel-name[theme_set()]
+
+.left-full[
+
+If you would like to apply your theme to all the figures you generate, then use `theme_set()` like below:
+
+```{r eval = F}
+theme_set(my_theme)
+```
+
+After this, all of your figures will follow  `my_theme`.
+
+]
+
+  ] <!-- panel ends here -->
+
+]
+
+
+<!-- 
+#=========================================
+# Extensions    
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: gallery
+
+# Gallery of other type of figures
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+
+# Pie charts
+
+.left4[
+
+.content-box-green[**When to use**]:
+
+Pie charts are useful to visualize the share of multiple categories of the same variable (water use share by the industrial, public, and agricultural sectors)
+
+
+.content-box-green[**Data preparation**]
+
+Create a variable with the starting and ending angles for each category based on the share for each group (see next slide)
+
+.content-box-green[**How**]
+
+
+You can use `geom_arc_bar()` from the `ggforce` package to create a pie chart
+
+```{r cache = F}
+library(ggforce)
+```
+
+Then use `geom_arc_bar()` to create a pie chart where you provide the starting and ending angles.
+
+Note: You can use the following code as a template to create a pie chart. Replace `state_name` in `fill = state_name` with the variable representing the groups in your share data.
+
+]
+
+.right5[
+
+```{r pie-chart, echo = F}  
+share_data <- county_yield %>% 
+  dplyr::select(state_name, corn_yield) %>% 
+  group_by(state_name) %>% 
+  summarize(yield = mean(corn_yield, na.rm = T)) %>% 
+  mutate(yield_ratio = yield/sum(yield)) %>% 
+  mutate(
+    end_angle = 2*pi*cumsum(yield_ratio),
+    start_angle = lag(end_angle, default = 0),
+    mid_angle = (end_angle + start_angle)/2
+  )
+
+#--- define two parameters ---#
+rpie = 1 # pie radius
+rlabel = 0.6 * rpie # radius of the labels
+
+#--- create a pie chart ---#
+share_data %>% 
+  ggplot(data = .) + 
+    geom_arc_bar(
+      aes(x0 = 0, y0 = 0, r0 = 0, r = rpie, # fixed values
+        start = start_angle, 
+        end = end_angle, 
+        fill = state_name
+      )
+    ) +
+    geom_text(
+      aes(
+        x = rlabel * sin(mid_angle), 
+        y = rlabel * cos(mid_angle), 
+        label = state_name
+      ), 
+      hjust = 0.5, 
+      vjust = 0.5
+    ) +
+    coord_fixed() +
+    theme_void() +
+    scale_fill_viridis_d("State")
+
+```
+]
+
+---
+
+
+```{r pie-chart-flip, cache = F, include = F}
+#--- define two parameters ---#
+rpie = 1 # pie radius
+rlabel = 0.6 * rpie # radius of the labels
+
+county_yield %>% #BREAK
+  dplyr::select(state_name, corn_yield) %>% #BREAK
+  group_by(state_name) %>% #BREAK
+  summarize(yield = mean(corn_yield, na.rm = T)) %>% #BREAK
+  mutate(yield_ratio = yield/sum(yield)) %>% #BREAK
+  mutate(
+    end_angle = 2*pi*cumsum(yield_ratio),
+    start_angle = lag(end_angle, default = 0),
+    mid_angle = (end_angle + start_angle)/2
+  ) %>% #BREAK
+  ggplot(data = .) + #BREAK 
+    geom_arc_bar(
+      aes(
+        x0 = 0, y0 = 0, r0 = 0, r = rpie, 
+        start = start_angle, end = end_angle, 
+        fill = state_name
+      )
+    ) + #BREAK
+    geom_text(
+      aes(
+        x = rlabel * sin(mid_angle), 
+        y = rlabel * cos(mid_angle), 
+        label = state_name
+      ), hjust = 0.5, vjust = 0.5
+    ) + #BREAK
+    coord_fixed() + #BREAK
+    theme_void() + #BREAK
+    scale_fill_viridis_d("State")
+
+```
+
+`r chunk_reveal(
+  chunk_name = "pie-chart-flip", 
+  title = "# ",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(40, 60)
+  )
+`
+
+
+
+
+
+---
+
+# Correlation plot 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
++ Correlation plots visualize the degree of correlation between variables from a correlation matrix 
+
++ Here, we use the `ggcorrplot` package, which is one of the packages that lets you make a correlation plot (others include the `corrplot`, `GGally` packages).
+
+```{r cache = F}
+library(ggcorrplot)
+```
+
+]
+
+  ]
+
+.panel[.panel-name[How]
+
+.left-full[
+
++ Create a correlation matrix using `cor()` on a dataset 
++ Apply `ggcorrplot()` to the correlation matrix
+
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[Example]
+
+.left4[
+```{r cor-plot, eval = F}  
+weather %>% 
+  na.omit() %>% 
+  dplyr::select(where(is.numeric)) %>% 
+  dplyr::select(- year) %>% 
+  cor() %>% # create a cor matrix
+  #--- create a cor plot ---#
+  ggcorrplot(., 
+    type = "lower", 
+    hc.order = TRUE
+  ) +
+  theme(
+    legend.position = "bottom"
+  ) 
+
+```
+
++ You can add `lab = TRUE` in `ggcorrplot()` to display the correlation coefficient numbers in the squares as well
+
+]
+
+.right6[
+```{r cor-plot-f, ref.label = "cor-plot", echo = F, cache = F, fig.dim = c(7, 5)}  
+
+```
+]
+
+  ]
+
+]
+
+---
+
+# Diverging chart (variant of a bar chart)
+
+.left4[
+
+.content-box-green[**When to use**]:
+
+Diverging charts can be useful to visualize the heterogeneity of a single variable across groups. 
+
+.content-box-green[**Data preparation**]
+
+Diverging charts are just bar chart with y-axis and x-axis flipped. So, you just need a single value per group in long format.
+
+.content-box-green[**How**]
+
+You can use `geom_bar()` with `coord_flip()`. See the next slide for a demonstration.
+
+]
+
+.right6[
+
+```{r diverging2, echo = F, out.width = "90%"}  
+county_yield %>% 
+  filter(state_name == "Nebraska") %>% 
+  filter(!is.na(corn_yield)) %>% 
+  group_by(county_code) %>% 
+  summarize(corn_yield = mean(corn_yield)) %>% 
+  mutate(
+    yield_norm = (corn_yield - mean(corn_yield))/sd(corn_yield),
+    below_above = ifelse(yield_norm < 0, "below", "above")
+  ) %>% 
+  head(20) %>% 
+  arrange(yield_norm) %>% 
+  mutate(
+    county_code_f = factor(county_code, levels = .$county_code)
+  ) %>% 
+  ggplot(data = .) +
+  geom_bar(
+    aes(
+      fill = below_above, x = county_code_f, 
+      y = yield_norm, label = county_code_f
+    ), 
+    stat = 'identity', 
+    width = 0.5
+  )  +
+  scale_fill_manual(
+    name = "Productivity", 
+    labels = c("Above Average", "Below Average"), 
+    values = c("above" = "#00ba38", "below" = "#f8766d")
+  ) + 
+  coord_flip() +
+  labs(x = "Normalized Yield", y = "County Code") +
+  theme(
+    legend.position = "bottom",
+    axis.text.y = element_text(size = 6)
+  )
+
+```
+]
+
+
+
+---
+
+```{r divergin-plot, cache = F, include = F}
+county_yield %>% #BREAK
+  filter(state_name == "Nebraska") %>% 
+  filter(!is.na(corn_yield)) %>% 
+  group_by(county_code) %>% 
+  summarize(corn_yield = mean(corn_yield)) %>% #BREAK 
+  mutate(
+    yield_norm = (corn_yield - mean(corn_yield))/sd(corn_yield),
+    below_above = ifelse(yield_norm < 0, "below", "above")
+  ) %>% #BREAK
+  head(20) %>% #BREAK 
+  arrange(yield_norm) %>% #BREAK
+  mutate(
+    county_code_f = factor(county_code, levels = .$county_code)
+  ) %>% #BREAK
+  ggplot(data = .) + #BREAK
+  geom_bar(
+    aes(fill = below_above, x = county_code_f, y = yield_norm, label = county_code_f), 
+    stat = 'identity', 
+    width = 0.5
+  )  + #BREAK
+  scale_fill_manual(
+    name = "Productivity", 
+    labels = c("Above Average", "Below Average"), 
+    values = c("above" = "#00ba38", "below" = "#f8766d")
+  ) + #BREAK
+  coord_flip() + #BREAK
+  labs(x = "Normalized Yield", y = "County Code") + #BREAK
+  theme(
+    legend.position = "bottom",
+    axis.text.y = element_text(size = 6)
+  )
+```
+
+`r chunk_reveal(
+  chunk_name = "divergin-plot", 
+  title = "# Diverging chart: step by step",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(40, 60)
+  )
+`
+
+---
+
+# Area chart 
+
+
+.left4[
+
+<br>
+
+.content-box-green[**When to use**]:   
+
+Area charts are useful to visualize the share of multiple categories of the same object (e.g., energy production by energy sources) and also their magnitude at the same time.
+
+.content-box-green[**Data preparation**]:   
+
+You just need `y` and `x` just like a line plot.
+
+You do not have to calculate the height (`y` value) yourself. `geom_area()` will automatically stack `y` values vertically for you (see the next slide). 
+ 
+]
+
+.right6[
+
+```{r area-chart, echo = F, out.width = "90%"}  
+county_yield %>% 
+  filter(!is.na(corn_yield)) %>% 
+  group_by(state_name, year) %>% 
+  summarize(corn_yield = mean(corn_yield)) %>% 
+  ggplot(data = .) + 
+  geom_area(
+    aes(
+      y = corn_yield, 
+      x = year, 
+      fill = state_name
+    ), 
+    stat = "identity"
+  ) + 
+  labs(x = "Year", y = "Corn Yield") +
+  scale_fill_viridis_d(name = "State") +  
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+```
+
+]
+
+---
+
+
+```{r area-chart-flip, cache = F, include = F}
+county_yield %>% #BREAK
+  filter(!is.na(corn_yield)) %>% #BREAK 
+  group_by(state_name, year) %>% #BREAK
+  summarize(corn_yield = mean(corn_yield)) %>% #BREAK 
+  ggplot(data = .) + #BREAK
+  geom_area(
+    aes(
+      y = corn_yield, 
+      x = year, 
+      fill = state_name
+    ), 
+    stat = "identity"
+  ) + #BREAK
+  labs(x = "Year", y = "Corn Yield") + #BREAK
+  scale_fill_viridis_d(name = "State") + #BREAK 
+  theme_bw() + #BREAK
+  theme(legend.position = "bottom")
+```
+
+`r chunk_reveal(
+  chunk_name = "area-chart-flip", 
+  title = "# Area chart: step by step",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+# Mean and SE chart
+
+.left4[
+
+.content-box-green[**When to use**]:   
+
+Mean and SE charts are useful for reporting mean of variables and their uncertainty in the form of standard errors.
+
+.content-box-green[**Data preparation**]:   
+
+For each group, you need to supply the mean of the variable and the upper and lower bounds (e.g., 95% confidence interval).
+
+]
+
+.right6[
+
+```{r mean-se, echo = F, out.width = "90%"}
+data(Salaries, package="carData")
+
+tibble(Salaries) %>%
+  group_by(rank) %>% #BREAK
+  summarize(
+    n = n(),
+    mean_salary = mean(salary),
+    sd = sd(salary),
+    se = sd / sqrt(n)
+  ) %>% #BREAK
+  ggplot(data = .) + #BREAK
+  aes(x = rank, y = mean_salary) + #BREAK
+  geom_point(size = 3) + #BREAK
+  geom_errorbar( #>>
+    aes( #>>
+      ymin = mean_salary - 1.96 * se, #>>
+      ymax = mean_salary + 1.96 * se #>>
+      ), #>>
+    width = .1 #>>
+  ) #>>
+
+```
+
+]
+
+
+---
+
+
+```{r mean-se-flip, cache = F, include = F}
+data(Salaries, package="carData")
+
+Salaries %>% #BREAK
+  group_by(rank) %>% 
+  summarize(
+    n = n(),
+    mean_salary = mean(salary),
+    sd = sd(salary),
+    se = sd / sqrt(n)
+  ) %>% #BREAK
+  ggplot(data = .) + #BREAK
+  aes(x = rank, y = mean_salary) + #BREAK
+  geom_point(size = 3) + #BREAK
+  geom_errorbar( 
+    aes( 
+      ymin = mean_salary - 1.96 * se, 
+      ymax = mean_salary + 1.96 * se 
+      ), 
+    width = .1 
+  ) 
+
+```
+
+`r chunk_reveal(
+  chunk_name = "mean-se-flip", 
+  title = "# Mean and SE chart: step by step",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(50, 50)
+  )
+`
+
+---
+
+# Heat map 
+
+.left5[
+
+.content-box-green[**When to use**]:   
+
+Heat maps can be useful for 3-dimensional data (`x`, `y`, `z`). 
+
+The magnitude of the third dimension (`z`) is represented by color unlike a 3D-plot (e.g., contour map).   
+
+.content-box-green[**Data preparation**]:   
+
+A dataset in long format that has a single value for each group.
+
+.content-box-green[**How**]:   
+
+For each group, you supply `x`, `y`, and `fill = z` to `geom_tile()` (See the next slide for a demonstration).
+
+Read the following data for replication:
+
+```{r }
+gene_data <- readRDS("gene.rds")
+```
+
+]
+
+.right5[
+
+```{r echo = F}
+gene_data %>% 
+  ggplot(.) + 
+    geom_tile(aes(gene_txt, x, fill= value)) +
+    scale_fill_distiller(palette = "YlOrRd") +
+    facet_grid(. ~ group) +
+    theme(
+      axis.ticks.y = element_blank(),
+      axis.title = element_blank(),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(angle = 90),
+      legend.position = "bottom"
+    )
+```
+
+]
+
+---
+
+
+```{r heatmap, cache = F, include = F}
+gene_data %>% #BREAK
+  ggplot(.) + #BREAK
+    geom_tile(aes(gene_txt, x, fill= value)) + #BREAK
+    scale_fill_distiller(palette = "YlOrRd") + #BREAK
+    facet_grid(. ~ group) + #BREAK
+    theme(
+      axis.ticks.y = element_blank(),
+      axis.title = element_blank(),
+      axis.text.y = element_blank(),
+      axis.text.x = element_text(angle = 90),
+      legend.position = "bottom"
+    )
+```
+
+`r chunk_reveal(
+  chunk_name = "heatmap", 
+  title = "# ",
+  break_type = "user", 
+  display_type = "both", 
+  left_assign = FALSE,
+  width = c(40, 60)
+  )
+`
+
+---
+
+# More supplementary `geom_*()` 
+
+.panelset[ 
+
+.panel[.panel-name[encircle]
+
+.left5[
+
+Create a dataset first:
+
+```{r cache = F}
+library(ggalt)
+
+yield_group <- county_yield %>% 
+  filter(state_name %in% c("Colorado", "Nebraska")) %>% 
+  filter(!(state_name == "Colorado" & corn_yield > 130)) %>% 
+  filter(!(state_name == "Nebraska" & corn_yield > 150))  
+```  
+
+Create a figure:
+
+```{r encircle, eval = F}  
+ggplot(data = yield_group) +
+  geom_point(
+    aes(y = corn_yield, x = d3_5_9, color = state_name)
+  ) +
+  geom_encircle( #<<
+    aes(y = corn_yield, x = d3_5_9, color = state_name) #<<
+  ) #<<
+
+```
++ Can be useful for illustrating clusters
+
+]
+
+.right5[
+```{r encircle-f, ref.label = "encircle", echo = F, out.width = "90%"}  
+
+```
+]
+
+
+  ]
+
+.panel[.panel-name[segment]
+
+.left5[
+```{r segment, eval = F}  
+ggplot(data = yield_group) +
+  geom_point(
+    aes(y = corn_yield, x = d3_5_9, color = state_name)
+  ) +
+  geom_segment( #<<
+    x = 10, #<<
+    y = 50, #<<
+    xend = 18.8, #<< 
+    yend = 88, #<<
+    arrow = arrow(length = unit(0.5, "cm")) #<<
+  ) #<<
+```
+]
+
+.right5[
+```{r segment-f, ref.label = "segment", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+.panel[.panel-name[curve]
+
+.left5[
+```{r curve, eval = F}  
+ggplot(data = yield_group) +
+  geom_point(
+    aes(y = corn_yield, x = d3_5_9, color = state_name)
+  ) +
+  geom_curve( #<<
+    x = 10, #<<
+    y = 50, #<<
+    xend = 18.8, #<< 
+    yend = 88, #<<
+    curvature = 0.2, #<<
+    arrow = arrow(length = unit(0.5, "cm")) #<<
+  ) #<<
+```
+]
+
+.right5[
+```{r curve-f, ref.label = "curve", echo = F, out.width = "90%"}  
+
+```
+]
+
+  ]
+
+]
+
+<!-- 
+#=========================================
+# Animation    
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: animated
+
+# Animated figures 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+
+# Animated figures using the `gganimate` package 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
++ Install the `gganimate` package:
+
+```{r eval = F}
+install.packages(gganimate)   
+``` 
+
++ Install the `png` and `gifski` packages as well:
+
+```{r eval = F}
+install.packages(png)   
+install.packages(gifski)   
+``` 
+
++ You need to library only the `gganimate` package
+
+```{r }
+library(gganimate)
+```
+
+]
+  ]
+
+.panel[.panel-name[How]
+
+.left-full[
+
+**One state a a time**:
+
++ Create a regular ggplot object **without** the dimension you intend to animate over 
++ add `transition_states(transition variable)` to make the `ggplot` object animated
+
+**Reveal a state at a time**:
+
++ Create a regular ggplot object **with** the dimension you intend to animate over 
++ add `transition_reveal(transition variable)` to make the `ggplot` object animated
+
+]
+
+  ]
+
+.panel[.panel-name[state]
+
+.left-code[
+
+```{r animate, eval = F}  
+weather %>% 
+  ggplot(data = .) +
+  geom_boxplot(
+    aes(y = temp, x = origin, fill = origin)
+  ) + 
+  transition_states(month) #<<
+```
++ `weather` is from the the `nycflights13` package has daily weather information at three airports in NY.
++ Each frame has a boxplot of temperature for the three airports in NY in its corresponding month.
+
+]
+
+.right-plot[
+```{r animate-f-1, ref.label = "animate", echo = F, out.width = "90%"}  
+```
+]
+
+  ]
+
+.panel[.panel-name[reveal]
+
+.left-code[
+```{r animate-2, eval = F}  
+weather %>% 
+  filter(month == 8) %>% 
+  filter(day <= 10) %>% 
+  ggplot(data = .) +
+  geom_boxplot(
+    aes(y = temp, x = factor(day), fill = origin)
+  ) + 
+  transition_reveal(day) #<<
+```
+]
+
+.right-plot[
+```{r animate-2-f, ref.label = "animate-2", echo = F, out.width = "90%"}  
+```
+]
+  ]
+
+]
+
+
+---
+
+# Animated figures  
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
+You can also use the `plotly` package to create an animated figure. 
+
+```{r include = F}
+suppressMessages(library(plotly))
+```
+
+```{r eval = F}
+install.packages(plotly)  
+
+library(plotly)
+```
+
++ It is very easy to create an animated figure using `plotly`
++ But, it is a bit of a hassle to integrate animated figures generated by `plotly`
+
+]
+
+  ] 
+
+.panel[.panel-name[How 1]
+
+.left-full[
+
++ Create a regular `ggplot` object (figure) where `frame = transition variable` is added in `aes()` along with other necessary arguments
++ Apply `ggploty()` to the `ggplot` object 
++ Save the results as an html file 
++ Import the html file and put it in an **iframe**
+
+]
+
+  ] 
+
+.panel[.panel-name[How 2]
+
+.left-full[
+
+```{r eval = F}
+#--- create a ggplot object ---#
+g_box <- county_yield %>% 
+  filter(state_name %in% c("Nebraska", "Colorado", "Kansas")) %>% 
+  ggplot(data = .) + 
+  geom_boxplot(
+    aes(
+      y = corn_yield, 
+      x = state_name,
+      #--- add frame ---#
+      frame = year #<<
+    )
+  ) +
+  labs(x = "State", y = "Corn Yield (bu/acre)")
+
+#--- apply ggplotly() to the ggplot object ---#
+ggplotly(g_box, width = 800, height = 400) %>% #<< 
+  #--- save as html file ---#
+  htmltools::save_html(file = "g_box.html") #<<
+
+```
+
+Then, add this in your Rmd file:
+
+```
+<iframe src="g_box.html" width="1000" height="550" scrolling="yes" seamless="seamless" frameBorder="0"> </iframe>
+```
+
+]
+
+  ] <!-- panel ends here -->
+
+.panel[.panel-name[time-series box plot]
+
+```{r echo = F, eval = F}
+g_box <- ggplot(data = county_yield) + 
+  geom_boxplot(
+    aes(
+      y = corn_yield, 
+      x = state_name,
+      frame = year
+    )
+  ) +
+  labs(x = "State", y = "Corn Yield (bu/acre)")
+
+htmltools::save_html(ggplotly(g_box, width = 800, height = 400), file = "g_box.html")
+
+```
+
+<iframe src="g_box.html" width="1000" height="550" scrolling="yes" seamless="seamless" frameBorder="0"> </iframe>
+  ]
+
+.panel[.panel-name[time-series scatter plot]
+
+```{r echo = F, eval = F}
+library(plotly)
+library(gapminder)
+
+test <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+  geom_point(aes(size = pop, frame = year, ids = country)) +
+  scale_x_log10()  
+
+htmltools::save_html(ggplotly(test, width = 800, height = 400), file = "fig.html")
+
+```
+
+<iframe src="fig.html" width="900" height="500" scrolling="yes" seamless="seamless" frameBorder="0"> </iframe>  
+
+  ] <!-- panel ends here -->
+
+]
+
+
+<!-- 
+#=========================================
+# Exporting a figure as an image    
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: inputoutput
+
+# Exporting a figure as an image 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Exporting a figure as an image 
+
+.panelset[ 
+
+.panel[.panel-name[Instruction]
+
+.left-full[
+
+You can use the `ggsave()` function with the following syntax:
+
+```{r eval = F}
+#--- Syntax (NOT RUN) ---#
+ggsave(filename = file name, plot = ggplot object)  
+
+#--- or just this ---#
+ggsave(file name, ggplot object)  
+```
+
+## Example
+
+```{r }
+ggsave("ex_boxplot.pdf", g_box)  
+```
+
+This will save `g_box` as **ex_boxplot.pdf** in the working directory.
+
+]
+
+  ]
+
+.panel[.panel-name[output file format]
+
+.left-full[
+
++ Many different file formats are supported including pdf, svg, eps, png, jpg, tif, etc. One thing you want to keep in mind is the type of graphics:
+  * vector graphics (pdf, svg, eps)
+  * raster graphics (jpg, png, tif)
+
++ While vector graphics are scalable, raster graphics are not. 
+
++ If you enlarge raster graphics, the cells making up the figure become visible, making the figure unappealing. 
+
++ Unless it is required to save figures as raster graphics, it is encouraged to save figures as vector graphics.
+
++ **pdf** is almost always a good choice
+
+]
+
+  ]
+
+.panel[.panel-name[Options]
+
+.left-full[
+
+## Image width and height
+
++ You can control the width and height of the output image using the `width` and `height` options (the default unit is inch.):
+
+```{r }
+ggsave("ex_boxplot.pdf", g_box, height = 5, width = 7)   
+```
+
+## Image resolution
+
++ You can control the resolution of the output image by specifying DPI (dots per inch) using the dpi option. 
+
++ The default DPI value is 300, but you can specify any value suitable for the output image, including “retina” (320) or “screen” (72). 
+
++ 600 or higher is recommended when a high resolution output is required.
+
+```{r eval = F}
+#--- dpi = 320 ---#
+ggsave("nc_dpi_320.png", g_nc, height = 5, width = 7, dpi = "retina")
+
+ggsave("nc_dpi_600.png", g_nc, height = 5, width = 7, dpi = 600)
+```
+
+]
+
+  ] 
+
+]
+
+
+
+<!-- 
+#=========================================
+# Resources    
+#=========================================
+-->
+  
+---
+
+class: inverse, center, middle
+name: inputoutput
+
+# Resources 
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+
+# Resources
+
+## Books and tutorials
+
++ [ggplot2: Elegant Graphics for Data Analysis](https://ggplot2-book.org/)
++ [Data Visualization with R](https://rkabacoff.github.io/datavis/)
++ [ggplot2 tutorial by Cedric Scherer](https://cedricscherer.netlify.app/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/)
++ [Interactive html document](https://plotly-r.com/index.html)
++ [R Graphics Cookbook, 2nd edition](https://r-graphics.org/)
+
+## Packages
++ [ggplot2 extensions](https://exts.ggplot2.tidyverse.org/)
++ [gganimat](https://exts.ggplot2.tidyverse.org/)
+
