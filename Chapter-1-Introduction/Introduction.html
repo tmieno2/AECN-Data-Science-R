@@ -3,16 +3,16 @@
   <head>
     <title>Introduction to R</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
-    <script src="libs/tile-view/tile-view.js"></script>
-    <link href="libs/animate.css/animate.xaringan.css" rel="stylesheet" />
-    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
-    <link href="libs/panelset/panelset.css" rel="stylesheet" />
-    <script src="libs/panelset/panelset.js"></script>
-    <script src="libs/clipboard/clipboard.min.js"></script>
-    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
-    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script src="introduction_files/header-attrs/header-attrs.js"></script>
+    <link href="introduction_files/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="introduction_files/tile-view/tile-view.js"></script>
+    <link href="introduction_files/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link href="introduction_files/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="introduction_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="introduction_files/panelset/panelset.js"></script>
+    <script src="introduction_files/clipboard/clipboard.min.js"></script>
+    <link href="introduction_files/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="introduction_files/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
     <link rel="stylesheet" href="../xaringan-themer.css" type="text/css" />
   </head>
@@ -468,7 +468,7 @@ name: intro
 
 ```r
 #--- addition ---#
-2 + 3.3   
+2 + 3.3
 ```
 
 ```
@@ -477,7 +477,7 @@ name: intro
 
 ```r
 #--- subtraction ---#
-6 - 2.7   
+6 - 2.7
 ```
 
 ```
@@ -486,7 +486,7 @@ name: intro
 
 ```r
 #--- multiplications ---#
-6 * 2   
+6 * 2
 ```
 
 ```
@@ -495,7 +495,7 @@ name: intro
 
 ```r
 #--- exponentiation ---#
-2 ^ 2.4  
+2 ^ 2.4
 ```
 
 ```
@@ -521,7 +521,7 @@ name: intro
 
 ```r
 #--- division ---#
-6 / 2   
+6 / 2
 ```
 
 ```
@@ -530,7 +530,7 @@ name: intro
 
 ```r
 #--- remainder ---#
-6 %% 4   
+6 %% 4
 ```
 
 ```
@@ -539,7 +539,7 @@ name: intro
 
 ```r
 #--- quotient ---#
-6 %/% 4   
+6 %/% 4
 ```
 
 ```
@@ -589,7 +589,7 @@ name: intro
 ```
 
 ```r
-5 &lt; 4  
+5 &lt; 4
 ```
 
 ```
@@ -670,7 +670,7 @@ object_name &lt;- contents
 
 ```r
 #--- numeric ---#
-a &lt;- 1   
+a &lt;- 1
 ```
 
 Notice that these objects are now in the list of objects on the environment tab of RStudio.
@@ -732,7 +732,7 @@ You can also use `=` for assignment
 
 ```r
 #--- character ---#
-a = "R rocks"
+a &lt;- "R rocks"
 
 a
 ```
@@ -813,7 +813,7 @@ A vectors is a class of object that consists of elements of the same kind (it ca
 
 ```r
 #--- create a vector of numbers ---#
-a &lt;- c(4, 3, 5, 9, 1)   
+a &lt;- c(4, 3, 5, 9, 1)
 
 a
 ```
@@ -1609,6 +1609,7 @@ name: rgis
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false

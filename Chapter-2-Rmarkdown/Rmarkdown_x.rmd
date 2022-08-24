@@ -4,7 +4,7 @@ author: "AECN 396/896-002"
 output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
-    css: ../xaringan-themer.css 
+    css: xaringan-themer.css 
     self_contained: true
     nature:
       ratio: 16:9
@@ -13,7 +13,7 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r, child = './../setup.Rmd'}
+```{r, child = '../setup.Rmd'}
 ```
 
 # Table of contents
@@ -114,7 +114,7 @@ class: middle
 
 .content-box-red[**Direction**]
 
-Take a look at **rmd_sample.Rmd**, which can be downloaded from [here](https://tmieno2.github.io/Data-Science-with-R/Chapter-2-Rmarkdown/sample_rmd.rmd).
+Take a look at **rmd_sample.Rmd**, which can be downloaded from [here](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-2-Rmarkdown/sample_rmd.Rmd).
 
 + R codes `summary(cars)` and `plot(pressure)` are enclosed individually by the special syntax
 
@@ -146,15 +146,15 @@ Inspect the rmd file and its output document:
 
 .content-box-green[**Rmd side**]
 
-1. lines 1-13: a **YAML header** where you control the aesthetics of the output document (more on this later) 
-2. lines 34-36: texts not enclosed by the special syntax
-3. lines 38-40: `summary(cars)` is an R code, which is enclosed by the special syntax
+1. lines 1-15: a **YAML header** where you control the aesthetics of the output document (more on this later) 
+2. lines 36-38: texts not enclosed by the special syntax
+3. lines 40-42: `summary(cars)` is an R code, which is enclosed by the special syntax
 
 .content-box-green[**html side**]
 
-1. lines 1-13: nothing 
-2. lines 34-36: printed as regular texts 
-3. lines 38-40: the R code and its results printed
+1. lines 1-15: nothing 
+2. lines 36-38: printed as regular texts 
+3. lines 40-42: the R code and its results printed
 
 ---
 class: middle
@@ -165,7 +165,7 @@ You can refer to an R object previously defined in line and display its content 
 
 .content-box-red[**Direction**]
 
-See lines 58-65 of the rmd file
+See lines 62-68 of the rmd file
 
 ---
 class: middle
@@ -184,6 +184,15 @@ class: middle
 .content-box-red[**Direction**]
 
 Compare Chapter 2 of the rmd file and its output html file
+
+---
+class: middle
+
+# Caveat when knitting  
+
++ When you knit an rmarkdown file and create a report, R creates an R session/environment that is completely <span style = "color: blue;"> independent </span> of whatever R sessions or environments you may have on your RStudio. 
+
++ This means that when you knit an rmarkdown file, you cannot refer to R objects you have defined on your current R session.
 
 ---
 
@@ -242,7 +251,7 @@ class: middle
 
 .content-box-red[**Direction**]
 
-Inspect the rmd file (lines 29-53) and its output document.
+Inspect the rmd file (lines 95-115) and its output document.
 
 ---
 class: middle
@@ -257,7 +266,7 @@ class: middle
 
 .content-box-red[**Direction**]
 
-Inspect the rmd file (lines 55-76) and its output document
+Inspect the rmd file (lines 119-140) and its output document
 
 ---
 class: middle
@@ -279,7 +288,7 @@ class: middle
 
 .content-box-red[**Direction**]
 
-Inspect the rmd file (lines 55-76) and its output document
+Inspect the rmd file (lines 144-156) and its output document
 
 <br>
 
@@ -294,7 +303,7 @@ class: middle
 
 .content-box-red[**Direction**]
 
-Inspect the rmd file (lines 55-76) and its output document
+Inspect the rmd file (lines 160-173) and its output document
 
 
 ---
@@ -329,7 +338,7 @@ opts_chunk$set(
 
 .content-box-red[**Direction**]
 
-Uncomment lines 13 - 23 and knit
+Remove `eval = F` from the R chunk at line 17 and knit.
 
 .content-box-green[**Important**]: Local option overrides the global option.
 
@@ -410,7 +419,7 @@ class: middle
 
 .content-box-green[**Direction**]
 
-Add `dependson = "cache"` to the `cache_2` chunk as an option and knit again.
+Add `dependson = "cache_1"` to the `cache_2` chunk as an option and knit again.
 
 <!-- 
 #/*=================================================*/
@@ -520,7 +529,7 @@ read.csv("~/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-2-Rmarkdown/corn_pri
 
 .content-box-green[**Option 3.**]
 
-Tell Rstudio to look for a specific directory for datasets by setting a working directory using `opts_knit$set(root.dir = directory)` at the beginning
+Tell R to look for a specific directory for datasets by setting a working directory using `opts_knit$set(root.dir = directory)` at the beginning
 
 ```{r eval = F}
 opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-2-Rmarkdown/")

@@ -14,16 +14,16 @@ output:
     toc_float: yes
 ---
 
-```{r , include = F}
+```{r , include = F, eval = F}
 library(knitr)
 opts_chunk$set(
   echo = FALSE,
   messages = TRUE,
   warnings = TRUE,
-  fig.align = 'center',
+  fig.align = "center",
   fig.width = 5,
   fig.height = 4
-  ) 
+)
 
 # opts_knit$set(root.dir = "~/Box/Teaching/UNL/DataScience/Data")
 ```
@@ -45,7 +45,7 @@ summary(cars)
 
 You can also embed plots, for example:
 
-```{r pressure, echo = TRUE, fig.align = "right"}
+```{r pressure, echo = FALSE, fig.align = "right"}
 plot(pressure)
 ```
 
@@ -54,7 +54,7 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 ## Including a table
 
 ```{r }
-knitr::kable(iris[1:5, ], caption = 'A caption')	
+knitr::kable(iris[1:5, ], caption = "A caption")
 ```
 
 ## Inline r code
@@ -122,21 +122,21 @@ summary(cars)
 
 ```{r}
 library(tidyverse)
-detach("package:tidyverse", unload=TRUE)
+detach("package:tidyverse", unload = TRUE)
 ```
 
 ### messages suppressed
 
 ```{r, message=FALSE}
 library(tidyverse)
-detach("package:tidyverse", unload=TRUE)
+detach("package:tidyverse", unload = TRUE)
 ```
 
 ### both messages and warnings suppressed
 
 ```{r, message=FALSE,warning=FALSE}
 library(tidyverse)
-detach("package:tidyverse", unload=TRUE)
+detach("package:tidyverse", unload = TRUE)
 ```
 
 ---
@@ -176,10 +176,9 @@ a
 
 # Caching
 
-```{r cache_1, eval = T, cache = T}
+```{r cache_1, eval = F, cache = T}
 #--- repeat steps 1-3 B times ---#
-MC_sim <- function(i){
-
+MC_sim <- function(i) {
   N <- 50000 # sample size
 
   #--- steps 1 and 2:  ---#
@@ -189,21 +188,21 @@ MC_sim <- function(i){
   y <- 1 + x + v # dependent variable
   data <- data.frame(y = y, x = x)
 
-  #--- OLS ---# 
-  reg <- lm(y~x, data = data) # OLS
+  #--- OLS ---#
+  reg <- lm(y ~ x, data = data) # OLS
 
   #--- return the coef ---#
-  return(reg$coef['x'])
+  return(reg$coef["x"])
 }
 
-MC_results <- lapply(1:1000, MC_sim) %>% 
-  unlist() %>% 
+MC_results <- lapply(1:1000, MC_sim) %>%
+  unlist() %>%
   mean()
 
 MC_results
 ```
 
-```{r cache_2, eval = T, cache = T, dependson = "cache_1"}
+```{r cache_2, eval = F, cache = T}
 MC_results
 ```
 
@@ -215,12 +214,14 @@ MC_results
 ```{r }
 library(DT)
 iris %>% datatable(
-  extensions = 'Buttons',
+  extensions = "Buttons",
   options = list(
-    dom = 'Blfrtip',
-    buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-    lengthMenu = list(c(10,25,50,-1),
-    c(10,25,50,"All"))
+    dom = "Blfrtip",
+    buttons = c("copy", "csv", "excel", "pdf", "print"),
+    lengthMenu = list(
+      c(10, 25, 50, -1),
+      c(10, 25, 50, "All")
+    )
   )
 )
 ```
@@ -229,8 +230,8 @@ iris %>% datatable(
 
 ```{r }
 library(dygraphs)
-dygraph(nhtemp, main = "New Haven Temperatures") %>% 
-  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01")) 
+dygraph(nhtemp, main = "New Haven Temperatures") %>%
+  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))
 ```
 
 ## Interactive ggplot2 figures
@@ -239,6 +240,6 @@ dygraph(nhtemp, main = "New Haven Temperatures") %>%
 library(ggplot2)
 library(plotly)
 p <- ggplot(data = diamonds) +
-  geom_bar(aes(x = cut, fill = clarity), position = "dodge") 
-ggplotly(p) 
+  geom_bar(aes(x = cut, fill = clarity), position = "dodge")
+ggplotly(p)
 ```
