@@ -14,7 +14,7 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
 + Chapter 3: Data Wrangling with the `tidyverse` package 
   - The Basics ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-3-DataWrangling/data_wrangling_basics_x.html))
   - Reshape and Merging ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-3-DataWrangling/data_wrangling_reshape_merge_x.html))
-+ Chapter 4: Data Visualization ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-4-DataVisualization/data_visualization_basics_x.html))
++ Chapter 4: Data Visualization ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-4-DataVisualization/data_visualization_x.html))
 + Chapter 5: Function, Loop, and Parallel Computation ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-5-Functions-Loop-Parallel/function_loop_parallel_x.html))
 + Chapter 6: Miscellaneous Tips and Useful Functions
     * Project Management, Code Organization, and RStudio  ([slide](https://tmieno2.github.io/AECN-Data-Science-R/Chapter-6-HowCodeProject/code_project_RStudio_x.html))

@@ -4,16 +4,16 @@
     <title>Data visualization with ggplot2</title>
     <meta charset="utf-8" />
     <meta name="author" content="AECN 396/896-002" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
-    <script src="libs/tile-view/tile-view.js"></script>
-    <link href="libs/animate.css/animate.xaringan.css" rel="stylesheet" />
-    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
-    <link href="libs/panelset/panelset.css" rel="stylesheet" />
-    <script src="libs/panelset/panelset.js"></script>
-    <script src="libs/clipboard/clipboard.min.js"></script>
-    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
-    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script src="data_visualization_x_files/header-attrs/header-attrs.js"></script>
+    <link href="data_visualization_x_files/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="data_visualization_x_files/tile-view/tile-view.js"></script>
+    <link href="data_visualization_x_files/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link href="data_visualization_x_files/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="data_visualization_x_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="data_visualization_x_files/panelset/panelset.js"></script>
+    <script src="data_visualization_x_files/clipboard/clipboard.min.js"></script>
+    <link href="data_visualization_x_files/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="data_visualization_x_files/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
     <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -21,8 +21,12 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Data visualization with <code>ggplot2</code>
+]
+.author[
 ### AECN 396/896-002
+]
 
 ---
 
@@ -36,7 +40,20 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+
+
+
+
+
+
 &lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
 
 .remark-slide-content.hljs-github h1 {
   margin-top: 5px;  
@@ -121,6 +138,7 @@ class: center, middle, inverse, title-slide
 
 .left-full {
   width: 80%;
+  height: 92%;
   float: left;
 }
 
@@ -136,26 +154,14 @@ class: center, middle, inverse, title-slide
   padding-left: 1%;
 }
 
-.left6 {
-  width: 60%;
-  height: 92%;
-  float: left;
-}
-
 .left5 {
   width: 49%;
-  &lt;!-- height: 92%; --&gt;
+  height: 92%;
   float: left;
 }
 
 .right5 {
   width: 49%;
-  float: right;
-  padding-left: 1%;
-}
-
-.right4 {
-  width: 39%;
   float: right;
   padding-left: 1%;
 }
@@ -174,6 +180,7 @@ class: center, middle, inverse, title-slide
 
 .left4 {
   width: 38%;
+  height: 92%;
   float: left;
 }
 
@@ -357,6 +364,7 @@ slides &gt; slide {
 
 
 
+
 # Before you start
 
 ## Learning objectives
@@ -431,30 +439,18 @@ county_yield &lt;- readRDS("county_yield.rds") %&gt;%
 
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279
-##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000
-##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000
-##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000
-##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824
-##   ---                                                                       
-## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.7817      0
-##   ---              
-## 2960: 0.0000      0
-## 2961: 3.4114      0
-## 2962: 4.7022      9
-## 2963: 0.0000      0
-## 2964: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279 0.0000      0
+##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000 0.0000      0
+##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000 0.0000      0
+##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000 0.0000      0
+##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824 4.7817      0
+##   ---                                                                                     
+## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 
   ]
@@ -502,30 +498,18 @@ count: false
 .panel2-taste-user[
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279
-##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000
-##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000
-##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000
-##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824
-##   ---                                                                       
-## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.7817      0
-##   ---              
-## 2960: 0.0000      0
-## 2961: 3.4114      0
-## 2962: 4.7022      9
-## 2963: 0.0000      0
-## 2964: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279 0.0000      0
+##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000 0.0000      0
+##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000 0.0000      0
+##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000 0.0000      0
+##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824 4.7817      0
+##   ---                                                                                     
+## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 ]
 
@@ -542,7 +526,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -559,7 +543,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -577,7 +561,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -596,7 +580,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -616,7 +600,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_06_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_06_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -637,7 +621,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_07_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_07_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -659,7 +643,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_08_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_08_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -682,7 +666,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_09_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_09_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -706,7 +690,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_10_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_10_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -736,7 +720,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_11_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_11_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -767,7 +751,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_12_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_12_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -799,7 +783,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_13_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_13_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -832,7 +816,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_14_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_14_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -866,7 +850,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_15_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_15_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -904,7 +888,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_16_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_16_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -943,7 +927,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_17_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_17_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -983,7 +967,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_18_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_18_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1024,7 +1008,7 @@ county_yield %&gt;%
 ]
  
 .panel2-taste-user[
-&lt;img src="data_visualization_x_files/figure-html/taste_user_19_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/taste_user_19_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -1387,7 +1371,7 @@ g_fig +
 ]
  
 .panel2-fig-scatter-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1406,7 +1390,7 @@ g_fig +
 ]
  
 .panel2-fig-scatter-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1426,7 +1410,7 @@ g_fig +
 ]
  
 .panel2-fig-scatter-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1447,7 +1431,7 @@ g_fig +
 ]
  
 .panel2-fig-scatter-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/fig-scatter-f_non_seq_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -1501,7 +1485,7 @@ g_fig +
 ]
  
 .panel2-hist-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1520,7 +1504,7 @@ g_fig +
 ]
  
 .panel2-hist-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1540,7 +1524,7 @@ g_fig +
 ]
  
 .panel2-hist-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1561,7 +1545,7 @@ g_fig +
 ]
  
 .panel2-hist-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1583,7 +1567,7 @@ g_fig +
 ]
  
 .panel2-hist-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/hist-f_non_seq_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -1639,7 +1623,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-box-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1658,7 +1642,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-box-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1678,7 +1662,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-box-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1699,7 +1683,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-box-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1721,7 +1705,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-box-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-f_non_seq_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -1776,7 +1760,7 @@ ggplot(data = mean_yield) +
 ]
  
 .panel2-line-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1795,7 +1779,7 @@ ggplot(data = mean_yield) +
 ]
  
 .panel2-line-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1815,7 +1799,7 @@ ggplot(data = mean_yield) +
 ]
  
 .panel2-line-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1836,7 +1820,7 @@ ggplot(data = mean_yield) +
 ]
  
 .panel2-line-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1858,7 +1842,7 @@ ggplot(data = mean_yield) +
 ]
  
 .panel2-line-f-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/line-f_non_seq_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -1918,19 +1902,19 @@ premium
 ```
 
 ```
-## # A tibble: 6,096 x 10
+## # A tibble: 6,096 × 10
 ##    carat cut     color clarity depth table price     x     y     z
 ##    &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 0.21  Premium E     SI1      59.8    61   326  3.89  3.84  2.31
-##  2 0.290 Premium I     VS2      62.4    58   334  4.2   4.23  2.63
-##  3 0.22  Premium F     SI1      60.4    61   342  3.88  3.84  2.33
-##  4 0.2   Premium E     SI2      60.2    62   345  3.79  3.75  2.27
-##  5 0.32  Premium E     I1       60.9    58   345  4.38  4.42  2.68
-##  6 0.24  Premium I     VS1      62.5    57   355  3.97  3.94  2.47
-##  7 0.290 Premium F     SI1      62.4    58   403  4.24  4.26  2.65
-##  8 0.22  Premium E     VS2      61.6    58   404  3.93  3.89  2.41
-##  9 0.42  Premium I     SI2      61.5    59   552  4.78  4.84  2.96
-## 10 0.24  Premium E     VVS1     60.7    58   553  4.01  4.03  2.44
+##  1  0.21 Premium E     SI1      59.8    61   326  3.89  3.84  2.31
+##  2  0.29 Premium I     VS2      62.4    58   334  4.2   4.23  2.63
+##  3  0.22 Premium F     SI1      60.4    61   342  3.88  3.84  2.33
+##  4  0.2  Premium E     SI2      60.2    62   345  3.79  3.75  2.27
+##  5  0.32 Premium E     I1       60.9    58   345  4.38  4.42  2.68
+##  6  0.24 Premium I     VS1      62.5    57   355  3.97  3.94  2.47
+##  7  0.29 Premium F     SI1      62.4    58   403  4.24  4.26  2.65
+##  8  0.22 Premium E     VS2      61.6    58   404  3.93  3.89  2.41
+##  9  0.42 Premium I     SI2      61.5    59   552  4.78  4.84  2.96
+## 10  0.24 Premium E     VVS1     60.7    58   553  4.01  4.03  2.44
 ## # … with 6,086 more rows
 ```
 
@@ -1976,7 +1960,7 @@ name: more-info
 
 ---
 
-# Placing more information in one figure 
+# Placing more information in one figure
 
 .panelset[ 
 
@@ -2079,7 +2063,7 @@ ggplot(data = county_yield_mean) +
 ]
  
 .panel2-density-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/density-more_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/density-more_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -2101,7 +2085,7 @@ ggplot(data = county_yield_mean) +
 ]
  
 .panel2-density-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/density-more_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/density-more_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -2157,7 +2141,7 @@ county_yield %&gt;%
 ]
  
 .panel2-box-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-more_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-more_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -2181,7 +2165,7 @@ county_yield %&gt;%
 ]
  
 .panel2-box-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/box-more_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-more_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -2238,7 +2222,7 @@ county_yield %&gt;%
 ]
  
 .panel2-scatter-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -2263,7 +2247,7 @@ county_yield %&gt;%
 ]
  
 .panel2-scatter-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -2289,7 +2273,7 @@ county_yield %&gt;%
 ]
  
 .panel2-scatter-more-non_seq[
-&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/scatter-more_non_seq_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -2361,7 +2345,7 @@ Using `premium`, create density plots of `carat` by `color` as shown below (set 
 class: inverse, center, middle
 name: faceting
 
-# Faceting  
+# Faceting
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
@@ -2380,14 +2364,14 @@ Sometimes, you would like to visualize information across groups on separate pan
 
 Too much information in one panel?
 
-&lt;img src="data_visualization_x_files/figure-html/box_all-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box_all-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 .right5[
 
 On separate panels (faceting)?
 
-&lt;img src="data_visualization_x_files/figure-html/box-faceted-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/box-faceted-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
   ]
@@ -2434,7 +2418,7 @@ count: false
 ]
  
 .panel2-facet-ex-user[
-&lt;img src="data_visualization_x_files/figure-html/facet-ex_user_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/facet-ex_user_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -2453,7 +2437,7 @@ ggplot(data = county_yield) +
 ]
  
 .panel2-facet-ex-user[
-&lt;img src="data_visualization_x_files/figure-html/facet-ex_user_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/facet-ex_user_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -2568,7 +2552,7 @@ ggplot(data = county_yield_s) +
   facet_wrap(state_name ~ year)  
 ```
 
-&lt;img src="data_visualization_x_files/figure-html/wrap-ex-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/wrap-ex-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 .right5[
@@ -2582,7 +2566,7 @@ ggplot(data = county_yield_s) +
   facet_grid(state_name ~ year)  
 ```
 
-&lt;img src="data_visualization_x_files/figure-html/frig-ex-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/frig-ex-1-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -2623,7 +2607,7 @@ ggplot(data = county_yield_s) +
   facet_grid(state_name ~ year)
 ```
 
-&lt;img src="data_visualization_x_files/figure-html/wrap-left-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/wrap-left-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 .right5[
@@ -2634,7 +2618,7 @@ ggplot(data = county_yield_s) +
   facet_grid(year ~ state_name) 
 ```
 
-&lt;img src="data_visualization_x_files/figure-html/grid-right-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/grid-right-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -2824,7 +2808,7 @@ Using premium, create histogram of `carat` by `color` and `clarity` on separate 
 
 ---
 
-# Density plot, histogram, boxplot 
+# Density plot, histogram, boxplot
 
 .panelset[ 
 
@@ -2882,7 +2866,7 @@ You can convey similar information using density plots faceted by year. But, it 
 
 ---
 
-# Preparing datasets 
+# Preparing datasets
 
 .left-full[
  
@@ -2934,13 +2918,13 @@ You will find that reshaping wide datasets using `pivot_longer()` is very useful
 class: inverse, center, middle
 name: other-geoms
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
 ---
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 .panelset[ 
 
@@ -3240,7 +3224,7 @@ count: false
 ]
  
 .panel2-mult-geom-user[
-&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_01_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_01_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -3267,7 +3251,7 @@ ggplot() +
 ]
  
 .panel2-mult-geom-user[
-&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -3301,7 +3285,7 @@ ggplot() +
 ]
  
 .panel2-mult-geom-user[
-&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mult-geom_user_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -3346,13 +3330,13 @@ text.html.markdown.rmarkdown meta.block-level.markdown markup.heading.1.markdown
 class: inverse, center, middle
 name: fine-tune
 
-# Make your figures presentable to others 
+# Make your figures presentable to others
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
 ---
 
-# Make your figures presentable to others 
+# Make your figures presentable to others
 
 
 .panelset[ 
@@ -3410,14 +3394,14 @@ The content itself does not change when theme is altered.
 
 Original
 
-&lt;img src="data_visualization_x_files/figure-html/original-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/original-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 .right5[
 
 Altered
 
-&lt;img src="data_visualization_x_files/figure-html/altered-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/altered-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -3429,14 +3413,14 @@ Altered
 
 Original
 
-&lt;img src="data_visualization_x_files/figure-html/t-original-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/t-original-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 .right5[
 
 Altered
 
-&lt;img src="data_visualization_x_files/figure-html/t-altered-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/t-altered-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
   ] &lt;!-- panel ends here --&gt;
@@ -3623,7 +3607,7 @@ g_box +
 
 ---
 
-# Exercise 
+# Exercise
 
 .panelset[ 
 
@@ -3646,7 +3630,7 @@ gg_delay &lt;- flights %&gt;%
 ]
 
 .right-plot[
-&lt;img src="data_visualization_x_files/figure-html/prep-ex-axes-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/prep-ex-axes-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
   ]
@@ -3847,7 +3831,7 @@ g_axis +
 
 ---
 
-# Exercise   
+# Exercise
 
 .panelset[ 
 
@@ -3870,7 +3854,7 @@ gg_delay &lt;- flights %&gt;%
 ]
 
 .right-plot[
-&lt;img src="data_visualization_x_files/figure-html/prep-ex-legends-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/prep-ex-legends-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
   ]
@@ -3967,7 +3951,7 @@ It makes the specified component disappear.
 
 ---
 
-# Axis theme 
+# Axis theme
 
 .panelset[ 
 
@@ -4441,7 +4425,7 @@ See [here](http://sape.inf.usi.ch/quick-reference/ggplot2/linetype) for the line
 ---
 
 
-# Faceted figure theme 
+# Faceted figure theme
 
 .panelset[ 
 
@@ -4585,105 +4569,7 @@ g_f +
 ---
 
 
-# More font families 
-
-.panelset[ 
-
-.panel[.panel-name[Instruction]
-
-.left-full[
-
-You can use more font families by taking advantage of the `extrafont` package. 
-
-Install and library the package, and then run `font_import()` to import font families (you need to do this only once). 
-
-
-```r
-install.packages(extrafont)
-
-library(extrafont)
-
-font_import()
-```
-
-Next time around, just run 
-
-
-```r
-library(extrafont)
-
-#--- load fonts ---#
-loadfonts()
-```
-
-]
-
-  ]
-
-.panel[.panel-name[font families]
-
-You can use `fonttable()` to see the list of fonts available:
-
-
-```r
-fonttable() %&gt;% 
-  dplyr::select(FontName, Bold,  Italic) %&gt;% 
-  head(20)  
-```
-
-```
-##                     FontName  Bold Italic
-## 1                  -Keyboard FALSE  FALSE
-## 2               -SFNSDisplay FALSE  FALSE
-## 3                  -SFNSText FALSE  FALSE
-## 4           -SFNSText-Italic FALSE   TRUE
-## 5                 AndaleMono FALSE  FALSE
-## 6               AppleBraille FALSE  FALSE
-## 7   AppleBraille-Outline6Dot FALSE  FALSE
-## 8   AppleBraille-Outline8Dot FALSE  FALSE
-## 9  AppleBraille-Pinpoint6Dot FALSE  FALSE
-## 10 AppleBraille-Pinpoint8Dot FALSE  FALSE
-## 11              AppleMyungjo FALSE  FALSE
-## 12               Arial-Black FALSE  FALSE
-## 13        Arial-BoldItalicMT  TRUE   TRUE
-## 14              Arial-BoldMT  TRUE  FALSE
-## 15            Arial-ItalicMT FALSE   TRUE
-## 16                   ArialMT FALSE  FALSE
-## 17               ArialNarrow FALSE  FALSE
-## 18          ArialNarrow-Bold  TRUE  FALSE
-## 19    ArialNarrow-BoldItalic  TRUE   TRUE
-## 20        ArialNarrow-Italic FALSE   TRUE
-```
-
-  ]
-
-.panel[.panel-name[try a family]
-
-
-.left-code[
-
-```r
-g_f +
-  theme(
-    strip.text.y = element_text(
-*     family = "Georgia",
-      color = "red"
-    )
-  )
-```
-]
-
-.right-plot[
-&lt;img src="data_visualization_x_files/figure-html/f-fam-f-1.png" width="90%" style="display: block; margin: auto;" /&gt;
-]
-
-  ] &lt;!-- panel ends here --&gt;
-
-]
-
----
-
-# More flexible color options with HEX 
+# More flexible color options with HEX
 
 .panelset[ 
 
@@ -4786,7 +4672,7 @@ One thing to remember is that you need to be aware of whether the aesthetic vari
   
 ---
 
-# Viridis 
+# Viridis
 
 .panelset[ 
 
@@ -4901,7 +4787,7 @@ ggplot(data = filter(county_yield, corn_yield &gt; 50)) +
 
 ---
 
-# RColorBrewer 
+# RColorBrewer
 
 .panelset[ 
 
@@ -5028,7 +4914,7 @@ ggplot(data = filter(county_yield, corn_yield &gt; 50)) +
 ---
 
 
-# Set discrete color scale manually 
+# Set discrete color scale manually
 
 .panelset[ 
 
@@ -5102,7 +4988,7 @@ ggplot(data = county_yield_s_b2010) +
 
 ---
 
-# Set continuous color scale manually 
+# Set continuous color scale manually
 
 .panelset[ 
 
@@ -5334,13 +5220,13 @@ Imagine plotting temperature (in Celsius) and precipitation (in mm) as faceted f
 class: inverse, center, middle
 name: tips
 
-# Tips 
+# Tips
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
 ---
 
-# Change the order 
+# Change the order
 
 .panelset[ 
 
@@ -5434,7 +5320,7 @@ county_yield_f$state_name_f %&gt;% head()
 
 ---
 
-# More on box plots 
+# More on box plots
 
 .panelset[ 
 
@@ -5607,7 +5493,7 @@ mean_yield_sy &lt;- county_yield %&gt;%
 
 
 ```
-## # A tibble: 27 x 3
+## # A tibble: 27 × 3
 ## # Groups:   state_name [3]
 ##    state_name  year corn_yield
 ##    &lt;chr&gt;      &lt;int&gt;      &lt;dbl&gt;
@@ -5793,7 +5679,7 @@ ggplot(data = mean_yield_sy) +
 ---
 name: custom-theme
 
-# Custom theme 
+# Custom theme
 
 .panelset[ 
 
@@ -5930,7 +5816,7 @@ Note: You can use the following code as a template to create a pie chart. Replac
 
 .right5[
 
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -5955,30 +5841,18 @@ count: false
 .panel2-pie-chart-flip-user[
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279
-##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000
-##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000
-##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000
-##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824
-##   ---                                                                       
-## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.7817      0
-##   ---              
-## 2960: 0.0000      0
-## 2961: 3.4114      0
-## 2962: 4.7022      9
-## 2963: 0.0000      0
-## 2964: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279 0.0000      0
+##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000 0.0000      0
+##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000 0.0000      0
+##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000 0.0000      0
+##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824 4.7817      0
+##   ---                                                                                     
+## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 ]
 
@@ -6036,7 +5910,7 @@ county_yield %&gt;%
 .panel2-pie-chart-flip-user[
 
 ```
-## # A tibble: 2,964 x 2
+## # A tibble: 2,964 × 2
 ## # Groups:   state_name [3]
 ##    state_name corn_yield
 ##    &lt;chr&gt;           &lt;dbl&gt;
@@ -6075,7 +5949,7 @@ county_yield %&gt;%
 .panel2-pie-chart-flip-user[
 
 ```
-## # A tibble: 3 x 2
+## # A tibble: 3 × 2
 ##   state_name yield
 ##   &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Colorado    168.
@@ -6106,7 +5980,7 @@ county_yield %&gt;%
 .panel2-pie-chart-flip-user[
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   state_name yield yield_ratio
 ##   &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;
 ## 1 Colorado    168.       0.322
@@ -6142,7 +6016,7 @@ county_yield %&gt;%
 .panel2-pie-chart-flip-user[
 
 ```
-## # A tibble: 3 x 6
+## # A tibble: 3 × 6
 ##   state_name yield yield_ratio end_angle start_angle mid_angle
 ##   &lt;chr&gt;      &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 Colorado    168.       0.322      2.02        0         1.01
@@ -6177,7 +6051,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_07_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_07_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6213,7 +6087,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_08_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_08_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6256,7 +6130,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_09_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_09_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6300,7 +6174,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_10_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_10_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6345,7 +6219,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_11_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_11_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6391,7 +6265,7 @@ county_yield %&gt;%
 ]
  
 .panel2-pie-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_12_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/pie-chart-flip_user_12_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -6429,7 +6303,7 @@ county_yield %&gt;%
 
 ---
 
-# Correlation plot 
+# Correlation plot
 
 .panelset[ 
 
@@ -6486,7 +6360,7 @@ weather %&gt;%
 ]
 
 .right6[
-&lt;img src="data_visualization_x_files/figure-html/cor-plot-f-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/cor-plot-f-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
   ]
@@ -6537,30 +6411,18 @@ count: false
 .panel2-divergin-plot-user[
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279
-##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000
-##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000
-##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000
-##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824
-##   ---                                                                       
-## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.7817      0
-##   ---              
-## 2960: 0.0000      0
-## 2961: 3.4114      0
-## 2962: 4.7022      9
-## 2963: 0.0000      0
-## 2964: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279 0.0000      0
+##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000 0.0000      0
+##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000 0.0000      0
+##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000 0.0000      0
+##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824 4.7817      0
+##   ---                                                                                     
+## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 ]
 
@@ -6582,7 +6444,7 @@ county_yield %&gt;%
 .panel2-divergin-plot-user[
 
 ```
-## # A tibble: 82 x 2
+## # A tibble: 82 × 2
 ##    county_code corn_yield
 ##    &lt;chr&gt;            &lt;dbl&gt;
 ##  1 001               195.
@@ -6621,7 +6483,7 @@ county_yield %&gt;%
 .panel2-divergin-plot-user[
 
 ```
-## # A tibble: 82 x 4
+## # A tibble: 82 × 4
 ##    county_code corn_yield yield_norm below_above
 ##    &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      
 ##  1 001               195.     1.08   above      
@@ -6661,7 +6523,7 @@ county_yield %&gt;%
 .panel2-divergin-plot-user[
 
 ```
-## # A tibble: 20 x 4
+## # A tibble: 20 × 4
 ##    county_code corn_yield yield_norm below_above
 ##    &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      
 ##  1 001               195.     1.08   above      
@@ -6711,7 +6573,7 @@ county_yield %&gt;%
 .panel2-divergin-plot-user[
 
 ```
-## # A tibble: 20 x 4
+## # A tibble: 20 × 4
 ##    county_code corn_yield yield_norm below_above
 ##    &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      
 ##  1 007               144.    -2.43   below      
@@ -6764,7 +6626,7 @@ county_yield %&gt;%
 .panel2-divergin-plot-user[
 
 ```
-## # A tibble: 20 x 5
+## # A tibble: 20 × 5
 ##    county_code corn_yield yield_norm below_above county_code_f
 ##    &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;fct&gt;        
 ##  1 007               144.    -2.43   below       007          
@@ -6816,7 +6678,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_07_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_07_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6850,7 +6712,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_08_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_08_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6889,7 +6751,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_09_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_09_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6929,7 +6791,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_10_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_10_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -6970,7 +6832,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_11_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_11_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7015,7 +6877,7 @@ county_yield %&gt;%
 ]
  
 .panel2-divergin-plot-user[
-&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_12_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/divergin-plot_user_12_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -7049,7 +6911,7 @@ county_yield %&gt;%
 
 ---
 
-# Area chart 
+# Area chart
 
 
 .left4[
@@ -7092,30 +6954,18 @@ count: false
 .panel2-area-chart-flip-user[
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279
-##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000
-##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000
-##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000
-##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824
-##   ---                                                                       
-## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.7817      0
-##   ---              
-## 2960: 0.0000      0
-## 2961: 3.4114      0
-## 2962: 4.7022      9
-## 2963: 0.0000      0
-## 2964: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:        NA         NA 2018         053     Kansas 0.8980 3.8186 13.5279 0.0000      0
+##    2:        NA         NA 2017         053     Kansas 3.9994 7.0006  0.0000 0.0000      0
+##    3:        NA         NA 2016         053     Kansas 0.5724 0.0996  0.0000 0.0000      0
+##    4:        NA         NA 2015         053     Kansas 4.4283 1.6177  0.0000 0.0000      0
+##    5:        NA         NA 2014         053     Kansas 4.7032 9.9327  3.5824 4.7817      0
+##   ---                                                                                     
+## 2960:        53        181 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 2961:        57        195 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 2962:        51        170 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 2963:        56        195 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 2964:        54        147 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 ]
 
@@ -7134,30 +6984,18 @@ county_yield %&gt;%
 .panel2-area-chart-flip-user[
 
 ```
-##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9
-##    1:      42.0      123.0 2000         053     Kansas 2.4856 2.8664  0.1336
-##    2:        NA      188.2 2017         095     Kansas 8.7246 0.0000  0.0000
-##    3:      58.4      168.7 2016         095     Kansas 1.0000 0.0000  0.0000
-##    4:        NA      197.9 2015         095     Kansas 1.7604 1.2120  2.0878
-##    5:        NA      151.7 2012         095     Kansas 6.2804 1.4699  9.5382
-##   ---                                                                       
-## 1952:      53.0      181.0 2004         073   Nebraska 0.0000 3.2915 19.7085
-## 1953:      57.0      195.0 2003         073   Nebraska 0.0000 7.7427 11.8459
-## 1954:      51.0      170.0 2002         073   Nebraska 0.0000 7.0000  1.2978
-## 1955:      56.0      195.0 2001         073   Nebraska 5.7915 0.0000  0.0000
-## 1956:      54.0      147.0 2000         073   Nebraska 0.0000 4.7386 17.6887
-##       d3_5_9 d4_5_9
-##    1: 0.0000      0
-##    2: 0.0000      0
-##    3: 0.0000      0
-##    4: 0.0000      0
-##    5: 4.4618      0
-##   ---              
-## 1952: 0.0000      0
-## 1953: 3.4114      0
-## 1954: 4.7022      9
-## 1955: 0.0000      0
-## 1956: 0.5727      0
+##       soy_yield corn_yield year county_code state_name d0_5_9 d1_5_9  d2_5_9 d3_5_9 d4_5_9
+##    1:      42.0      123.0 2000         053     Kansas 2.4856 2.8664  0.1336 0.0000      0
+##    2:        NA      188.2 2017         095     Kansas 8.7246 0.0000  0.0000 0.0000      0
+##    3:      58.4      168.7 2016         095     Kansas 1.0000 0.0000  0.0000 0.0000      0
+##    4:        NA      197.9 2015         095     Kansas 1.7604 1.2120  2.0878 0.0000      0
+##    5:        NA      151.7 2012         095     Kansas 6.2804 1.4699  9.5382 4.4618      0
+##   ---                                                                                     
+## 1952:      53.0      181.0 2004         073   Nebraska 0.0000 3.2915 19.7085 0.0000      0
+## 1953:      57.0      195.0 2003         073   Nebraska 0.0000 7.7427 11.8459 3.4114      0
+## 1954:      51.0      170.0 2002         073   Nebraska 0.0000 7.0000  1.2978 4.7022      9
+## 1955:      56.0      195.0 2001         073   Nebraska 5.7915 0.0000  0.0000 0.0000      0
+## 1956:      54.0      147.0 2000         073   Nebraska 0.0000 4.7386 17.6887 0.5727      0
 ```
 ]
 
@@ -7177,21 +7015,21 @@ county_yield %&gt;%
 .panel2-area-chart-flip-user[
 
 ```
-## # A tibble: 1,956 x 10
+## # A tibble: 1,956 × 10
 ## # Groups:   state_name, year [56]
-##    soy_yield corn_yield  year county_code state_name d0_5_9 d1_5_9 d2_5_9 d3_5_9
-##        &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-##  1      42         123   2000 053         Kansas       2.49  2.87   0.134   0   
-##  2      NA         188.  2017 095         Kansas       8.72  0      0       0   
-##  3      58.4       169.  2016 095         Kansas       1     0      0       0   
-##  4      NA         198.  2015 095         Kansas       1.76  1.21   2.09    0   
-##  5      NA         152.  2012 095         Kansas       6.28  1.47   9.54    4.46
-##  6      42         170   2007 095         Kansas       0     0      0       0   
-##  7      49         193   2005 095         Kansas       4.32  0      0       0   
-##  8      47         173   2003 095         Kansas       2.29  5.16   4.46    1.09
-##  9      40         165   2002 095         Kansas       3.71  1.48   1.90    0   
-## 10      52         171   2001 095         Kansas       9.88  0.188  0       0   
-## # … with 1,946 more rows, and 1 more variable: d4_5_9 &lt;dbl&gt;
+##    soy_yield corn_yield  year county_code state_name d0_5_9 d1_5_9 d2_5_9 d3_5_9 d4_5_9
+##        &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1      42         123   2000 053         Kansas       2.49  2.87   0.134   0         0
+##  2      NA         188.  2017 095         Kansas       8.72  0      0       0         0
+##  3      58.4       169.  2016 095         Kansas       1     0      0       0         0
+##  4      NA         198.  2015 095         Kansas       1.76  1.21   2.09    0         0
+##  5      NA         152.  2012 095         Kansas       6.28  1.47   9.54    4.46      0
+##  6      42         170   2007 095         Kansas       0     0      0       0         0
+##  7      49         193   2005 095         Kansas       4.32  0      0       0         0
+##  8      47         173   2003 095         Kansas       2.29  5.16   4.46    1.09      0
+##  9      40         165   2002 095         Kansas       3.71  1.48   1.90    0         0
+## 10      52         171   2001 095         Kansas       9.88  0.188  0       0         0
+## # … with 1,946 more rows
 ```
 ]
 
@@ -7212,7 +7050,7 @@ county_yield %&gt;%
 .panel2-area-chart-flip-user[
 
 ```
-## # A tibble: 56 x 3
+## # A tibble: 56 × 3
 ## # Groups:   state_name [3]
 ##    state_name  year corn_yield
 ##    &lt;chr&gt;      &lt;int&gt;      &lt;dbl&gt;
@@ -7246,7 +7084,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7273,7 +7111,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_06_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_06_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7301,7 +7139,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_07_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_07_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7330,7 +7168,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_08_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_08_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7360,7 +7198,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_09_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_09_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7391,7 +7229,7 @@ county_yield %&gt;%
 ]
  
 .panel2-area-chart-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_10_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/area-chart-flip_user_10_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -7890,7 +7728,7 @@ Salaries %&gt;%
 .panel2-mean-se-flip-user[
 
 ```
-## # A tibble: 3 x 5
+## # A tibble: 3 × 5
 ##   rank          n mean_salary     sd    se
 ##   &lt;fct&gt;     &lt;int&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 AsstProf     67      80776.  8174.  999.
@@ -7921,7 +7759,7 @@ Salaries %&gt;%
 ]
  
 .panel2-mean-se-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7947,7 +7785,7 @@ Salaries %&gt;%
 ]
  
 .panel2-mean-se-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -7974,7 +7812,7 @@ Salaries %&gt;%
 ]
  
 .panel2-mean-se-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -8008,7 +7846,7 @@ Salaries %&gt;%
 ]
  
 .panel2-mean-se-flip-user[
-&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_06_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/mean-se-flip_user_06_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -8042,7 +7880,7 @@ Salaries %&gt;%
 
 ---
 
-# Heat map 
+# Heat map
 
 .left5[
 
@@ -8071,7 +7909,7 @@ gene_data &lt;- readRDS("gene.rds")
 
 .right5[
 
-&lt;img src="data_visualization_x_files/figure-html/unnamed-chunk-68-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/unnamed-chunk-65-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -8093,7 +7931,7 @@ count: false
 .panel2-heatmap-user[
 
 ```
-## # A tibble: 8,748 x 5
+## # A tibble: 8,748 × 5
 ##    x              gene         value group gene_txt
 ##    &lt;chr&gt;          &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   
 ##  1 Zm00001d004894 20_WW_BL_TP1 0.739 BL    20_WWTP1
@@ -8123,7 +7961,7 @@ gene_data %&gt;%
 ]
  
 .panel2-heatmap-user[
-&lt;img src="data_visualization_x_files/figure-html/heatmap_user_02_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/heatmap_user_02_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -8140,7 +7978,7 @@ gene_data %&gt;%
 ]
  
 .panel2-heatmap-user[
-&lt;img src="data_visualization_x_files/figure-html/heatmap_user_03_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/heatmap_user_03_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -8158,7 +7996,7 @@ gene_data %&gt;%
 ]
  
 .panel2-heatmap-user[
-&lt;img src="data_visualization_x_files/figure-html/heatmap_user_04_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/heatmap_user_04_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -8177,7 +8015,7 @@ gene_data %&gt;%
 ]
  
 .panel2-heatmap-user[
-&lt;img src="data_visualization_x_files/figure-html/heatmap_user_05_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/heatmap_user_05_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -8203,7 +8041,7 @@ gene_data %&gt;%
 ]
  
 .panel2-heatmap-user[
-&lt;img src="data_visualization_x_files/figure-html/heatmap_user_06_output-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="data_visualization_x_files/figure-html/heatmap_user_06_output-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 &lt;style&gt;
@@ -8237,7 +8075,7 @@ gene_data %&gt;%
 
 ---
 
-# More supplementary `geom_*()` 
+# More supplementary `geom_*()`
 
 .panelset[ 
 
@@ -8344,14 +8182,14 @@ ggplot(data = yield_group) +
 class: inverse, center, middle
 name: animated
 
-# Animated figures 
+# Animated figures
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
 ---
 
 
-# Animated figures using the `gganimate` package 
+# Animated figures using the `gganimate` package
 
 .panelset[ 
 
@@ -8452,7 +8290,7 @@ weather %&gt;%
 
 ---
 
-# Animated figures  
+# Animated figures
 
 .panelset[ 
 
@@ -8556,13 +8394,13 @@ Then, add this in your Rmd file:
 class: inverse, center, middle
 name: inputoutput
 
-# Exporting a figure as an image 
+# Exporting a figure as an image
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
 ---
 
-# Exporting a figure as an image 
+# Exporting a figure as an image
 
 .panelset[ 
 
@@ -8662,7 +8500,7 @@ ggsave("nc_dpi_600.png", g_nc, height = 5, width = 7, dpi = 600)
 class: inverse, center, middle
 name: inputoutput
 
-# Resources 
+# Resources
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=1000px&gt;&lt;/html&gt;
 
@@ -8730,6 +8568,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

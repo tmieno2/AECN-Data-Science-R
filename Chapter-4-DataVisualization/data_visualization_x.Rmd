@@ -5,6 +5,7 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
+    embed-resources: true
     nature:
       ratio: 16:10
       highlightStyle: github
@@ -3106,78 +3107,6 @@ g_f +
 
 ---
 
-
-# More font families
-
-.panelset[ 
-
-.panel[.panel-name[Instruction]
-
-.left-full[
-
-You can use more font families by taking advantage of the `extrafont` package. 
-
-Install and library the package, and then run `font_import()` to import font families (you need to do this only once). 
-
-```{r eval = F}
-install.packages(extrafont)
-
-library(extrafont)
-
-font_import()
-```
-
-Next time around, just run 
-
-```{r }
-library(extrafont)
-
-#--- load fonts ---#
-loadfonts()
-```
-
-]
-
-  ]
-
-.panel[.panel-name[font families]
-
-You can use `fonttable()` to see the list of fonts available:
-
-```{r }
-fonttable() %>% 
-  dplyr::select(FontName, Bold,  Italic) %>% 
-  head(20)  
-```
-
-  ]
-
-.panel[.panel-name[try a family]
-
-
-.left-code[
-```{r f-fam, eval = F}
-g_f +
-  theme(
-    strip.text.y = element_text(
-      family = "Georgia", #<<
-      color = "red"
-    )
-  )
-```
-]
-
-.right-plot[
-```{r f-fam-f, ref.label = "f-fam", echo = F, out.width = "90%"}
-
-```
-]
-
-  ] <!-- panel ends here -->
-
-]
-
----
 
 # More flexible color options with HEX
 
