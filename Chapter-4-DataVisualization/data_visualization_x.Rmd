@@ -5,7 +5,6 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    self_contained: true
     nature:
       ratio: 16:10
       highlightStyle: github
@@ -667,7 +666,7 @@ name: more-info
 
 ---
 
-# Placing more information in one figure 
+# Placing more information in one figure
 
 .panelset[ 
 
@@ -891,7 +890,7 @@ ggplot(data = premium) +
 class: inverse, center, middle
 name: faceting
 
-# Faceting  
+# Faceting
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
@@ -1330,7 +1329,7 @@ ggplot(data=premium) +
 
 ---
 
-# Density plot, histogram, boxplot 
+# Density plot, histogram, boxplot
 
 .panelset[ 
 
@@ -1408,7 +1407,7 @@ county_yield %>%
 
 ---
 
-# Preparing datasets 
+# Preparing datasets
 
 .left-full[
  
@@ -1450,13 +1449,13 @@ You will find that reshaping wide datasets using `pivot_longer()` is very useful
 class: inverse, center, middle
 name: other-geoms
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 .panelset[ 
 
@@ -1775,13 +1774,13 @@ text.html.markdown.rmarkdown meta.block-level.markdown markup.heading.1.markdown
 class: inverse, center, middle
 name: fine-tune
 
-# Make your figures presentable to others 
+# Make your figures presentable to others
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
-# Make your figures presentable to others 
+# Make your figures presentable to others
 
 
 .panelset[ 
@@ -2081,7 +2080,7 @@ g_box +
 
 ---
 
-# Exercise 
+# Exercise
 
 .panelset[ 
 
@@ -2332,7 +2331,7 @@ g_axis +
 
 ---
 
-# Exercise   
+# Exercise
 
 .panelset[ 
 
@@ -2463,7 +2462,7 @@ It makes the specified component disappear.
 
 ---
 
-# Axis theme 
+# Axis theme
 
 .panelset[ 
 
@@ -2953,7 +2952,7 @@ See [here](http://sape.inf.usi.ch/quick-reference/ggplot2/linetype) for the line
 ---
 
 
-# Faceted figure theme 
+# Faceted figure theme
 
 .panelset[ 
 
@@ -3108,7 +3107,7 @@ g_f +
 ---
 
 
-# More font families 
+# More font families
 
 .panelset[ 
 
@@ -3180,7 +3179,7 @@ g_f +
 
 ---
 
-# More flexible color options with HEX 
+# More flexible color options with HEX
 
 .panelset[ 
 
@@ -3290,7 +3289,7 @@ One thing to remember is that you need to be aware of whether the aesthetic vari
   
 ---
 
-# Viridis 
+# Viridis
 
 .panelset[ 
 
@@ -3422,7 +3421,7 @@ ggplot(data = filter(county_yield, corn_yield > 50)) +
 
 ---
 
-# RColorBrewer 
+# RColorBrewer
 
 .panelset[ 
 
@@ -3541,7 +3540,7 @@ ggplot(data = filter(county_yield, corn_yield > 50)) +
 ---
 
 
-# Set discrete color scale manually 
+# Set discrete color scale manually
 
 .panelset[ 
 
@@ -3613,7 +3612,7 @@ ggplot(data = county_yield_s_b2010) +
 
 ---
 
-# Set continuous color scale manually 
+# Set continuous color scale manually
 
 .panelset[ 
 
@@ -3827,13 +3826,13 @@ Imagine plotting temperature (in Celsius) and precipitation (in mm) as faceted f
 class: inverse, center, middle
 name: tips
 
-# Tips 
+# Tips
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
-# Change the order 
+# Change the order
 
 .panelset[ 
 
@@ -3932,7 +3931,7 @@ decorate("factor", eval = F) %>%
 
 ---
 
-# More on box plots 
+# More on box plots
 
 .panelset[ 
 
@@ -4305,7 +4304,7 @@ ggplot(data = mean_yield_sy) +
 ---
 name: custom-theme
 
-# Custom theme 
+# Custom theme
 
 .panelset[ 
 
@@ -4529,7 +4528,7 @@ county_yield %>% #BREAK
 
 ---
 
-# Correlation plot 
+# Correlation plot
 
 .panelset[ 
 
@@ -4705,7 +4704,7 @@ county_yield %>% #BREAK
 
 ---
 
-# Area chart 
+# Area chart
 
 
 .left4[
@@ -4866,7 +4865,7 @@ Salaries %>% #BREAK
 
 ---
 
-# Heat map 
+# Heat map
 
 .left5[
 
@@ -4941,7 +4940,7 @@ gene_data %>% #BREAK
 
 ---
 
-# More supplementary `geom_*()` 
+# More supplementary `geom_*()`
 
 .panelset[ 
 
@@ -5051,14 +5050,14 @@ ggplot(data = yield_group) +
 class: inverse, center, middle
 name: animated
 
-# Animated figures 
+# Animated figures
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
 
-# Animated figures using the `gganimate` package 
+# Animated figures using the `gganimate` package
 
 .panelset[ 
 
@@ -5156,7 +5155,7 @@ weather %>%
 
 ---
 
-# Animated figures  
+# Animated figures
 
 .panelset[ 
 
@@ -5284,13 +5283,13 @@ htmltools::save_html(ggplotly(test, width = 800, height = 400), file = "fig.html
 class: inverse, center, middle
 name: inputoutput
 
-# Exporting a figure as an image 
+# Exporting a figure as an image
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
-# Exporting a figure as an image 
+# Exporting a figure as an image
 
 .panelset[ 
 
@@ -5386,7 +5385,7 @@ ggsave("nc_dpi_600.png", g_nc, height = 5, width = 7, dpi = 600)
 class: inverse, center, middle
 name: inputoutput
 
-# Resources 
+# Resources
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 

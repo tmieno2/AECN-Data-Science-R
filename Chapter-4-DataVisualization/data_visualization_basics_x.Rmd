@@ -5,7 +5,6 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    self_contained: true
     nature:
       ratio: 16:10
       highlightStyle: github
@@ -161,7 +160,7 @@ county_yield %>%
 `r chunk_reveal(
   chunk_name = "taste", 
   title = "# Taste of ggplot2",
-  # break_type = "user", 
+  #break_type = "user", 
   display_type = "both",
   width = c(50, 50)
   )
@@ -487,12 +486,12 @@ The same element name can mean different things based on `geom` types
 ---
 
 ```{r fig-scatter-f, cache = F, include = F}
-g_fig + # BREAK
+g_fig + #BREAK
   geom_point(
     aes(x = d3_5_9, y = corn_yield),
-    color = "red", # BREAK2
-    size = 0.7, # BREAK3
-    shape = 0 # BREAK4
+    color = "red", #BREAK2
+    size = 0.7, #BREAK3
+    shape = 0 #BREAK4
   )
 ```
 
@@ -526,7 +525,7 @@ g_fig +
 `r chunk_reveal(
   chunk_name = "hist-f", 
   title = "# Histogram",
-  # break_type = "non_seq", 
+  #break_type = "non_seq", 
   display_type = "both", 
   left_assign = FALSE,
   width = c(50, 50)
@@ -542,13 +541,13 @@ g_fig +
 
 
 ```{r box-f, cache = F, include = F}
-ggplot(data = county_yield) + # BREAK
+ggplot(data = county_yield) + #BREAK
   geom_boxplot(
     aes(x = factor(year), y = corn_yield),
-    color = "red", # BREAK2
-    fill = "orange", # BREAK3
-    size = 0.2, # BREAK4
-    shape = 1 # BREAK5
+    color = "red", #BREAK2
+    fill = "orange", #BREAK3
+    size = 0.2, #BREAK4
+    shape = 1 #BREAK5
   )
 ```
 
@@ -570,13 +569,13 @@ ggplot(data = county_yield) + # BREAK
 ---
 
 ```{r line-f, cache = F, include = F}
-ggplot(data = mean_yield) + # BREAK1
+ggplot(data = mean_yield) + #BREAK1
   geom_line(
     aes(x = year, y = corn_yield),
-    color = "blue", # BREAK2
-    size = 1.5, # BREAK3
-    fill = "red", # BREAK4
-    linetype = "dotted", # BREAK5
+    color = "blue", #BREAK2
+    size = 1.5, #BREAK3
+    fill = "red", #BREAK4
+    linetype = "dotted", #BREAK5
   )
 ```
 
@@ -664,7 +663,7 @@ name: more-info
 
 ---
 
-# Placing more information in one figure 
+# Placing more information in one figure
 
 .panelset[ 
 
@@ -766,11 +765,11 @@ ggplot(data = county_yield_mean) +
 
 
 ```{r density-more, cache = F, include = F}
-ggplot(data = county_yield_mean) + # BREAK
+ggplot(data = county_yield_mean) + #BREAK
   geom_density(
     aes(
       x = corn_yield,
-      fill = state_name # BREAK2
+      fill = state_name #BREAK2
     ),
     alpha = 0.3
   )
@@ -797,7 +796,7 @@ county_yield %>%
     aes(
       x = factor(year),
       y = corn_yield,
-      fill = state_name # BREAK2
+      fill = state_name #BREAK2
     )
   )
 ```
@@ -818,13 +817,13 @@ county_yield %>%
 ```{r scatter-more, cache = F, include = F}
 county_yield %>%
   filter(state_name %in% c("Nebraska", "Kansas")) %>%
-  ggplot(data = .) + # BREAK
+  ggplot(data = .) + #BREAK
   geom_point(
     aes(
       x = d3_5_9,
       y = corn_yield,
-      color = state_name, # BREAK2
-      shape = state_name # BREAK3
+      color = state_name, #BREAK2
+      shape = state_name #BREAK3
     ),
     size = 0.7
   )
@@ -886,7 +885,7 @@ ggplot(data = premium) +
 class: inverse, center, middle
 name: faceting
 
-# Faceting  
+# Faceting
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
@@ -974,7 +973,7 @@ What does `~ .` do?
 ggplot(data = county_yield) +
   geom_boxplot(
     aes(x = factor(year), y = corn_yield)
-  ) + # BREAK
+  ) + #BREAK
   facet_wrap(state_name ~ .)
 ```
 
@@ -1325,7 +1324,7 @@ ggplot(data = premium) +
 
 ---
 
-# Density plot, histogram, boxplot 
+# Density plot, histogram, boxplot
 
 .panelset[ 
 
@@ -1403,7 +1402,7 @@ county_yield %>%
 
 ---
 
-# Preparing datasets 
+# Preparing datasets
 
 .left-full[
  
@@ -1445,13 +1444,13 @@ You will find that reshaping wide datasets using `pivot_longer()` is very useful
 class: inverse, center, middle
 name: other-geoms
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
 ---
 
-# Other supplementary `geom_*()`  
+# Other supplementary `geom_*()`
 
 .panelset[ 
 
@@ -1729,14 +1728,14 @@ ggplot() +
   geom_point(
     data = county_yield,
     aes(y = corn_yield, x = d3_5_9)
-  ) + # BREAK
+  ) + #BREAK
   #--- regression line ---#
   geom_line(
     data = ci_bound_data,
     aes(x = d3_5_9, y = fit),
     color = "blue",
     size = 1.2
-  ) + # BREAK
+  ) + #BREAK
   #--- confidence interval ---#
   geom_ribbon(
     data = ci_bound_data,
