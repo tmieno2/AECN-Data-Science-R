@@ -20,16 +20,16 @@ options(htmltools.dir.version = FALSE)
 options(knitr.duplicate.label = "allow")
 
 opts_chunk$set(
+  echo = TRUE,
   fig.align = "center",
   fig.retina = 5,
   fig.dim = c(4, 3),
   out.width = "60%",
-  warning = F,
-  message = F,
+  warning = FALSE,
+  message = FALSE,
   # fig.path='Figs/',
-  cache = T,
-  root.dir = here(),
-  echo = T
+  cache = TRUE,
+  root.dir = here()
 )
 
 library(flipbookr)

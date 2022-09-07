@@ -5,15 +5,15 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
 ---
 
-```{r, child = './../setup.Rmd'}
+```{r, child = '../setup.Rmd'}
 ```
+
 
 # Table of contents
 
@@ -622,11 +622,14 @@ read.dta13(file path)
 
 ## Examples
 
-```{r read_dta, cache = TRUE}
+```{r read_dta, eval = FALSE}
 #--- import the data ---#
 corn_yields <- read.dta13("corn_yields.dta")
 ```
 
+```{r, echo = F}
+corn_yields <- read.dta13("~/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-3-DataWrangling/corn_yields.dta")
+```
   ]
 
 .panel[.panel-name[Note]
@@ -673,10 +676,13 @@ readRDS("path to the file")
 
 ## Examples
 
-```{r read_rds}
+```{r read_rds, eval = F}
 corn_yields <- readRDS("corn_yields.rds") 
 ```
 
+```{r, echo = F}
+corn_yields <- readRDS("~/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-3-DataWrangling/corn_yields.rds")
+```
   ]
 
 .panel[.panel-name[Note]
@@ -1828,6 +1834,20 @@ weather
 
 Find the daily mean temperature (temp), humidity (humid), wind speed (wind_speed), and precipitation (precip) by the origin of departure. Do not forget to name each daily weather variable. Below is the output you will see if you get it right.
 
+```{r echo = F}
+(
+daily_weather <- 
+  weather %>%
+  group_by(origin, month, day) %>%
+  summarize(
+    temp = mean(temp),
+    humid = mean(humid),
+    wind_speed = mean(wind_speed),
+    precip = mean(precip)
+  )
+)
+```
+
   ]
 
 .panel[.panel-name[Exercise 3]
@@ -1836,14 +1856,13 @@ Find the daily mean temperature (temp), humidity (humid), wind speed (wind_speed
 
 Subset the daily weather data you obtained in exercise 2 so that it contains weather information only in Nov, Dec, Jan, and Feb for flights that depart from “EWR”. Below is the output you will see if you get it right.
 
-  ]
-
-.panel[.panel-name[Exercise 4]
-
-<br>
-
-Find the monthly mean temperature (temp), humidity (humid), wind speed (wind_speed), and precipitation (precip) by the origin of departure.
-
+```{r echo = F}
+(
+daily_weather %>%
+  filter(month %in% c(11, 12, 1, 2)) %>%
+  filter(origin == "EWR")
+)
+```
   ]
 
 ]

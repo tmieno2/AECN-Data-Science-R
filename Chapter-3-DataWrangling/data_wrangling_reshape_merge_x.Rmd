@@ -5,7 +5,6 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -507,6 +506,7 @@ data.frame(
 
 Run the following code so you can use the `flights` dataset.
 ```{r }
+#| echo: true
 library(nycflights13)
 ```
   ]
@@ -742,7 +742,9 @@ left_join(data_x, data_y, by = keys)
 
 Run the following code to run the merging demonstration later:
 
-```{r data_gen_disp, eval = F}
+```{r data_gen_disp, eval = F }
+#| echo: true
+
 N <- 2
 T <- 2
 
@@ -770,12 +772,14 @@ yield_data <- data.frame(
 The keys are `county` and `year`, so
 
 ```{r }
+#| echo: true
 left_join(yield_data, price_data, by = c("county", "year"))  
 ```
 
 Switching the two?
 
 ```{r }
+#| echo: true
 left_join(price_data, yield_data, by = c("county", "year"))  
 ```
 
@@ -792,6 +796,7 @@ Note: In this instance, .red[which comes first does not matter] because all the 
 Let's expand the `yield_data`:
 
 ```{r }
+#| echo: true
 yield_data <- data.frame(
   yield = runif(6, min = 180, max = 280),
   county = c("Lancaster", "Douglas", "Chase", "Lancaster", "Douglas", "Chase"),
@@ -810,12 +815,14 @@ yield_data
 **`yield_data` on the right**:
 
 ```{r }
+#| echo: true
 left_join(price_data, yield_data, by = c("county", "year"))  
 ```
 
 **`yield_data` on the left**:
 
 ```{r }
+#| echo: true
 left_join(yield_data, price_data, by = c("county", "year"))  
 ```
 
@@ -834,6 +841,7 @@ We saw in the previous slide having `price_data` (as `data_x`) and `yield_data` 
 If you would like to keep unmatched rows in `data_y`, you can use `full_join()`.
 
 ```{r }
+#| echo: true
 full_join(price_data, yield_data, by = c("county", "year"))  
 ```
 
@@ -856,6 +864,7 @@ full_join(price_data, yield_data, by = c("county", "year"))
 Let's create a weather dataset where you have more than one observations per county-year:
 
 ```{r }
+#| echo: true
 weather_data <- data.frame(
   rainfall = 20 * runif(12),
   county = rep(c("Lancaster", "Douglas", "Chase"), each = 4),
@@ -873,7 +882,9 @@ weather_data
 .panel[.panel-name[Demo]
 
 ```{r }
-left_join(yield_data, weather_data, by = c("county", "year"))  
+#| echo: true
+
+left_join(yield_data, weather_data, by = c("county", "year"))
 ```
 
 .red[Remember?] 
@@ -901,7 +912,8 @@ Create the following datasets and take a look at them to understand what's in th
 
 **Flights in January**:
 
-```{r }
+```{r}
+#| echo: true
 flights_Jan <- flights %>% 
   filter(month == 1) %>% 
   select(month, day, dep_delay, origin)
@@ -909,7 +921,8 @@ flights_Jan <- flights %>%
 
 **daily temperature in January**:
 
-```{r }
+```{r}
+#| echo: true
 daily_temp_Jan <- weather %>% 
   filter(month == 1) %>% 
   group_by(origin, month, day) %>% 
@@ -918,17 +931,18 @@ daily_temp_Jan <- weather %>%
 
 **hourly temperature in January**:
 
-```{r }
+```{r}
+#| echo: true
 hourly_temp_Jan <- weather %>% 
   filter(month == 1) %>% 
-  select(origin, month, day, hour, temp)
+  select(origin, month, day, hour, temp) 
 ```
 
   ] 
 
 .panel[.panel-name[Exercise 1]
 
-+ You are interested in learning the impact of **daily** temperature on departure delay for the flights in January. To do so, you need to have them in a single dataset.  
++ You are interested in learning the impact of **daily** temperature on departure delay for the flights in January. To do so, you need to have the variables in a single dataset.  
 
 + Is this going to be a 1-to-1 matching or 1-to-m matching?
 
