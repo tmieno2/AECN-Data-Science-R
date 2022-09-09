@@ -6,6 +6,8 @@ output:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
     embed-resources: true
+    self_contained: yes
+    mode: selfcontained
     nature:
       ratio: 16:10
       highlightStyle: github
