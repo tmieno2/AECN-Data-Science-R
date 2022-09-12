@@ -5,7 +5,7 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    lib_dir: libs
+    lib_dir: lib
     nature:
       ratio: 16:10
       highlightStyle: github
@@ -17,9 +17,9 @@ output:
 ```
 
 ```{r, include = F, cache = F}
-suppressMessages(library(nycflights13)) 
-suppressMessages(library(extrafont)) 
-suppressMessages(library(data.table)) 
+suppressMessages(library(nycflights13))
+suppressMessages(library(extrafont))
+suppressMessages(library(data.table))
 suppressMessages(library(patchwork))
 ```
 
