@@ -1,0 +1,154 @@
+---
+title: "Assignment 3 (AECN 396/896-002)"
+author: "Your Name Here"
+output:
+  html_document:
+    number_sections: false
+    theme: flatly
+    toc: yes
+    toc_depth: 1
+    toc_float: yes
+geometry: margin=0.75in
+---
+
+```{r setup, echo = F}
+library(knitr)
+
+opts_chunk$set(
+  echo = F,
+  cache = T,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE
+  ) 
+
+opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_3")
+# setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_3")
+
+```
+```{css blockuote, echo = F}
+<style>
+.book .book-body .page-wrapper .page-inner section.normal table
+{
+  width:auto;
+}
+.book .book-body .page-wrapper .page-inner section.normal table td,
+.book .book-body .page-wrapper .page-inner section.normal table th,
+.book .book-body .page-wrapper .page-inner section.normal table tr
+{
+  padding:0;
+  border:0;
+  background-color:#fff;
+}
+</style>
+```
+
+```{r packages, echo = F}
+suppressMessages(library(tidyverse))
+suppressMessages(library(modelsummary))
+suppressMessages(library(readr))
+suppressMessages(library(data.table))
+suppressMessages(library(readstata13))
+suppressMessages(library(future.apply))
+suppressMessages(library(ggthemes))
+suppressMessages(library(lubridate))
+```
+
+# Assignment Goals
+
+In this assignment, you are asked to work on spatial datasets of an on-farm nitrogen rate trial for corn production. The primary goal of the project is to understand the impact of nitrogen rate on corn yield and also how it is affected by electrical conductivity.
+
+This assignment is designed to train you on
+
++ data visualization (map making) using the `ggplot2` package
++ create tables using the `modelsummary` package
++ read spatial datasets in various formats using the `sf` and `raster` packages
++ spatially join spatial objects to extract data using the `sf` and `exactextractr` packages
+
+# Importing and understanding the datasets
+
+## Q1
+
+Import the trial design data named "trial_design.rds" and name it `trial_design`. Then, visualize the trial design using `ggplot()` where `theme_void()` is applied to the figure. You figure should look like below.   
+
+## Q2 
+
+Import the yield data for the field named "yield.rds" and name it `yield`. Then, visualize the yield data using `ggplot()` where yield points are color-differentiated based on the level of yield values (use whatever color scale you would like). Apply `theme_void()` to the figure.You figure should look like below.   
+
+## Q3 
+
+Import the as-applied nitrogen rate data named "NH3.gpkg" and name it `NH3`. Then, visualize the nitrogen rate data using `ggplot()` where the points are color-differentiated based on nitrogen rates (use whatever color scale you would like). Apply `theme_void()` to the figure.You figure should look like below.   
+
+## Q4
+
+Import the electrical conductivity GeoTiff file named "ec.tif" and name it `ec`. Then, visualize the electrical conductivity data using `ggplot()` where the points are color-differentiated based on electrical conductivity (use whatever color scale you would like). Apply `theme_void()` to the figure.You figure should look like below.   
+
+# Spatial data joining
+
+## Q1
+
+In order to run the statistical model where the observation units are the trial plots, we need to spatially join `yield`, `NH3`, and `ec` to `trial_design`. In particular, we will find the average value of `yield`, `NH3`, and `ec` for each of the trial plots. 
+
+**yield** and **NH3**
+Using `st_join()`, first identify which points of `yield` and `NH3` are located inside each of the trial plots in `trial_design`, calculate their averages for each trial plot, and then drop the geometry column using `st_drop_geometry()` to turn it into a `tibble` from an `sf`. Note that `id` from `trial_design` is the trial plot id variable. Name them `yield_mean` and `NH3_mean`, respectively.
+
+
+**EC**
+
+Using `exact_extract()`, extract EC values from `ec` for the intersecting trial plots and find the mean of EC for each trial plot. Name it `ec_mean`. Then, assign the EC values to `trial_design` as one of the columns.
+
+## Q2 
+
+Merge `yield_mean` and `NH3_mean` to `trial_design` using `id`, and name it `final_data`.
+
+## Q3
+
+Create individual maps of yield, NH3, and ec using `final_data` where the fill color of trial plots are differentiated based on yield, NH3, and ec. Then, use the `patchwork` package to stack the figures vertically as follows:
+
+## Q4
+
+Using the `modelsummary` package, create a summary table shown below:
+
+## Q5
+
+Using `case_when()` and `quantile()`, group the observations into three categories:
+
++ `ec` lower than the 33% quantile of `ec` (label this group as `ec_low`)
++ `ec` higher than the 33% quantile of `ec`, but lower than the 67% quantile of `ec` (label this group as `ec_mid`)
++ `ec` higher than the 67% quantile of `ec` (label this group as `ec_high`)
+
+Name the group variable `ec_group`. If you are not familiar with `quantile()` look it up yourself and figure out how to use it.
+
+## Q6
+
+Using the `modelsummary` package, create a summary table shown below:
+
+What do you observe from this table? 
+
+## Q7 
+
+Estimate the following two models via OLS:
+
+**Model 1**
+$$
+yield_i = \beta_0 + \beta_1 N_i + \beta_2 N_i^2 + \beta_3 EC_i + \beta_4 N_i \cdot EC_i + \beta_5 N_i^2 \cdot EC_i + v_i
+$$
+
+**Model 2**
+$$
+yield_i = \beta_0 + \beta_1 N_i + \beta_2 EC_i + \beta_3 N_i \cdot EC_i + v_i
+$$
+
+where $yield_i$, $N_i$, $EC_i$, and $v_i$ are corn yield, nitrogen rate, EC, and error term at plot $i$. 
+
+Then, create the following regression table using the `modelsummary` package:
+
+Here are the actions you need to take to modify the default summary table to have the table above:
+
++ modify coefficient names
++ add statistical significance symbol
++ omit some of the model summary statistics
++ format numbers so that only 2 digits after the decimal points are displayed
+
+Finally, save the table as docx file. Name the docx file however you want. Just provide print the R code below.
+

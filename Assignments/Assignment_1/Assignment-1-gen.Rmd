@@ -1,0 +1,596 @@
+---
+title: "Assignment 1 (AECN 396/896-002)"
+author: "Your Name Here"
+output:
+  html_document:
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_float: yes
+geometry: margin=0.75in
+---
+
+```{r setup, echo = F}
+library(knitr)
+
+opts_chunk$set(
+  echo= TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE
+  ) 
+
+opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
+# setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
+
+```
+
+```{r packages, echo = F}
+suppressMessages(library(tidyverse))
+suppressMessages(library(readr))
+suppressMessages(library(data.table))
+suppressMessages(library(readstata13))
+suppressMessages(library(ggthemes))
+suppressMessages(library(lubridate))
+```
+
+# Research Project Objectives
+
+In this assignment, you are asked to work on datasets on irrigation water use for agricultural production, saturated thickness, and weather data observed at the well level. 
+
+The ultimate goal of the project is to explore the impacts of well yield (how much groundwater you can pump per minute) and weather conditions on groundwater use for irrigated agricultural production by agricultural producers in Colorado.    
+
+This assignment is structured in a way that you mimic a research process a researcher would actually go through to write a journal article, which involves 
+
++ read data files in various formats
++ transform the raw datasets so they are usable for analysis 
++ put together separate datasets into a single dataset  
++ visualize the data to gain insights into the problems you are tackling
+
+Most of the questions are designed to build intuitions and insights into the groundwater-irrigated agricultural production at hand as well as testing your R skills. My hope here is that you get to understand better how R are used in a research workflow. With that said, there are also questions that are purely for testing your R skills.
+
+# Importing datasets
+
+We have three separate datasets saved in various formats. Here are the list of datasets and the definition of the variables.
+
++ `all_sat_CO_as1.csv`: 
+  * `wdid`: well id
+  * `year`: year
+  * `sat_thickness`: saturated thickness (in feet) 
+  * `unit`: indicates what unit `sat_thickness` is observed
++ `data_CO_as1.rds`: 
+  * `wdid`: well id
+  * `pumpingAF`: pumping in acre-feet
+  * `latdecdeg`: latitude
+  * `longdecdeg`: longitude
+  * `year`: year
+  * `PCC`: pumping costs
+  * `WellCap`: well yield capacity 
+  * `REAname`: energy provider 
++ `daymet_raw_as1.dta`:
+  * `wdid`: well id
+  * `year`: year
+  * `month`: month of the year
+  * `day`: day of the month 
+  * `precip`: precipitation (mm)
+  * `max.temp`: maximum temperature (Celsius)
+  * `min.temp`: minimum temperature (Celsius)
+
+
+```{r eval = F, echo = F}
+#===================================
+# generate data
+#===================================
+#--- sat data ---#
+sat_CO <- readRDS("all_sat_CO.rds") 
+write_csv(sat_CO, "all_sat_CO_as1.csv") 
+
+
+#--- irrigation data ---#
+data_CO <- readRDS("data_CO.rds") %>% 
+  select(wdid, pumpingAF, latdecdeg, longdecdeg, year, PCC, WellCap, REAname) %>% 
+  tibble()
+
+saveRDS(data_CO, "data_CO_as1.rds")
+
+#--- daymet data ---#
+daymet <- readRDS("dyamet_raw.rds") %>% 
+  setnames(
+    c("year","yday","dayl..s.","prcp..mm.day.","srad..W.m.2.","swe..kg.m.2.","tmax..deg.c.","tmin..deg.c.","vp..Pa."),
+    c("year","year.day","daylight","precip","solar.rad","snow.water.equiv","max.temp","min.temp","vapor.pressure")
+  ) %>% 
+  mutate(
+    date = as.Date(year.day - 1, origin = paste(year,"-01-01",sep=""))
+  ) %>% 
+  mutate(
+    month = month(date),
+    day = day(date)
+  ) 
+
+save.dta13(select(daymet, wdid, year, month, day, precip, max.temp, min.temp), "daymet_raw_as1.dta")
+
+read.dta13("daymet_raw_as1.dta")
+
+```
+
+---
+
+**Q1**
+
+Import "data_CO_as1.rds" and assign the data to an R object called `ir_data`
+
+```{r include = F}
+ir_data <- readRDS("data_CO_as1.rds")
+```
+
+---
+
+**Q2**
+
+Import "all_sat_CO_as1.csv" using the `read_csv()` function from the `readr` package and assign the data to an R object called `sat_data`
+
+```{r include = F}
+sat_data <- read_csv("all_sat_CO_as1.csv") 
+```
+
+---
+
+**Q3**
+
+Import "daymet_raw_as1.dta", convert it (which is a `data.frame`) into a `tibble`, and assign the data to an R object called `daymet_data`
+
+```{r include = F}
+daymet_data <- read.dta13("daymet_raw_as1.dta") %>% 
+  tibble()
+```
+
+# Irrigation data: Exploratory analysis and data Wrangling
+
+---
+
+**Q1**
+
+Create a density plot of `pumpingAF` by year where their fill-color is differentiated by year. Set `alpha` at $0.3$.
+
+```{r echo = F}
+ggplot(data = ir_data) +
+  geom_density(aes(x = pumpingAF, fill = factor(year)), alpha = 0.3)
+```
+
+---
+
+**Q2**
+
+Create a density plot of `pumpingAF` by year where they are faceted by year instead of having all of them in one panel. Pick your favorite color, get the HEX code for the color, and use it as the fill-color that is applied for all the facets.
+
+```{r echo = F}
+ggplot(data = ir_data) +
+  geom_density(aes(x = pumpingAF), fill = "red", alpha = 0.3) +
+  facet_grid(year ~ .)
+```
+
+Anything that stands out from the figure?
+
+---
+
+**Q3**
+
+Rename `WellCap` and `PCC` to `well_yield` and `pumping_costs`, respectively. 
+
+```{r echo = F}
+ir_data <- rename(ir_data, well_yield = WellCap, pumping_costs = PCC)
+```
+
+---
+
+**Q4**
+
+Create a scatter plot of `pumpingAF` (y-axis) against `well_yield` faceted by year using `facet_wrap()`. Arrange the panels so that you have 2 rows of panels. Further, add liner model fits to the figures using `geom_smooth()`. Finally, apply the pre-made theme of `theme_economist()` from the `ggthemes` package.
+
+```{r echo = F}
+ggplot(data = ir_data) +
+  geom_point(aes(y = pumpingAF, x = well_yield)) +
+  geom_smooth(aes(y = pumpingAF, x = well_yield), method = "lm") +
+  facet_wrap(year ~ ., nrow = 2) +
+  theme_economist()
+```
+
+Are there any noticeable differences across years? 
+
+---
+
+**Q5**
+
+Create a scatter plot of `pumpingAF` (y-axis) against `well_yield` where the points are color-differentiated by energy provider (`REAname`) faceted by year. 
+
+```{r echo = F}
+ggplot(data = ir_data) +
+  geom_point(aes(y = pumpingAF, x = well_yield, color = REAname)) +
+  facet_wrap(year ~ ., nrow = 2)
+```
+
+Any differences across the energy providers?
+
+---
+
+**Q6**
+
+Find the mean of `pumping_costs` by energy provider (`REAname`) and year (`year`). Assign it to an R object called `pcc_mean`.
+
+```{r echo = F}
+(
+pcc_mean <- ir_data %>% 
+  group_by(REAname, year) %>%  
+  summarize(pc_mean = mean(pumping_costs))
+)
+```
+
+---
+
+**Q7**
+
+Using `pcc_mean`, create a bar plot of mean pumping costs (y-axis) and year (x-axis) where the fill-color of the bars are differentiated by energy provider (`REAname`). Use `position = dodge` option so that bars are not vertically stacked.
+
+```{r echo = F}
+ggplot(data = pcc_mean) +
+  geom_bar(aes(y = pc_mean, x = factor(year), fill = REAname), stat = "identity", position = "dodge")
+```
+
+Do you notice anything worth mentioning? Do you think the differences in pumping costs between the energy providers were an underlying cause of the differences in groundwater use between them (question **Q5**)?  
+
+---
+
+**Q8**
+
+Using `ir_data`, create a map of groundwater use where
+
++ `longdecdeg` is the x-axis
++ `latdecdeg` is the y-axis
++ points are color differentiated by the amount of groundwater use (`pumpingAF`)
++ apply `scale_color_viridis_c()`
++ faceted by year
++ apply `coord_equal()`
++ put the legend below the figure
++ add `fig.height = 15` as an R chunk option so that the figure is sufficiently large in the output html file
+
+```{r echo = F, fig.height = 15}
+ggplot(data = ir_data) +
+  geom_point(aes(x = longdecdeg, y = latdecdeg, color = pumpingAF)) +
+  facet_wrap(year ~ .) +
+  scale_color_viridis_c() +
+  coord_equal() +
+    theme(
+      legend.position = "bottom"
+    )
+```
+
+Do you observe any spatial patterns in groundwater use?
+
+---
+
+**Q9**
+
+It seems that extremely high values of groundwater use is making it a bit hard to recognize a spatial pattern in groundwater use (if any). Filter `ir_data` to those that satisfy `pumpingAF < 500` and then make the same map. 
+
+```{r echo = F, fig.height = 15}
+ir_data %>% 
+  filter(pumpingAF < 500) %>% 
+  ggplot(data = .) +
+    geom_point(aes(x = longdecdeg, y = latdecdeg, color = pumpingAF)) +
+    facet_wrap(year ~ .) +
+    scale_color_viridis_c() +
+    coord_equal() +
+    theme(
+      legend.position = "bottom"
+    )
+```
+
+# Saturated thickness data: Exploratory analysis and data Wrangling
+
+**Q1**
+
+Find the mean of saturated thickness (`sat_thickness`) by year.
+
+```{r echo = F}
+(
+sat_mean_data <- sat_data %>% 
+  group_by(year) %>% 
+  summarize(sat_mean = mean(sat_thickness))
+)
+```
+
+**Q2**
+
+Using the mean saturated thickness data, create a line plot of saturated thickness (y-axis) against year (x-axis). Do the following to the figure:
+
++ add points using `geom_point()` where the color of the points are blue  
++ make the line red
++ remove minor grid lines (both x and y) 
++ remove major panel grid lines for x (the white vertical lines) 
++ change the y-axis breaks to `seq(135, 170, by = 5)`
++ change the x-axis breaks to a sequence of numbers that start from the minimum `year` value and increases up to the maximum `year` value with the incremental step of 1
++ change the angle of the x-axis labels to 90 degree
++ change the axis titles to how they appear on the figure below
++ Put an annotation that says "At this rate groundwater is all gone soon!!." with the line breaks after "groundwater." You can put this text anywhere as long as it does not overlap with the line.
+
+
+```{r echo = F}
+ggplot(data = sat_mean_data) +
+  geom_line(aes(y = sat_mean, x = year), color = "red") +
+  geom_point(aes(y = sat_mean, x = year), color = "blue") +
+  scale_y_continuous(breaks = seq(135, 170, by = 5)) +
+  scale_x_continuous(breaks = min(sat_mean_data$year):max(sat_mean_data$year)) +
+  xlab("Year") +
+  ylab("Saturated Thickness (feet)") +
+  annotate(
+    'text',
+    x = 1992,
+    y = 145,
+    label = 'At this rate, groundwater\n is all gone soon!!.',
+    size = 6,
+    color = "red"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 90),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank() 
+  )
+
+```
+
+Anything that you notice from the figure?
+
+
+# Daymet weather data: Exploratory analysis and data Wrangling
+
+Ultimately, you would like to estimate the following statistical model:
+
+$$
+\mbox{groundwater use} = \beta_0 + \beta_1 \mbox{well yield}+ \beta_1 \mbox{pumping cost} + \alpha_1 P_5 + \alpha_2 P_6 + \alpha_3 P_7 + \alpha_4 P_8 + \alpha_5 P_9 + \gamma_1 GDD + v
+$$
+
+where `P_x` refers to total precipitation observed in month `x` (e.g., `P_5` is total precipitation in May) and `GDD` is the cumulative growing degree days from May through September (hereafter referred to as irrigation season) 
+
+The objective here is to construct these weather variables observed at each of the wells each year to be merged later to the irrigation dataset (`ir_data`).
+
+---
+
+**Q1**
+
+Since we do not use weather data in months excepts the irrigation season, filter the data to those that are observed in the irrigation season and assign it to `daymet_data` to override the original version of `daymet_data`.
+
+```{r echo = F}
+(
+daymet_data <- filter(daymet_data, month %in% 5:9)  
+)
+```
+
+---
+
+**Q2**
+
+Identify the minimum and maximum of `precip`, `max.temp`, and `min.temp` by year-month (Hint: use `group_by()` and `summarize()` with `across()`)
+
+
+---
+
+**Q3**
+
+Daily GDD (growing degree days) is defined as `(max.temp + min.temp)/2 - 10`. Using `mutate()`, create daily GDD variable named `daily_gdd` in `daymet_data`.
+
+
+```{r include = F}
+daymet_data <- mutate(daymet_data, daily_gdd = (max.temp + min.temp)/2 - 10) 
+```
+
+---
+
+**Q4**
+
+For each well-year, calculate the sum of daily GDD during the irrigation season, name it `GDD`, and assign it to an R object called `GDD_data`
+
+```{r echo = F}
+GDD_data <- daymet_data %>% 
+  group_by(year, wdid) %>% 
+  summarize(GDD = sum(daily_gdd))
+```
+
+---
+
+**Q5**
+
+Create a boxplot of `GDD` where the y-axis is `GDD` and the x-axis is `year`.
+
+```{r include = F}
+ggplot(data = GDD_data) +
+  geom_boxplot(aes(y = GDD, x = factor(year)))
+```
+
+What do you observe from the figure? Anything that stands out?
+
+---
+
+**Q6**
+
+We now work on precipitation variables. Find the monthly total precipitation by well and year, call it `tot_precip`, and assign it to an R object called `precip_data`.
+
+```{r echo =F}
+(
+precip_data <- daymet_data %>% 
+  group_by(wdid, year, month) %>% 
+  summarize(tot_precip = sum(precip))
+)
+``` 
+
+---
+
+**Q7**
+
+We would like to have monthly precipitation as separate columns instead of having a single column storing monthly precipitation across the months in the irrigation season. Use `pivot_wider()` to reshape `precip_data` to a wide format so that each row represents a unique `wdid`-`year` combination. In doing so add the prefix of `m_` to new variables so that the new variable names are not numeric. Assign the resulting data to an R object called `precip_data_wide`. 
+
+```{r echo = F}
+(
+precip_data_wide <- precip_data %>% 
+  pivot_wider(values_from = tot_precip, names_from = `month`, names_prefix = "m_")
+)
+```
+
+---
+
+**Q8**
+
+Create panels of boxplots of `tot_precip` against `year` faceted by month (Hint: faceting variable has to be a <span style="color:red"> discrete </span> variable). Further, make changes in the faceted figures so that it looks like the figure below. Note, the size of the strip text is 20. Think carefully about which `precip_data` or `precip_data-wide` you should use.
+
+```{r echo = F}
+ggplot(precip_data) +
+  geom_boxplot(aes(y = tot_precip, x = factor(year)), color = "blue", fill = "red") +
+  facet_grid(factor(month) ~ .) +
+  xlab("Year") +
+  ylab("Total Precipitation (mm)") +
+  theme(
+    strip.text.y = element_text(size = 20, color = "blue")
+  )
+```
+
+Anything notable in the figure?
+
+---
+
+**Q9**
+
+Merge `precip_data_wide` and `GDD_data` using `left_join()`. Assign the merged data to an R object called `weather_data`.
+
+```{r echo = F}
+(
+weather_data <- left_join(precip_data_wide, GDD_data, by = c("wdid", "year")) 
+)
+```
+
+---
+
+**Q10**
+
++ Using `precip_data`, find total precipitation during the irrigation season by well-year, find its mean by year, and call the variable `season_precip`. Assign the data to an R object called `season_precip_data`. 
+
+```{r echo = F}
+(
+season_precip_data <- precip_data %>% 
+  group_by(wdid, year) %>% 
+  summarize(season_precip_well = sum(tot_precip)) %>% 
+  group_by(year) %>% 
+  summarize(season_precip = mean(season_precip_well))  
+
+)
+```
+
++ Using `ir_data`, find the mean of groundwater use (`pumpingAF`) by year and call the variable `mean_gw`. Assign the object to an R object called `mean_gw_data`.
+
+```{r echo = F}
+(
+mean_gw_data <- ir_data %>% 
+  group_by(year) %>% 
+  summarize(mean_gw = mean(pumpingAF))
+)
+```
+
++ merge `mean_gw_data` and `precip_data`, reshape it into a long format where you have a single column that has groundwater use and precipitation values mixed. Call the data `gw_precip_data`.
+
+
+```{r echo = F}
+gw_precip_data <- left_join(mean_gw_data, season_precip_data, by = "year") %>% 
+  pivot_longer(-year, names_to = "variable", values_to = "value")
+```
+
++ Using `facet_grid`, create a figure with two panels of line plots: 1) groundwater use against year and 2) precipitation against year.
+
+```{r echo = F}
+ggplot(data = gw_precip_data) +
+  geom_line(aes(y = value, x = year)) +
+  facet_grid(variable ~ .)
+```
+
++ Let the each of the panels have its own y-scale
+
+```{r echo = F}
+ggplot(data = gw_precip_data) +
+  geom_line(aes(y = value, x = year)) +
+  facet_grid(variable ~ ., scale = "free_y")
+```
+
++ Go back to `gw_precip_data` and change the texts in `variable` so that `mean_gw` becomes `Groundwater Use (acre-feet)` and `season_precip` becomes `Total Precipitation (mm)`.
+
+```{r echo = F}
+gw_precip_data <- gw_precip_data %>% 
+  mutate(variable = case_when(
+    variable == "mean_gw" ~ "Groundwater Use (acre-feet)",
+    variable == "season_precip" ~ "Total Precipitation (mm)"
+  )) 
+
+```
+
++ Now use `gw_precip_data` to create the faceted figure again and confirm the strip texts now look more explanatory.  
+
+gw_precip_data
+
+```{r echo = F}
+ggplot(data = gw_precip_data) +
+  geom_line(aes(y = value, x = year)) +
+  facet_grid(variable ~ ., scale = "free_y") 
+```
+
+# Combine all the datasets and explore further
+
+---
+
+**Q1**
+
++ Merge `ir_data`, `sat_data`, and `weather_data` and assign it to an R object as `fainl_data`. 
++ Remove `latdecdeg` and `longdecdeg`
++ Move the `m_5`, ..., `m_9` columns right after `wdid` (use `starts_with()`)
+
+```{r echo = F}
+(
+final_data <- left_join(ir_data, sat_data, by = c("wdid", "year")) %>% 
+  left_join(., weather_data, by = c("wdid", "year")) %>% 
+  select(-latdecdeg, -longdecdeg) %>% 
+  relocate(wdid, starts_with("m_"))
+)
+
+```
+
+---
+
+**Q2**
+
++ Find the total precipitation during the irrigation season by adding `m_5` through `m_9`. Call it `tot_precip`.
++ Create a dummy variable that is `TRUE` if `well_yield > 600` and `FALSE` otherwise. Call it 'high_wy'. (Hint: use `ifelse()`)
++ Create a scatter plot of `pumpingAF` (y-axis) against `tot_precip` (x-axis) with linear model fit
++ facet the figure by `high_wy`
+
+```{r echo = F}
+final_data <- final_data %>% 
+  mutate(tot_precip = m_5 + m_6 + m_7 + m_8 + m_9) %>% 
+  mutate(high_wy = ifelse(well_yield > 600, TRUE, FALSE))  
+
+ggplot(data = final_data) +
+  geom_point(aes(y = pumpingAF, x = tot_precip)) +
+  geom_smooth(aes(y = pumpingAF, x = tot_precip), method = "lm") +
+  facet_grid(high_wy ~ .)
+```
+
+---
+
+**Q3**
+
+Run OLS to estimate the following model:
+
+$$
+\mbox{groundwater use} = \beta_0 + \beta_1 \mbox{well yield}+ \beta_1 \mbox{pumping cost} + \alpha_1 P_5 + \alpha_2 P_6 + \alpha_3 P_7 + \alpha_4 P_8 + \alpha_5 P_9 + \gamma_1 GDD + v
+$$
+
+```{r echo = F}
+lm(pumpingAF ~ well_yield + pumping_costs + m_5 + m_6 + m_7 + m_8 + m_9 + GDD, data = final_data) %>%  summary() 
+```
+
+What do you find?
+

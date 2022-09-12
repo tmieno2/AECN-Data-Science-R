@@ -1,0 +1,17 @@
+/*/*/*_files/*
+/*/*/*_cache/*
+/*/*_files/*
+/*/*_cache/*
+Assignments/*submission/*
+Assignments/*/*.rds
+Assignments/*/*.csv
+Assignments/*/*.dta
+Assignments/*/*.dbf
+Assignments/*/*.shp
+Assignments/*/*.prj
+Assignments/*/*.shx
+Assignments/*/*.tif
+Assignments/*/*.gpkg
+Assignments/*/*.html
+Assignments/*/*.DS_Store
+.Rproj*

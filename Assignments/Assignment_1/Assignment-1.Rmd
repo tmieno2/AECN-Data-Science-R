@@ -1,0 +1,72 @@
+---
+title: "Assignment 1 (AECN 396/896-002)"
+author: "Your Name Here"
+output:
+  html_document:
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+  word_document: default
+geometry: margin=0.75in
+---
+
+```{r setup, echo = F}
+library(knitr)
+
+opts_chunk$set(
+  echo= TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE
+  ) 
+
+opts_knit$set(root.dir = '~/Dropbox/Teaching/UNL/EconometricsMaster/aecn892_2017/labs/bookdown')
+
+setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
+```
+
+```{r packages, echo = T}
+suppressMessages(library(tidyverse))
+suppressMessages(library(readr))
+```
+
+# Research Project Objective
+
+In this assignment, you are asked to work on datasets on irrigation water use, saturated thickness level, and weather data observed at the well level. 
+
+The ultimate goal of the project is to explore the impacts of well yield (how much groundwater you can pump per minute) and weather conditions on groundwater use for irrigated agricultural production by agricultural producers in Colorado.    
+
+In the course of this project (assignment), you will be asked to 
+
++ read data files in various formats
++ put together separate datasets into one single data  
++ visualize the data to gain insights into groundwater use for irrigated agricultural production
+
+
+# Importing datasets
+
+We have three separate datasets saved in various formats:
+
++ `all_sat_CO.csv`: 
+  * wdid: well id
+  * year: year
+  * sat_thickness: saturated thickness (in feet) 
++ `data_CO.rds`: 
++ `daymet_raw.dta`:daily 
+
+```{r }
+sat_CO <- readRDS("all_sat_CO.rds") 
+write_csv(sat_CO, "all_sat_CO.csv")  
+sat_CO <- read_csv("all_sat_CO.csv")  
+
+```
+
+
+
+
+
