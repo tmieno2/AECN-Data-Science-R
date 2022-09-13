@@ -41,7 +41,7 @@ suppressMessages(library(parallel))
 class: inverse, center, middle
 name: user-defined-function
 
-# User-defined Function 
+# User-defined Function
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
@@ -580,7 +580,7 @@ At each value of the corn price sequence of `seq(2.5, 4.0, by = 0.1)`, calculate
 
 ---
 
-# Looping over multiple variables 
+# Looping over multiple variables
 
 .panelset[ 
 
@@ -721,7 +721,7 @@ final_results <- bind_rows(rev_data)
 ---
 
 
-# Tips to write a function for loop 
+# Tips to write a function for loop
 
 Before define a function, write a code that works for one row.
 
@@ -752,7 +752,7 @@ After you confirm the code you write gives you desired outcomes, make it a funct
 
 ---
 
-# Exercise 
+# Exercise
 
 Find the profit of corn production at different price combinations of corn and nitrogen where nitrogen rate is fixed at 200 lb/acre.
 
@@ -957,7 +957,7 @@ name: par
 
 ---
 
-# Parallel processing 
+# Parallel processing
 
 .panelset[ 
 
@@ -1103,7 +1103,7 @@ microbenchmark(
 ---
 
 
-# Parallel processing: a less trivial example 
+# Parallel processing: a less trivial example
 
 .panelset[ 
 
@@ -1240,7 +1240,7 @@ MC_results <- pbmclapply(1:1000, MC_sim, mc.cores = detectCores() - 1)
 
 ---
 
-# Exercise 
+# Exercise
 
 ```{r gen-files-def, echo = F, eval = F}
 
@@ -1277,7 +1277,7 @@ file_names <- list.files("../../Datasets/Chapter_5/experiment_data")
 class: inverse, center, middle
 name: opt
 
-# Low-dimensional optimization 
+# Low-dimensional optimization
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
