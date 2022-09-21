@@ -16,6 +16,8 @@ Assignments/*/*.gpkg
 Assignments/*/*.html
 Assignments/*/*.DS_Store
 .Rproj*
-*/*.DS_Store
-*/*/*.DS_Store
+*/.DS_Store
+/.DS_Store
+*/*/.DS_Store
 */*.tex
+.Rproj.user

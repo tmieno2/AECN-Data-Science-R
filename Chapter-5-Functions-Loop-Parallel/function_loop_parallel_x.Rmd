@@ -5,7 +5,7 @@ output:
   xaringan::moon_reader:
     # css: [default, metropolis, metropolis-fonts] 
     css: xaringan-themer.css 
-    self_contained: true
+    libs: lib
     nature:
       # ratio: 16:10
       highlightStyle: github
@@ -1707,40 +1707,13 @@ eval_data_1
 
 .panel[.panel-name[Strategy 2]
 
-.left5[
+Instead of using expand on all the three vectors using `expand.grid()`, we can use `expand.grid.df()` from the `reshape` package as follows.
 
-By calling the same rows over and over again, you can replicate the same rows multiple times:
-
-```{r }
-field_data[c(1, 1, 1, 2, 2, 2), ]
+```{r expand-df}
+reshape::expand.grid.df(field_data, data.frame(N_seq))
 ```
 
-Hard-coding the vector, 
-
-```{r }
-rep(1:2, each = 3)
-```
-
-But, more generally,
-
-```{r }
-rep(1:nrow(field_data), each = length(N_seq))
-```
-]
-
-.right5[
-
-Under the `tidyverse` framework,
-
-```{r }
-field_data %>% 
-  slice(rep(1:nrow(.), each = length(N_seq)))
-```
-
-This approach does not create plots that do not exist unlike the expand-everything approach.
-
-]
-
+As you can see, it creates unique complete comninations of the rows from the fisrt and second `data.frame`s. Consequently, it does not create any observations that do not exist in reality. 
 
   ] 
 
