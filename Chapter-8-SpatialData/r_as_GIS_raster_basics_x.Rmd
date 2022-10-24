@@ -14,18 +14,26 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r, child = './../setup.Rmd'}
+```{r, child = '../setup.Rmd'}
 ```
 
 ```{r, include = F, cache = F}
-suppressMessages(library(sf)) 
-suppressMessages(library(ggplot2)) 
-suppressMessages(library(raster))
-suppressMessages(library(tmap))
+library(sf)
+library(here)
+library(ggplot2)
+library(raster)
+library(tmap)
+library(mapview)
+
+library(knitr)
+opts_knit$set(error = TRUE, root.dir = here("Chapter-8-SpatialData"))
+options(knitr.duplicate.label = "allow")
 ```
 
+
+
 ```{r echo = F, eval = F}
-setwd("/Users/tmieno2/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-8-SpatialData")
+setwd("/Users/tmieno2/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-8-SpatialData")
 ```
 # Before you start
 
@@ -57,7 +65,7 @@ class: middle
 
 .content-box-green[**Preparation**]
 
-Go [here](https://www.dropbox.com/sh/vhtpjiezijb97lj/AABpvzqdyZMkR1DgUBeI_mOja?dl=0) and download all the files.
+Go [here](https://www.dropbox.com/sh/iih8icftc4xa7nm/AABfQj82A-i8GWaHgHngLMQAa?dl=0) and download all the files.
 
 ---
 class: inverse, center, middle
@@ -85,7 +93,7 @@ Let's start with taking a look at raster data. We will download CDL data for Iow
 
 ```{r read_the_IA_cdl_data, highlight.output = 1}
 (
-drone_blue <- raster("./Data/Annos_062718_RE_transparent_reflectance_blue.tif")
+  drone_blue <- raster("Data/Annos_062718_RE_transparent_reflectance_blue.tif")
 )
 ```
 
@@ -108,11 +116,11 @@ tm_shape(drone_blue) +
 
 # temp <- aggregate(drone_blue, 10)
 
-# drone_df <- as.data.frame(temp, xy = TRUE) %>% 
+# drone_df <- as.data.frame(temp, xy = TRUE) %>%
 #   setnames(names(.)[3], "blue")
 # ggplot() +
 #   geom_raster(
-#     data = drone_df, 
+#     data = drone_df,
 #     aes(
 #       x = x,
 #       y = y,
@@ -125,7 +133,7 @@ tm_shape(drone_blue) +
 class: middle
 
 ```{r }
-drone_blue	
+drone_blue
 ```
 
 Evaluating the imported raster object provides you with information about the raster data: 
@@ -145,7 +153,7 @@ You often need to extract the CRS of a raster object before you interact extract
 You can use `projection()` to extract the CRS from a raster data: 
 
 ```{r chars}
-projection(drone_blue) 
+projection(drone_blue)
 ```
 
 --
@@ -170,17 +178,17 @@ class: middle
 
 To create a `RasterStack` and `RasterBrick`, let's first import the drone data for the green band.
 
-```{r make_stack}
+```{r read_for_make_stack}
 (
-drone_green <- raster("./Data/Annos_062718_RE_transparent_reflectance_green.tif")
+  drone_green <- raster("./Data/Annos_062718_RE_transparent_reflectance_green.tif")
 )
-```  
+```
 
 Let's use `stack()` to stack the two raster datasets to create a `RasterStack` object:
 
 ```{r make_stack_run, echo = F}
 (
-drone_bg <- stack(drone_blue, drone_green)
+  drone_bg <- stack(drone_blue, drone_green)
 )
 ```
 
@@ -193,10 +201,10 @@ You can create a `RasterStack` by directly reading raster datasets using `stack(
 
 ```{r make_stack}
 (
-drone_stack <- stack(
-	"./Data/Annos_062718_RE_transparent_reflectance_green.tif", 
-	"./Data/Annos_062718_RE_transparent_reflectance_green.tif"
-)
+  drone_stack <- stack(
+    "./Data/Annos_062718_RE_transparent_reflectance_green.tif",
+    "./Data/Annos_062718_RE_transparent_reflectance_green.tif"
+  )
 )
 ```
 
@@ -209,11 +217,11 @@ class: middle
 
 ```{r make_brick, eval = F}
 #--- stack the two ---#
-IA_cdl_brick <- brick(drone_stack)
+drone_brick <- brick(drone_stack)
 
 #--- take a look ---#
-IA_cdl_brick
-```  
+drone_brick
+```
 
 --
 
@@ -264,13 +272,13 @@ You can read multiple single-layer raster datasets of the same spatial extent an
 ```{r multiple_files}
 #--- the list of path to the files ---#
 files_list <- c(
-	"./Data/Annos_062718_RE_transparent_reflectance_green.tif", 
-	"./Data/Annos_062718_RE_transparent_reflectance_blue.tif" 
+  "./Data/Annos_062718_RE_transparent_reflectance_green.tif",
+  "./Data/Annos_062718_RE_transparent_reflectance_blue.tif"
 )
 
 #--- read the two at the same time ---#
 (
-drone_blue_green <- stack(files_list) 
+  drone_blue_green <- stack(files_list)
 )
 ```
 
@@ -331,11 +339,11 @@ class: middle
 
 # Exercise 1
 
-Read "NIR.tif" and "Red.tif", and name them `NIR` and `Red`. 
+Read "NIR.tif" and "RED.tif", and name them `NIR` and `RED`. 
 
 ```{r include = F}
-NIR <- raster("./Data/NIR.tif") 
-Red <- raster("./Data/Red.tif") 
+NIR <- raster("./Data/NIR.tif")
+RED <- raster("./Data/RED.tif")
 ```
 
 ---
@@ -363,7 +371,7 @@ class: middle
 .content-box-green[**Examples**]
 
 ```{r }
-drone_b_plus_g <- drone_blue + drone_green	
+drone_b_plus_g <- drone_blue + drone_green
 ```
 
 .content-box-green[**Confirm**]
@@ -386,15 +394,15 @@ class: middle
 Of course, you can do other simple arithmetic operations like multiplication, division, and subtraction (try yourself).
 
 ```{r eval = F}
-drone_blue * drone_green	
+drone_blue * drone_green
 ```
 
 ```{r eval = F}
-drone_blue / drone_green  
+drone_blue / drone_green
 ```
 
 ```{r eval = F}
-drone_blue - drone_green	
+drone_blue - drone_green
 ```
 
 ---
@@ -411,12 +419,12 @@ class: middle
 
 .left5[
 
-Using `NIR` and `Red`,  calculate NDVI and name it `NDVI`.
+Using `NIR` and `RED`,  calculate NDVI and name it `NDVI`.
 
-$NDVI = (NIR-Red)/(NIR+Red)$
+$NDVI = (NIR-RED)/(NIR+RED)$
 
 ```{r ndvi-calc, include = F}
-NDVI <- (NIR-Red)/(NIR+Red)
+NDVI <- (NIR - RED) / (NIR + RED)
 ```
 
 The use the following code to visualize NDVI.
@@ -466,7 +474,7 @@ plot(drone_blue)
 ]
 
 .right5[
-```{r plot_stack, echo = F}
+```{r plot_stack_run, echo = F}
 plot(drone_blue)
 ```
 ]
@@ -505,7 +513,7 @@ If you would like to have an interactive view of raster datasets, you can use th
 mapView(drone_blue_green)
 ```
 
----
+--- 
 class: middle
 
 .content-box-green[**Note**]

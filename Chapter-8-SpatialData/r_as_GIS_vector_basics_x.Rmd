@@ -68,7 +68,7 @@ class: middle
 
 + Create the "Data" folder under the directory you have set as the working directory 
 
-+ Go [here](https://www.dropbox.com/sh/mn7yk7baru0pm4e/AADDfjIHcWpxACamPh3NVGI4a?dl=0), download all the files, and then save them in the "Data" folder you created in the step above
++ Go [here](https://www.dropbox.com/sh/iih8icftc4xa7nm/AABfQj82A-i8GWaHgHngLMQAa?dl=0), download all the files, and then save them in the "Data" folder you created in the step above
 
 ---
 class: inverse, center, middle

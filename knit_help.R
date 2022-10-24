@@ -38,3 +38,9 @@ rmarkdown::render(here("Chapter-4-DataVisualization/data_visualization_basics_x.
 # /*===========================================================
 rmarkdown::render(here("Chapter-5-Functions-Loop-Parallel/function_loop_parallel_x.Rmd"))
 # pagedown::chrome_print(here("Chapter-5-Functions-Loop-Parallel/function_loop_parallel_x.html"))
+
+# /*===========================================================
+#' # Chapter 8: R as GIS
+# /*===========================================================
+rmarkdown::render(here("Chapter-8-SpatialData/r_as_GIS_raster_basics_x.Rmd"))
+# pagedown::chrome_print(here("Chapter-5-Functions-Loop-Parallel/function_loop_parallel_x.html"))

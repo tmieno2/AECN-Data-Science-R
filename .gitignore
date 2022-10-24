@@ -2,6 +2,16 @@
 /*/*/*_cache/*
 # /*/*_files/*
 /*/*_cache/*
+*.prj
+*.tif
+*.shp
+*.shx
+*.dbf
+*.sbn
+*.tfw
+*.sbx
+*.xml
+Chapter-8-SpatialData/Data/*
 Assignments/*submission/*
 Assignments/*/*.rds
 Assignments/*/*.csv

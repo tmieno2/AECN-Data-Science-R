@@ -14,15 +14,15 @@ geometry: margin=0.75in
 library(knitr)
 
 opts_chunk$set(
-  echo= TRUE,
+  echo = TRUE,
   comment = NA,
   message = FALSE,
   warning = FALSE
-  ) 
+)
 
-opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
-# setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
+opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/Data-Science-with-R/Assignments/Assignment_1")
 
+# setwd("~/Dropbox/TeachingUNL/Data-Science-with-R/Assignments/Assignment_1")
 ```
 
 ```{r packages, echo = F}
@@ -78,39 +78,38 @@ We have three separate datasets saved in various formats. Here are the list of d
 
 
 ```{r eval = F, echo = F}
-#===================================
+# ===================================
 # generate data
-#===================================
+# ===================================
 #--- sat data ---#
-sat_CO <- readRDS("all_sat_CO.rds") 
-write_csv(sat_CO, "all_sat_CO_as1.csv") 
+sat_CO <- readRDS("all_sat_CO.rds")
+write_csv(sat_CO, "all_sat_CO_as1.csv")
 
 
 #--- irrigation data ---#
-data_CO <- readRDS("data_CO.rds") %>% 
-  select(wdid, pumpingAF, latdecdeg, longdecdeg, year, PCC, WellCap, REAname) %>% 
+data_CO <- readRDS("data_CO.rds") %>%
+  select(wdid, pumpingAF, latdecdeg, longdecdeg, year, PCC, WellCap, REAname) %>%
   tibble()
 
 saveRDS(data_CO, "data_CO_as1.rds")
 
 #--- daymet data ---#
-daymet <- readRDS("dyamet_raw.rds") %>% 
+daymet <- readRDS("dyamet_raw.rds") %>%
   setnames(
-    c("year","yday","dayl..s.","prcp..mm.day.","srad..W.m.2.","swe..kg.m.2.","tmax..deg.c.","tmin..deg.c.","vp..Pa."),
-    c("year","year.day","daylight","precip","solar.rad","snow.water.equiv","max.temp","min.temp","vapor.pressure")
-  ) %>% 
+    c("year", "yday", "dayl..s.", "prcp..mm.day.", "srad..W.m.2.", "swe..kg.m.2.", "tmax..deg.c.", "tmin..deg.c.", "vp..Pa."),
+    c("year", "year.day", "daylight", "precip", "solar.rad", "snow.water.equiv", "max.temp", "min.temp", "vapor.pressure")
+  ) %>%
   mutate(
-    date = as.Date(year.day - 1, origin = paste(year,"-01-01",sep=""))
-  ) %>% 
+    date = as.Date(year.day - 1, origin = paste(year, "-01-01", sep = ""))
+  ) %>%
   mutate(
     month = month(date),
     day = day(date)
-  ) 
+  )
 
 save.dta13(select(daymet, wdid, year, month, day, precip, max.temp, min.temp), "daymet_raw_as1.dta")
 
 read.dta13("daymet_raw_as1.dta")
-
 ```
 
 ---

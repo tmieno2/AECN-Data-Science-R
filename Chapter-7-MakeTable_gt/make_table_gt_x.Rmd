@@ -1053,3 +1053,18 @@ gtsave(gt_4, "gt4.pdf", zoom = 0.9, vwidth = 800)
 
 
 
+
+```{r}
+# Use `gtcars` to create a gt table;
+# add a header and then export as
+# OOXML code for Word
+library(gt)
+library(tidyverse)
+library(flextable)
+
+gtcars %>%
+  dplyr::select(mfr, model) %>%
+  dplyr::slice(1:2) %>%
+  flextable()
+
+```
