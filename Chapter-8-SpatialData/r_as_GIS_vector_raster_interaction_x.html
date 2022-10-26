@@ -36,7 +36,20 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+
+
+
+
+
+
 &lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
 
 .remark-slide-content.hljs-github h1 {
   margin-top: 5px;  
@@ -121,6 +134,7 @@ class: center, middle, inverse, title-slide
 
 .left-full {
   width: 80%;
+  height: 92%;
   float: left;
 }
 
@@ -136,26 +150,14 @@ class: center, middle, inverse, title-slide
   padding-left: 1%;
 }
 
-.left6 {
-  width: 60%;
-  height: 92%;
-  float: left;
-}
-
 .left5 {
   width: 49%;
-  &lt;!-- height: 92%; --&gt;
+  height: 92%;
   float: left;
 }
 
 .right5 {
   width: 49%;
-  float: right;
-  padding-left: 1%;
-}
-
-.right4 {
-  width: 39%;
   float: right;
   padding-left: 1%;
 }
@@ -174,6 +176,7 @@ class: center, middle, inverse, title-slide
 
 .left4 {
   width: 38%;
+  height: 92%;
   float: left;
 }
 
@@ -358,6 +361,7 @@ slides &gt; slide {
 
 
 
+
 # Before you start
 
 ## Learning objectives
@@ -413,20 +417,23 @@ class: middle
 
 
 ```r
-treatment_blocks &lt;- st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %&gt;% 
-	#--- transform the CRS so that it is consistent with the raster data ---#
-	st_transform(4326)
+treatment_blocks &lt;- st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %&gt;%
+  #--- transform the CRS so that it is consistent with the raster data ---#
+  st_transform(4326)
 ```
 
 + Import yield point data
 
 
 ```r
-yield &lt;- st_read(dsn = "./Data", layer = "Stevens_Centuro_YLD_shp") %&gt;% 
-	dplyr::select(Yld_Vol_Dr) %&gt;% 
-	rename(dry_yield = Yld_Vol_Dr) %&gt;% 
-	#--- transform the CRS so that it is consistent with the raster data ---#
-	st_transform(4326)
+yield &lt;-
+  st_read(dsn = "./Data", layer = "Stevens_Centuro_YLD_shp") %&gt;%
+  # dplyr::select(Yld_Vol_Dr) %&gt;%
+  # rename(dry_yield = Yld_Vol_Dr) %&gt;%
+  #--- create fake yield data ---#
+  mutate(yield = runif(n()) * 240) %&gt;%
+  #--- transform the CRS so that it is consistent with the raster data ---#
+  st_transform(4326)
 ```
 
 
@@ -434,7 +441,7 @@ yield &lt;- st_read(dsn = "./Data", layer = "Stevens_Centuro_YLD_shp") %&gt;%
 
 
 ```r
-ndre &lt;- raster("./Data/ndre_07202019.tif")
+ndre &lt;- raster("./Data/NDRE.tif")
 ```
 
 ---
@@ -450,10 +457,8 @@ class: middle
 ]
 
 .right6[
-&lt;img src="r_as_GIS_vector_raster_interaction_x_files/figure-html/unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="r_as_GIS_vector_raster_interaction_x_files/figure-html/unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
-
-
 
 ---
 class: inverse, center, middle
@@ -581,7 +586,7 @@ class: middle
 ]
 
 .right6[
-&lt;img src="r_as_GIS_vector_raster_interaction_x_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="r_as_GIS_vector_raster_interaction_x_files/figure-html/unnamed-chunk-13-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -593,7 +598,7 @@ class: middle
 
 
 ```r
-ndre_extracted &lt;- raster::extract(ndre, yield)	
+ndre_extracted &lt;- raster::extract(ndre, yield)
 ```
 
 .content-box-green[**Next step**]
@@ -623,7 +628,7 @@ So, you can simply do this:
 
 
 ```r
-yield &lt;- mutate(yield, NDRE = ndre_extracted) 	
+yield &lt;- mutate(yield, NDRE = ndre_extracted)
 ```
 
 We see only `NA` values for NDRE. No worries, the job was successful.
@@ -635,22 +640,22 @@ filter(yield, !is.na(NDRE))
 
 ```
 ## Simple feature collection with 9499 features and 2 fields
-## geometry type:  POINT
-## dimension:      XY
-## bbox:           xmin: -95.50367 ymin: 40.03684 xmax: -95.49777 ymax: 40.04296
-## geographic CRS: WGS 84
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: -95.50367 ymin: 40.03684 xmax: -95.49777 ymax: 40.04296
+## Geodetic CRS:  WGS 84
 ## First 10 features:
-##    dry_yield                   geometry      NDRE
-## 1    84.0352  POINT (-95.50366 40.0373) 0.0000000
-## 2   104.3075 POINT (-95.50362 40.03731) 0.0000000
-## 3   122.9578 POINT (-95.50359 40.03731) 0.0000000
-## 4   111.2970 POINT (-95.50356 40.03731) 0.0000000
-## 5    82.7091 POINT (-95.50353 40.03732) 0.0000000
-## 6    57.9979  POINT (-95.5035 40.03732) 0.0000000
-## 7    56.8335 POINT (-95.50346 40.03732) 0.0000000
-## 8    80.8742 POINT (-95.50343 40.03732) 0.5384092
-## 9    97.2693  POINT (-95.5034 40.03732) 0.5394769
-## 10   94.5606 POINT (-95.50336 40.03731) 0.5143825
+##                      geometry     yield      NDRE
+## 1   POINT (-95.50366 40.0373)  69.14508 0.0000000
+## 2  POINT (-95.50362 40.03731)  49.93165 0.0000000
+## 3  POINT (-95.50359 40.03731)  53.67087 0.0000000
+## 4  POINT (-95.50356 40.03731) 117.27362 0.0000000
+## 5  POINT (-95.50353 40.03732) 137.38194 0.0000000
+## 6   POINT (-95.5035 40.03732) 138.52154 0.0000000
+## 7  POINT (-95.50346 40.03732) 141.14915 0.0000000
+## 8  POINT (-95.50343 40.03732)  21.16815 0.5384092
+## 9   POINT (-95.5034 40.03732)  24.55388 0.5394769
+## 10 POINT (-95.50336 40.03731)  43.50102 0.5143825
 ```
 
 ---
@@ -765,13 +770,13 @@ head(ndre_extracted[[1]])
 ```
 
 ```
-##        value coverage_fraction
-## 27 0.5890073      0.0002342653
-## 28 0.5822207      0.0020282459
-## 29 0.5958067      0.0041096755
-## 30 0.6105236      0.0061911056
-## 31 0.5333855      0.0082725352
-## 32 0.5064147      0.0103539648
+##       value coverage_fraction
+## 1 0.5890073      0.0002342659
+## 2 0.5822207      0.0020282459
+## 3 0.5958067      0.0041096755
+## 4 0.6105236      0.0061911056
+## 5 0.5333855      0.0082725352
+## 6 0.5064147      0.0103539648
 ```
 
 .content-box-green[**Key**]
@@ -791,17 +796,17 @@ To achieve this, you can use `bind_rows()` with `.id` option and then utilize `d
 
 
 ```r
-ndre_mean &lt;- ndre_extracted %&gt;% 
-	bind_rows(.id = "id") %&gt;% 
+ndre_mean &lt;- ndre_extracted %&gt;%
+  bind_rows(.id = "id") %&gt;%
   #--- convert from character to numeric  ---#
-	mutate(id = as.numeric(id)) %&gt;% 
-	group_by(id) %&gt;% 
-	summarize(NDRE = mean(value))
+  mutate(id = as.numeric(id)) %&gt;%
+  group_by(id) %&gt;%
+  summarize(NDRE = mean(value))
 ```
 
 
 ```
-## # A tibble: 6 x 2
+## # A tibble: 6 × 2
 ##      id  NDRE
 ##   &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1 0.599
@@ -832,7 +837,7 @@ head(ndre_extracted)
 ```
 
 ```
-## [1] 0.5987833 0.5853426 0.5886605 0.6057857 0.6043198 0.6066582
+## [1] 0.5987833 0.5853425 0.5886605 0.6057857 0.6043198 0.6066582
 ```
 
 --
@@ -855,7 +860,7 @@ Let's create a stack:
 
 
 ```r
-ndre_stack &lt;- stack(ndre, ndre, ndre) 	
+ndre_stack &lt;- stack(ndre, ndre, ndre)
 ```
 
 --
@@ -877,20 +882,13 @@ ndre_stack_extracted[[1]] %&gt;% head()
 ```
 
 ```
-##    ndre_07202019.1 ndre_07202019.2 ndre_07202019.3
-## 27       0.5890073       0.5890073       0.5890073
-## 28       0.5822207       0.5822207       0.5822207
-## 29       0.5958067       0.5958067       0.5958067
-## 30       0.6105236       0.6105236       0.6105236
-## 31       0.5333855       0.5333855       0.5333855
-## 32       0.5064147       0.5064147       0.5064147
-##    coverage_fraction
-## 27      0.0002342653
-## 28      0.0020282459
-## 29      0.0041096755
-## 30      0.0061911056
-## 31      0.0082725352
-## 32      0.0103539648
+##      NDRE.1    NDRE.2    NDRE.3 coverage_fraction
+## 1 0.5890073 0.5890073 0.5890073      0.0002342659
+## 2 0.5822207 0.5822207 0.5822207      0.0020282459
+## 3 0.5958067 0.5958067 0.5958067      0.0041096755
+## 4 0.6105236 0.6105236 0.6105236      0.0061911056
+## 5 0.5333855 0.5333855 0.5333855      0.0082725352
+## 6 0.5064147 0.5064147 0.5064147      0.0103539648
 ```
 
 Instead of having two columns, we now have three columns of extracted raster values and one column for `coverage_fraction`.
@@ -928,7 +926,7 @@ ndre_sr &lt;- rast(ndre)
 
 
 ```r
-ndre_extracted &lt;- terra::extract(ndre_sr, `st_coordinates`(yield))	
+ndre_extracted &lt;- terra::extract(ndre_sr, `st_coordinates`(yield))
 ```
 
 

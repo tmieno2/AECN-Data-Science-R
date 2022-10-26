@@ -30,11 +30,10 @@ opts_knit$set(error = TRUE, root.dir = here("Chapter-8-SpatialData"))
 options(knitr.duplicate.label = "allow")
 ```
 
-
-
 ```{r echo = F, eval = F}
 setwd("/Users/tmieno2/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-8-SpatialData")
 ```
+
 # Before you start
 
 ## Learning objectives
@@ -186,7 +185,7 @@ To create a `RasterStack` and `RasterBrick`, let's first import the drone data f
 
 Let's use `stack()` to stack the two raster datasets to create a `RasterStack` object:
 
-```{r make_stack_run, echo = F}
+```{r make_stack_run}
 (
   drone_bg <- stack(drone_blue, drone_green)
 )

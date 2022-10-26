@@ -14,23 +14,28 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r, child = './../setup.Rmd'}
+```{r, child = 'setup.Rmd'}
 ```
 
 ```{r, include = F, cache = F}
-suppressMessages(library(sf)) 
-suppressMessages(library(stars)) 
-suppressMessages(library(terra)) 
-suppressMessages(library(patchwork))
-suppressMessages(library(data.table))
-suppressMessages(library(mapview))
-suppressMessages(library(tidyverse))
-suppressMessages(library(raster))
-suppressMessages(library(exactextractr))
+library(sf)
+library(stars)
+library(terra)
+library(patchwork)
+library(data.table)
+library(mapview)
+library(tidyverse)
+library(raster)
+library(tmap)
+library(exactextractr)
+
+library(knitr)
+opts_knit$set(error = TRUE, root.dir = here("Chapter-8-SpatialData"))
+options(knitr.duplicate.label = "allow")
 ```
 
 ```{r echo = F, eval = F}
-setwd("/Users/tmieno2/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-8-SpatialData")
+setwd("/Users/tmieno2/Dropbox/TeachingUNL/Data-Science-with-R/Chapter-8-SpatialData")
 ```
 # Before you start
 
@@ -86,26 +91,29 @@ class: middle
 + Import treatment block shape files:
 
 ```{r results = "hide"}
-treatment_blocks <- st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %>% 
-	#--- transform the CRS so that it is consistent with the raster data ---#
-	st_transform(4326)
+treatment_blocks <- st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %>%
+  #--- transform the CRS so that it is consistent with the raster data ---#
+  st_transform(4326)
 ```
 
 + Import yield point data
 
 ```{r results = "hide"}
-yield <- st_read(dsn = "./Data", layer = "Stevens_Centuro_YLD_shp") %>% 
-	dplyr::select(Yld_Vol_Dr) %>% 
-	rename(dry_yield = Yld_Vol_Dr) %>% 
-	#--- transform the CRS so that it is consistent with the raster data ---#
-	st_transform(4326)
+yield <-
+  st_read(dsn = "./Data", layer = "Stevens_Centuro_YLD_shp") %>%
+  # dplyr::select(Yld_Vol_Dr) %>%
+  # rename(dry_yield = Yld_Vol_Dr) %>%
+  #--- create fake yield data ---#
+  mutate(yield = runif(n()) * 240) %>%
+  #--- transform the CRS so that it is consistent with the raster data ---#
+  st_transform(4326)
 ```
 
 
 + Import drone imagery data (GeoTiff) file.
 
 ```{r }
-ndre <- raster("./Data/ndre_07202019.tif")
+ndre <- raster("./Data/NDRE.tif")
 ```
 
 ---
@@ -123,16 +131,14 @@ class: middle
 .right6[
 ```{r echo = F}
 tm_shape(ndre) +
-	tm_raster(title = "NDRE") +
-tm_shape(yield) +
-	tm_symbols(size = 0.02) +
-tm_shape(treatment_blocks) +
-	tm_borders(col = "red") +
-	tm_layout(legend.outside = TRUE)
+  tm_raster(title = "NDRE") +
+  tm_shape(yield) +
+  tm_symbols(size = 0.02) +
+  tm_shape(treatment_blocks) +
+  tm_borders(col = "red") +
+  tm_layout(legend.outside = TRUE)
 ```
 ]
-
-
 
 ---
 class: inverse, center, middle
@@ -182,10 +188,10 @@ class: middle
 
 ```{r echo = F, out.width = "70%"}
 tm_shape(ndre_cropped) +
-	tm_raster(title = "NDRE") +
-tm_shape(treatment_blocks) +
-	tm_polygons(alpha = 0, size = 0.1) +
-	tm_layout(legend.outside = TRUE)
+  tm_raster(title = "NDRE") +
+  tm_shape(treatment_blocks) +
+  tm_polygons(alpha = 0, size = 0.1) +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ---
@@ -213,17 +219,17 @@ set.seed(378533)
 
 #--- create polygons ---#
 polygon <- st_polygon(list(
-  rbind(c(0, 0), c(8, 0), c(8, 8), c(0, 8), c(0, 0)) 
+  rbind(c(0, 0), c(8, 0), c(8, 8), c(0, 8), c(0, 0))
 ))
 
-raster_like_cells <- st_make_grid(polygon, n = c(8, 8)) %>% 
-  st_as_sf() %>% 
-  mutate(value = sample(1:64, 64)) 
+raster_like_cells <- st_make_grid(polygon, n = c(8, 8)) %>%
+  st_as_sf() %>%
+  mutate(value = sample(1:64, 64))
 
 stars_cells <- st_rasterize(raster_like_cells, nx = 8, ny = 8)
 
-cell_centroids <- st_centroid(raster_like_cells) %>% 
-  st_as_sf() 
+cell_centroids <- st_centroid(raster_like_cells) %>%
+  st_as_sf()
 ```
 
 .left4[
@@ -246,9 +252,9 @@ point_2 <- st_point(c(6.7, 1.8))
 point_3 <- st_point(c(4.2, 7.1))
 
 #--- combine the points to make a single  sf of points ---#
-points <- list(point_1, point_2, point_3) %>% 
-  st_sfc() %>% 
-  st_as_sf() %>% 
+points <- list(point_1, point_2, point_3) %>%
+  st_sfc() %>%
+  st_as_sf() %>%
   mutate(point_name = c("Point 1", "Point 2", "Point 3"))
 
 #--------------------------
@@ -257,9 +263,9 @@ points <- list(point_1, point_2, point_3) %>%
 ggplot() +
   geom_stars(data = stars_cells, alpha = 0.5) +
   scale_fill_distiller(name = "Value", palette = "Spectral") +
-  geom_sf_text(data = raster_like_cells, aes(label = value)) + 
+  geom_sf_text(data = raster_like_cells, aes(label = value)) +
   geom_sf(data = points, aes(shape = point_name), size = 2) +
-  scale_shape(name = "Points")  +
+  scale_shape(name = "Points") +
   theme_void()
 ```
 ]
@@ -302,21 +308,21 @@ class: middle
 
 .right6[
 ```{r echo = F}
-yield_subset <- yield[treatment_blocks, ] %>% 
-	.[1:2, ] 
+yield_subset <- yield[treatment_blocks, ] %>%
+  .[1:2, ]
 
-yield_subset_buffer <-st_buffer(yield_subset, dist = 0.00001)
+yield_subset_buffer <- st_buffer(yield_subset, dist = 0.00001)
 
 ndre_subset <- crop(ndre, yield_subset_buffer)
 
 tm_shape(ndre_subset) +
-	tm_raster() +
-tm_shape(yield_subset) +
-	tm_symbols(size = 0.4, col = "green") +
-tm_layout(
-	frame = F,
-	legend.outside = TRUE
-)
+  tm_raster() +
+  tm_shape(yield_subset) +
+  tm_symbols(size = 0.4, col = "green") +
+  tm_layout(
+    frame = F,
+    legend.outside = TRUE
+  )
 ```
 ]
 
@@ -328,7 +334,7 @@ class: middle
 .content-box-green[**Implementation**]
 
 ```{r }
-ndre_extracted <- raster::extract(ndre, yield)	
+ndre_extracted <- raster::extract(ndre, yield)
 ```
 
 .content-box-green[**Next step**]
@@ -357,7 +363,7 @@ The $n$th value in `ndre_extracted` is for the $n$th point in `yield`.
 So, you can simply do this:
 
 ```{r }
-yield <- mutate(yield, NDRE = ndre_extracted) 	
+yield <- mutate(yield, NDRE = ndre_extracted)
 ```
 
 We see only `NA` values for NDRE. No worries, the job was successful.
@@ -392,7 +398,7 @@ class: middle
 # Create a polygon for which values are extracted
 #--------------------------
 polygon_extract <- st_polygon(list(
-  rbind(c(1.5, 2), c(6, 2.3), c(7, 6.5), c(2, 5), c(1.5, 2)) 
+  rbind(c(1.5, 2), c(6, 2.3), c(7, 6.5), c(2, 5), c(1.5, 2))
 ))
 
 polygons_extract_viz <- ggplot() +
@@ -487,12 +493,12 @@ Rather, what we often need is the summary of the values by polygon (e.g., averag
 To achieve this, you can use `bind_rows()` with `.id` option and then utilize `dplyr` operations.
 
 ```{r }
-ndre_mean <- ndre_extracted %>% 
-	bind_rows(.id = "id") %>% 
+ndre_mean <- ndre_extracted %>%
+  bind_rows(.id = "id") %>%
   #--- convert from character to numeric  ---#
-	mutate(id = as.numeric(id)) %>% 
-	group_by(id) %>% 
-	summarize(NDRE = mean(value))
+  mutate(id = as.numeric(id)) %>%
+  group_by(id) %>%
+  summarize(NDRE = mean(value))
 ```
 
 ```{r echo = F}
@@ -535,7 +541,7 @@ You can extract raster values from stacked raster layers by a single call of `ex
 Let's create a stack:
 
 ```{r }
-ndre_stack <- stack(ndre, ndre, ndre) 	
+ndre_stack <- stack(ndre, ndre, ndre)
 ```
 
 --
@@ -587,11 +593,11 @@ ndre_sr <- rast(ndre)
 ```
 
 ```{r eval = F}
-ndre_extracted <- terra::extract(ndre_sr, `st_coordinates`(yield))	
+ndre_extracted <- terra::extract(ndre_sr, `st_coordinates`(yield))
 ```
 
 ```{r echo = F}
-ndre_extracted <- terra::extract(ndre_sr, st_coordinates(yield))	
+ndre_extracted <- terra::extract(ndre_sr, st_coordinates(yield))
 ```
 
 
