@@ -5,7 +5,7 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
 
 ## Syllabus
 
-+ [Syllabus](https://github.com/tmieno2/AECN-Data-Science-R/blob/master/Syllabus/2023/syllabus_2023.pdf)
++ [Syllabus](https://tmieno2.github.io/AECN-Data-Science-R/Syllabus/2023/syllabus_2023.pdf)
 
 ## Lecture Notes
 
