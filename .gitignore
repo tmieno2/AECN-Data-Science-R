@@ -31,3 +31,6 @@ Assignments/*/*.DS_Store
 */*/.DS_Store
 */*.tex
 .Rproj.user
+Video/*
+Chapter-9*/*files/*
+Chapter-9*/*cache/*

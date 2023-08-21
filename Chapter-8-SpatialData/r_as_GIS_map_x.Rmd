@@ -28,16 +28,16 @@ setwd("/Users/tmieno2/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-8-Spa
 ```
 
 ```{r, include = F, cache = F}
-suppressMessages(library(sf)) 
-suppressMessages(library(patchwork))
-suppressMessages(library(tigris))
-suppressMessages(library(mapview))
-suppressMessages(library(lubridate))
-suppressMessages(library(tidyverse))
-suppressMessages(library(exactextractr))
-suppressMessages(library(raster))
-suppressMessages(library(ggspatial))
-suppressMessages(library(RStoolbox))
+library(sf)
+library(patchwork)
+library(tigris)
+library(mapview)
+library(lubridate)
+library(tidyverse)
+library(exactextractr)
+library(raster)
+library(ggspatial)
+library(RStoolbox)
 ```
 
 # Before you start
@@ -76,7 +76,7 @@ class: middle
 .content-box-green[**packages**]
 
 ```{r eval = F}
-library(sf) 
+library(sf)
 library(patchwork)
 library(tigris)
 library(mapview)
@@ -121,12 +121,12 @@ class: middle
 .panel[.panel-name[points]
 
 ```{r results = "hide"}
-gw_KS_sf <- readRDS("./Data/gw_KS_sf.rds") 
+gw_KS_sf <- readRDS("./Data/gw_KS_sf.rds")
 ```
 
 .scroll-box-16[
 ```{r echo = F}
-gw_KS_sf 
+gw_KS_sf
 ```
 ]
   ]
@@ -135,15 +135,15 @@ gw_KS_sf
 
 .panel[.panel-name[polygons]
 
-```{r results = "hide"}
-KS_county <- counties(state = "Kansas", cb = TRUE) %>% 
-  st_as_sf() %>% 
+```{r, results = "hide"}
+KS_county <- tigris::counties(state = "Kansas", cb = TRUE) %>%
+  st_as_sf() %>%
   st_transform(st_crs(gw_KS_sf))
 ```
 
 .scroll-box-16[
-```{r echo = F}
-KS_county 
+```{r,  echo = F}
+KS_county
 ```
 ]
 
@@ -155,13 +155,13 @@ KS_county
 .panel[.panel-name[lines]
 
 ```{r results = "hide"}
-KS_railroads <- st_read(dsn = "./Data/", layer = "tl_2015_us_rails") %>% 
+KS_railroads <- st_read(dsn = "./Data/", layer = "tl_2015_us_rails") %>%
   st_crop(KS_county)
 ```
 
 .scroll-box-16[
 ```{r echo = F}
-KS_railroads 
+KS_railroads
 ```
 ]
   ] 
@@ -202,7 +202,7 @@ class: middle
 .content-box-green[**Example: Points**]
 ```{r points-ex, eval = F}  
 (
-g_wells <- ggplot(data = gw_KS_sf) +    
+  g_wells <- ggplot(data = gw_KS_sf) +
     geom_sf()
 )
 ```
@@ -228,7 +228,7 @@ class: middle
 .content-box-green[**Example: Polygons**]
 ```{r polygons-ex, eval = F}  
 (
-g_wells <- ggplot(data = KS_county) +    
+  g_wells <- ggplot(data = KS_county) +
     geom_sf()
 )
 ```
@@ -254,7 +254,7 @@ class: middle
 .content-box-green[**Example: Lines**]
 ```{r lines-ex, eval = F}  
 (
-g_wells <- ggplot(data = KS_railroads) +    
+  g_wells <- ggplot(data = KS_railroads) +
     geom_sf()
 )
 ```
@@ -296,9 +296,9 @@ class: middle
 For illustration here, let’s focus on the wells in one county so it is easy to detect the differences across various aesthetics configurations.
 
 ```{r }
-gw_Stevens <- KS_county %>% 
-  filter(NAME == "Stevens") %>% 
-  st_crop(gw_KS_sf, .) 
+gw_Stevens <- KS_county %>%
+  filter(NAME == "Stevens") %>%
+  st_crop(gw_KS_sf, .)
 ```
 
   ]
@@ -312,10 +312,10 @@ gw_Stevens <- KS_county %>%
 <br>
 <br>
 ```{r ex-1, eval = F}  
-ggplot() + 
+ggplot() +
   geom_sf(
     data = gw_Stevens,
-    aes(color = af_used), 
+    aes(color = af_used),
     size = 2
   )
 ```
@@ -342,11 +342,11 @@ ggplot() +
 <br>
 <br>
 ```{r ex-2, eval = F}  
-ggplot() + 
+ggplot() +
   geom_sf(
     data = gw_Stevens,
-    aes(size = af_used), 
-    color = "blue", 
+    aes(size = af_used),
+    color = "blue",
     shape = 15
   )
 ```
@@ -372,22 +372,22 @@ ggplot() +
 .left4[
 <br>
 ```{r ex-3, eval = F}  
-gw_Stevens %>% 
-  cbind(., st_coordinates(.)) %>% 
+gw_Stevens %>%
+  cbind(., st_coordinates(.)) %>%
   mutate(
     east_west = ifelse(
-      X < -101.3, 
-      "west", 
+      X < -101.3,
+      "west",
       "east"
     )
-  ) %>% 
+  ) %>%
   ggplot(data = .) +
-    geom_sf(
-      aes(
-        shape = east_west, 
-        color = east_west
-      )
+  geom_sf(
+    aes(
+      shape = east_west,
+      color = east_west
     )
+  )
 ```
 
 + `color`: dependent on whether located east of west of -101.3 in longitude
@@ -435,10 +435,10 @@ gw_Stevens %>%
 <br>
 <br>
 ```{r ex-poly-1, eval = F}  
-ggplot() +  
+ggplot() +
   geom_sf(
     data = KS_county,
-    color = "red", 
+    color = "red",
     fill = "darkgreen"
   )
 ```
@@ -513,22 +513,21 @@ You can combine all the layers created by `geom_sf()` additively so they appear 
 <br>
 <br>
 ```{r mult-ex, eval = F}  
-ggplot() +  
+ggplot() +
   #--- this one uses KS_county ---#
   geom_sf(
     data = KS_county
   ) +
   #--- this one uses KS_railroads ---#
   geom_sf(
-    data = KS_railroads, 
+    data = KS_railroads,
     color = "red"
   ) +
   #--- this one uses KS_wells ---#
   geom_sf(
-    data = gw_KS_sf, 
+    data = gw_KS_sf,
     size = 0.1
-  ) 
-
+  )
 ```
 ]
 
@@ -560,18 +559,18 @@ Here, wells are hidden beneath the county layer.
 ggplot() +
   #--- this one uses KS_wells ---#
   geom_sf(
-    data = gw_KS_sf, 
+    data = gw_KS_sf,
     size = 0.4
-  )+  
+  ) +
   #--- this one uses KS_county ---#
   geom_sf(
     data = KS_county
   ) +
   #--- this one uses KS_railroads ---#
   geom_sf(
-    data = KS_railroads, 
+    data = KS_railroads,
     color = "red"
-  )  
+  )
 ```
 ]
 
@@ -613,8 +612,8 @@ Create a map:
 
 ```{r crs-gg, eval = F}  
 (
-g_county <- ggplot() +
-  geom_sf(data = KS_county)
+  g_county <- ggplot() +
+    geom_sf(data = KS_county)
 )
 ```
 
@@ -640,13 +639,13 @@ class: middle
 Change the CRS and then create a map:
 
 ```{r crs-1, eval = F}  
-g_32614 <- KS_county %>% 
+g_32614 <- KS_county %>%
   st_transform(32614) %>% #<<
   ggplot(data = .) +
-    geom_sf()
+  geom_sf()
 
 #--- compare ---#
-g_county/g_32614
+g_county / g_32614
 ```
 
 + Now, the map is drawn based on the new CRS of 32614 (the bottom figure)
@@ -679,7 +678,7 @@ g_32614 <- ggplot() +
   geom_sf(data = KS_county) +
   coord_sf(crs = 32614) #<<
 
-g_county/g_32614
+g_county / g_32614
 ```
 ]
 
@@ -709,9 +708,9 @@ g_32614 <- ggplot() +
   coord_sf(
     crs = 32614,
     datum = 32614
-  ) 
+  )
 
-g_county/g_32614
+g_county / g_32614
 ```
 ]
 
@@ -736,11 +735,11 @@ When multiple `geom_sf()` layers, the CRS of the first layers is automatically a
 <br>
 <br>
 ```{r crs-4, eval = F}  
-ggplot() +  
+ggplot() +
   #--- epsg: 32614 ---#
   geom_sf(
     data = st_transform(
-      KS_county, 
+      KS_county,
       32614
     )
   ) +
@@ -771,7 +770,7 @@ class: middle
 <br>
 <br>
 ```{r crs-csf-mult, eval = F}  
-ggplot() +  
+ggplot() +
   #--- epsg: 4269 ---#
   geom_sf(
     data = KS_railroads
@@ -779,7 +778,7 @@ ggplot() +
   #--- epsg: 32614 ---#
   geom_sf(
     data = st_transform(
-      KS_county, 
+      KS_county,
       32614
     ),
     fill = NA
@@ -821,7 +820,7 @@ Visualizing `Raster*` objects involves two steps:
 .content-box-green[**Raster Dataset**]
 
 ```{r }
-tmax_Jan_09_rs <- stack("./Data/tmax_Jan_09.tif")  
+tmax_Jan_09_rs <- stack("./Data/tmax_Jan_09.tif")
 ```
 
 ---
@@ -835,27 +834,27 @@ In order to create maps from the information stored in `Raster*` objects, you fi
 
 .left5[
 ```{r }
-tmax_Jan_09_df <- tmax_Jan_09_rs %>% 
+tmax_Jan_09_df <- tmax_Jan_09_rs %>%
   #--- convert Raster* to a data.frame with XY ---#
-  as.data.frame(xy = TRUE) %>% 
+  as.data.frame(xy = TRUE) %>%
   #--- remove cells with NA for any of the layers ---#
-  na.omit() %>% 
+  na.omit() %>%
   #--- change the variable names ---#
   setnames(
-    paste0("tmax_Jan_09.", 1:5), 
+    paste0("tmax_Jan_09.", 1:5),
     seq(
-      ymd("2009-01-01"), 
-      ymd("2009-01-05"), 
+      ymd("2009-01-01"),
+      ymd("2009-01-05"),
       by = "days"
-    ) %>% 
-    as.character()
-  ) 
+    ) %>%
+      as.character()
+  )
 ```
 ]
 
 .right5[
 ```{r }
-head(tmax_Jan_09_df) 
+head(tmax_Jan_09_df)
 ```
 
 Notice that the data is in a wide format where tmax values for different dates are stored as separate columns. 
@@ -882,8 +881,8 @@ ggplot() +
   geom_raster(
     data = tmax_Jan_09_df,
     aes(
-      x = x, 
-      y = y, 
+      x = x,
+      y = y,
       fill = `2009-01-01`
     )
   ) +
@@ -919,16 +918,16 @@ To create a faceted (faceted by date) figure, you first make `tmax_Jan_09_df` lo
 ```{r faceted-demo, eval = F}  
 #--- wide to long ---#
 tmax_long_df <- tmax_Jan_09_df %>%
-pivot_longer(
-  c(-x, -y),
-  names_to = "date",
-  values_to = "tmax"
-)
+  pivot_longer(
+    c(-x, -y),
+    names_to = "date",
+    values_to = "tmax"
+  )
 
 #--- faceted figure ---#
 ggplot() +
   geom_raster(
-    data = tmax_long_df, 
+    data = tmax_long_df,
     aes(x = x, y = y, fill = tmax)
   ) +
   facet_wrap(date ~ .) +
@@ -972,19 +971,19 @@ Let’s crop the tmax data to Kansas and create a map of tmax values displayed o
 KS_county_sp <- st_transform(KS_county, projection(tmax_Jan_09_rs))
 
 #--- crop to KS ---#
-KS_tmax_Jan_09 <- crop(tmax_Jan_09_rs, KS_county_sp) 
+KS_tmax_Jan_09 <- crop(tmax_Jan_09_rs, KS_county_sp)
 
 #--- convert to a df ---#
 KS_tmax_Jan_09_df <- as.data.frame(
   KS_tmax_Jan_09,
   xy = TRUE
-) %>% 
-na.omit() %>%
-pivot_longer(
-  c(-x, -y),
-  names_to = "date",
-  values_to = "tmax"
-)
+) %>%
+  na.omit() %>%
+  pivot_longer(
+    c(-x, -y),
+    names_to = "date",
+    values_to = "tmax"
+  )
 ```
 
 ---
@@ -1001,11 +1000,11 @@ class: middle
 ```{r raster-sf, eval = F}  
 ggplot() +
   geom_raster(
-    data = KS_tmax_Jan_09_df, 
+    data = KS_tmax_Jan_09_df,
     aes(x = x, y = y, fill = tmax)
   ) +
   geom_sf(
-    data = KS_county, 
+    data = KS_county,
     fill = NA
   ) +
   facet_wrap(date ~ .) +
@@ -1037,11 +1036,11 @@ This is what happens when the `sf` and `Raster*` objects are on different CRS.
 ```{r raster-sf-wrong, eval = F}  
 ggplot() +
   geom_raster(
-    data = KS_tmax_Jan_09_df, 
+    data = KS_tmax_Jan_09_df,
     aes(x = x, y = y, fill = tmax)
   ) +
   geom_sf(
-    data = st_transform(KS_county, 32614), 
+    data = st_transform(KS_county, 32614),
     fill = NA
   ) +
   facet_wrap(date ~ .) +
@@ -1078,7 +1077,7 @@ class: middle
 
 .left5[
 ```{r }
-g_county 
+g_county
 ```
 ]
 
@@ -1096,7 +1095,7 @@ class: middle
 The `ggspatial` package lets you put a north arrow and scale bar on a map using `annotation_scale()` and `annotation_north_arrow()`
 
 ```{r eval = F}
-library(ggspatial)  
+library(ggspatial)
 ```
 
 ---
@@ -1105,10 +1104,10 @@ class: middle
 .content-box-green[**preparation**]
 
 ```{r results = "hide"}
-g_nc <- st_read(system.file("shape/nc.shp", package="sf")) %>% 
-  ggplot(data = .) + 
-    geom_sf() + 
-    theme_void()
+g_nc <- st_read(system.file("shape/nc.shp", package = "sf")) %>%
+  ggplot(data = .) +
+  geom_sf() +
+  theme_void()
 ```
 
 ---
@@ -1125,9 +1124,9 @@ Use `annotation_scale()` to add a scale bar.
 .content-box-green[**Example**]
 
 ```{r scale, eval = F}  
-g_nc + 
+g_nc +
   annotation_scale(
-    location = "bl", 
+    location = "bl",
     width_hint = 0.2
   )
 ```
@@ -1159,9 +1158,9 @@ Use `pad_x` and `pad_y` options to fine-tune the location of the scale bar.
 .content-box-green[**Example**]
 
 ```{r scale-pad, eval = F}  
-g_nc + 
+g_nc +
   annotation_scale(
-    location = "bl", 
+    location = "bl",
     width_hint = 0.2,
     pad_x = unit(1, "in"),
     pad_y = unit(0.3, "in")
@@ -1195,20 +1194,20 @@ class: middle
 .content-box-green[**Example**]
 
 ```{r scale-pad-na, eval = F}  
-g_nc + 
+g_nc +
   annotation_scale(
-    location = "bl", 
+    location = "bl",
     width_hint = 0.2,
     pad_x = unit(1, "in"),
     pad_y = unit(0.3, "in")
   ) +
   #--- add north arrow ---#
   annotation_north_arrow(
-    location = "tl", 
-    pad_x = unit(0.2, "in"), 
+    location = "tl",
+    pad_x = unit(0.2, "in"),
     pad_y = unit(-0.1, "in"),
     style = north_arrow_fancy_orienteering
-   ) 
+  )
 ```
 
 + use `style` option to pick a different type of north arrow symbol
@@ -1237,7 +1236,7 @@ Inset maps provide a better sense of the geographic extent and the location of t
 .content-box-green[**Example**]
 
 ```{r  echo = F, out.width = "40%"}
-include_graphics("inset.jpg") 
+include_graphics("inset.jpg")
 ```
 
 ---
@@ -1260,15 +1259,15 @@ Here is the map of three counties:
 
 ```{r ks-three, eval = F}  
 (
-g_three_counties <- ggplot() +
-  geom_sf(
-    data = three_counties
-  ) +
-  geom_sf_text(
-    data = three_counties, 
-    aes(label = NAME)
-  ) +
-  theme_void()
+  g_three_counties <- ggplot() +
+    geom_sf(
+      data = three_counties
+    ) +
+    geom_sf_text(
+      data = three_counties,
+      aes(label = NAME)
+    ) +
+    theme_void()
 )
 ```
 
@@ -1347,12 +1346,12 @@ The first task is to initiate a `ggplot` with `coord_equal()` as follows:
 
 ```{r combine, eval = F}  
 (
-g_inset <- ggplot() +
-  coord_equal(
-    xlim = c(0, 1), 
-    ylim = c(0, 1), 
-    expand = FALSE
-  )
+  g_inset <- ggplot() +
+    coord_equal(
+      xlim = c(0, 1),
+      ylim = c(0, 1),
+      expand = FALSE
+    )
 )
 ```
 
@@ -1382,9 +1381,9 @@ Let's add a layer to the canvas with `annotation_custom()` in which you provide 
 ```{r combine-2, eval = F}  
 g_inset +
   annotation_custom(
-    grob_aoi, 
-    xmin = 0, 
-    xmax = 0.8, 
+    grob_aoi,
+    xmin = 0,
+    xmax = 0.8,
     ymin = 0,
     ymax = 1
   )
@@ -1415,15 +1414,15 @@ Similarly, we can add `grob_region` using `annotation_custom()`. Let's put it at
 g_inset +
   annotation_custom(
     grob_aoi, # area of interest
-    xmin = 0, 
-    xmax = 0.8, 
+    xmin = 0,
+    xmax = 0.8,
     ymin = 0,
     ymax = 1
   ) +
   annotation_custom(
-    grob_region, 
-    xmin = 0.6, 
-    xmax = 1, 
+    grob_region,
+    xmin = 0.6,
+    xmax = 1,
     ymin = 0,
     ymax = 0.3
   )
@@ -1454,15 +1453,15 @@ Note that the resulting map still has the default theme because it does not inhe
 g_inset +
   annotation_custom(
     grob_aoi, # area of interest
-    xmin = 0, 
-    xmax = 0.8, 
+    xmin = 0,
+    xmax = 0.8,
     ymin = 0,
     ymax = 1
   ) +
   annotation_custom(
-    grob_region, 
-    xmin = 0.6, 
-    xmax = 1, 
+    grob_region,
+    xmin = 0.6,
+    xmax = 1,
     ymin = 0,
     ymax = 0.3
   ) +
@@ -1511,7 +1510,7 @@ class: middle
   
 ```{r read-ndre}
 (
-ndre_080319_rl <- raster("./Data/Preston_2019_Rate_Blocks_3-AUG-2019_ndre_raw.tif")
+  ndre_080319_rl <- raster("./Data/Preston_2019_Rate_Blocks_3-AUG-2019_ndre_raw.tif")
 )
 ```
 
@@ -1519,7 +1518,7 @@ ndre_080319_rl <- raster("./Data/Preston_2019_Rate_Blocks_3-AUG-2019_ndre_raw.ti
 
 ```{r aggregate-raster}
 (
-ndre_080319_rl_ag <- raster::aggregate(ndre_080319_rl, fact = 10)  
+  ndre_080319_rl_ag <- raster::aggregate(ndre_080319_rl, fact = 10)
 )
 ```
 
@@ -1532,17 +1531,17 @@ class: middle
 
 .left4[
 ```{r raster-ag-fig, eval = F}  
-ndre_080319_rl_ag %>% 
-  as.data.frame(xy = TRUE) %>% 
-  setnames(names(.)[3], "value") %>% 
+ndre_080319_rl_ag %>%
+  as.data.frame(xy = TRUE) %>%
+  setnames(names(.)[3], "value") %>%
   ggplot(data = .) +
-    geom_raster(
-      aes(
-        x = x,
-        y = y,
-        fill = value
-      )
+  geom_raster(
+    aes(
+      x = x,
+      y = y,
+      fill = value
     )
+  )
 ```
 ]
 
@@ -1562,19 +1561,19 @@ Suppose you have three raster layers for R (red), G (green), and B (blue).
 You can use `ggRGB()` from the `RStoolbox` package to create a map with actual colors based on the three color composite layers. 
 
 ```{r eval = F}
-library(RStoolbox)  
+library(RStoolbox)
 ```
 
 .content-box-green[**Data**]
 
 ```{r get-three-layers, eval = F}
-blue <- raster("./Data/Annos_062718_RE_transparent_reflectance_blue.tif") %>% 
+blue <- raster("./Data/Annos_062718_RE_transparent_reflectance_blue.tif") %>%
   aggregate(10)
 
-red <- raster("./Data/Annos_062718_RE_transparent_reflectance_red.tif") %>% 
+red <- raster("./Data/Annos_062718_RE_transparent_reflectance_red.tif") %>%
   aggregate(10)
 
-green <- raster("./Data/Annos_062718_RE_transparent_reflectance_green.tif") %>% 
+green <- raster("./Data/Annos_062718_RE_transparent_reflectance_green.tif") %>%
   aggregate(10)
 ```
 
@@ -1599,19 +1598,19 @@ class: middle
 rgb_rs <- stack(blue, green, red)
 
 #--- create a map ---#
-ggRGB(rgb_rs, 
-  stretch = "sqrt", 
+ggRGB(rgb_rs,
+  stretch = "sqrt",
   limits = matrix(
-    c(0, 0.0, 0, 0.25, 0.25, 0.25), 
+    c(0, 0.0, 0, 0.25, 0.25, 0.25),
     ncol = 2
   )
 ) +
-theme_void()
+  theme_void()
 ```
 
 ```{r echo = F, eval = F}
 # library(tmap)
-# tm_shape(rgb_rs) +  
+# tm_shape(rgb_rs) +
 #   tm_rgb(r = 3, g = 2, b =1)
 ```
 ]
@@ -1646,22 +1645,22 @@ Create a map of NDRE at three different dates
 .content-box-green[**Datesets**]
 
 ```{r eval = F, echo = T}
-ndre_080319 <- raster("./Data/Preston_2019_Rate_Blocks_3-AUG-2019_ndre_raw.tif") %>% 
-  aggregate(10) %>% 
-  as.data.frame(xy = TRUE) %>% 
-  setnames(names(.)[3], "value") %>% 
+ndre_080319 <- raster("./Data/Preston_2019_Rate_Blocks_3-AUG-2019_ndre_raw.tif") %>%
+  aggregate(10) %>%
+  as.data.frame(xy = TRUE) %>%
+  setnames(names(.)[3], "value") %>%
   mutate(date = as.Date("2019-08-03"))
 
-ndre_081319 <- raster("./Data/Preston_2019_Rate_Blocks_13-AUG-2019_ndre_raw.tif") %>% 
-  aggregate(10) %>% 
-  as.data.frame(xy = TRUE) %>% 
-  setnames(names(.)[3], "value") %>% 
+ndre_081319 <- raster("./Data/Preston_2019_Rate_Blocks_13-AUG-2019_ndre_raw.tif") %>%
+  aggregate(10) %>%
+  as.data.frame(xy = TRUE) %>%
+  setnames(names(.)[3], "value") %>%
   mutate(date = as.Date("2019-08-13"))
 
-ndre_072019 <- raster("./Data/Preston_2019_Rate_Blocks_20-JUL-2019_ndre_raw.tif") %>% 
-  aggregate(10) %>% 
-  as.data.frame(xy = TRUE) %>% 
-  setnames(names(.)[3], "value") %>% 
+ndre_072019 <- raster("./Data/Preston_2019_Rate_Blocks_20-JUL-2019_ndre_raw.tif") %>%
+  aggregate(10) %>%
+  as.data.frame(xy = TRUE) %>%
+  setnames(names(.)[3], "value") %>%
   mutate(date = as.Date("2019-07-20"))
 
 #--- combine all the datasets ---#
@@ -1669,13 +1668,13 @@ ndre_all <- rbind(ndre_080319, ndre_081319, ndre_072019)
 ```
 
 ```{r echo = F}
-# saveRDS(ndre_080319, "ndre_080319.rds") 
-# saveRDS(ndre_081319, "ndre_081319.rds") 
-# saveRDS(ndre_072019, "ndre_072019.rds") 
+# saveRDS(ndre_080319, "ndre_080319.rds")
+# saveRDS(ndre_081319, "ndre_081319.rds")
+# saveRDS(ndre_072019, "ndre_072019.rds")
 
-ndre_080319 <- readRDS("ndre_080319.rds") 
-ndre_081319 <- readRDS("ndre_081319.rds") 
-ndre_072019 <- readRDS("ndre_072019.rds") 
+ndre_080319 <- readRDS("ndre_080319.rds")
+ndre_081319 <- readRDS("ndre_081319.rds")
+ndre_072019 <- readRDS("ndre_072019.rds")
 
 ndre_all <- rbind(ndre_080319, ndre_081319, ndre_072019)
 ```
@@ -1696,7 +1695,7 @@ class: middle
 ```{r faceted, eval = F}  
 ggplot() +
   geom_raster(
-    data = ndre_all, 
+    data = ndre_all,
     aes(x = x, y = y, fill = value)
   ) +
   facet_wrap(date ~ .) +
@@ -1722,7 +1721,7 @@ class: middle
 ```{r patched, eval = F}  
 g_ndre_080319 <- ggplot() +
   geom_raster(
-    data = ndre_080319, 
+    data = ndre_080319,
     aes(x = x, y = y, fill = value)
   ) +
   coord_equal() +
@@ -1731,7 +1730,7 @@ g_ndre_080319 <- ggplot() +
 
 g_ndre_081319 <- ggplot() +
   geom_raster(
-    data = ndre_081319, 
+    data = ndre_081319,
     aes(x = x, y = y, fill = value)
   ) +
   coord_equal() +
@@ -1740,14 +1739,14 @@ g_ndre_081319 <- ggplot() +
 
 g_ndre_072019 <- ggplot() +
   geom_raster(
-    data = ndre_072019, 
+    data = ndre_072019,
     aes(x = x, y = y, fill = value)
   ) +
   coord_equal() +
   scale_fill_viridis_c() +
   theme_void()
 
-g_ndre_072019 | g_ndre_080319 | g_ndre_081319 
+g_ndre_072019 | g_ndre_080319 | g_ndre_081319
 ```
 ]
 

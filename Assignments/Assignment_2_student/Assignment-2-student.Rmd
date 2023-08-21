@@ -19,10 +19,9 @@ opts_chunk$set(
   comment = NA,
   message = FALSE,
   warning = FALSE
-  ) 
+)
 
-opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_2")
-
+opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/Data-Science-with-R/Assignments/Assignment_2")
 ```
 
 ```{r packages, echo = F}
@@ -59,8 +58,8 @@ First, import `soybean_trial_data.rds`, which has following variables:
 ```{r }
 # Note: you need to modify this code unless you soybean_trial_data.rds
 # is stored in the same folder as the Rmd file.
- 
-data <- readRDS("soybean_trial_data.rds")  
+
+data <- readRDS("soybean_trial_data.rds")
 ```
 
 * `subplot_id`: observational unit
@@ -81,7 +80,7 @@ $\mbox{soybean yield =}$ `r data[1, ]$beta_int` + `r data[1, ]$beta_log_seed` $\
 because
 
 ```{r }
-data[1, ]$beta_int 
+data[1, ]$beta_int
 data[1, ]$beta_log_seed
 ```
 
@@ -173,7 +172,7 @@ We would like to find the optimal seed rate for each subplot at
 
 ```{r echo = T}
 soy_price <- 9
-seed_price <- 0.35 
+seed_price <- 0.35
 ```
 
 We will use a grid search method. That is, we will create a sequence of seed rates, find profits, and then select the seed rate that yield the highest profit. 

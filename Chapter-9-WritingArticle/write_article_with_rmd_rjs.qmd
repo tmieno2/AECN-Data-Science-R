@@ -1,0 +1,82 @@
+---
+title: "Writing Articles to WORD using Rmarkdown"
+author: "AECN 396/896-002"
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    css: styles.css
+---
+
+```{r, include = F}
+library(nycflights13)
+library(extrafont)
+library(patchwork)
+```
+
+##  Learning objectives
+
+Learn how to use a combination of R packages to generate (mostly) publication-ready articles in WORD 
+
+
+## Before you start 
+
++ This lecture slides assume basic knowledge on how to use Rmarkdown. See [here](https://bookdown.org/yihui/rmarkdown/) first if are not familiar with Rmarkdown.
+
++ Go [here](https://www.dropbox.com/sh/7dccenk0f03v7sq/AADTO0UpSjuD4y3T4KDyTQgia?dl=0) and download all the files including sample_to_word.Rmd (a sample Rmarkdown file).
+
+## Steps 
+
+Here are the proposed steps to generate a fully publication-ready article: 
+
++ Write an Rmarkdown file and knit to a WORD file (the focus of this lecture)
+  * regular texts
+  * R codes for analysis, tables, figures
+
++ Do final formatting jobs on the output WORD file (not discussed here) to the specific needs required by the final destination of the article
+
+## Why Rmarkdown-WORD?
+
++ No manual copying and pasting of tables and figures
+
++ No manual formatting of tables and figures when they get updated in the course of your research projects
+
++ No manual updating of data-driven numbers (e.g., coefficient estimates, summary numbers) in text
+
+## What can you do with Rmarkdown-WORD?
+
++ include (run) R codes to
+  * run statistical or modeling analysis  
+  * create figures (e.g., the `ggplot2` package)
+  * create tables (e.g., the `modelsummary` and `flextable` packages)
+
++ refer to the R objects generated (data, tables, figures) to place them in the output WORD file 
+
++ cross-reference tables and figures using special syntaxes
+
++ create citations and a reference list automatically using special syntaxes 
+
++ format citation and reference styles using [Citation Style Language](https://citationstyles.org/)  
+
++ use Latex math syntax to write equations 
+
++ use markdown syntax for formatting the output WORD file 
+  * headings
+  * footnotes
+
+## Structure of the Rmarkdown file {background-image="https://placeholder.pics/svg/500"}
+
++ YAML header
++ Main body
+  + Narrative 
+  + R code (analysis, figures, tables)
+
+
+---
+
+### YAML header
+
+
+## Track Change

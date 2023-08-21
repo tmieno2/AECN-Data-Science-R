@@ -16,10 +16,10 @@ class: middle
 ```{r, child = './../setup.Rmd'}
 ```
 
-```{r, include = F, cache = F}
-suppressMessages(library(nycflights13)) 
-suppressMessages(library(extrafont)) 
-suppressMessages(library(patchwork))
+```{r, include = F}
+library(nycflights13) 
+library(extrafont) 
+library(patchwork)
 ```
 
 # Learning objectives

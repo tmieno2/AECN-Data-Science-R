@@ -1,0 +1,336 @@
+\documentclass[12pt]{article}
+\usepackage{hyperref}
+\usepackage{termcal}
+\usepackage{enumitem}
+\usepackage{color}
+\textwidth=7in
+\textheight=9.5in
+\topmargin=-1in
+\headheight=0in
+\headsep=.5in
+\hoffset  -.85in
+
+\pagestyle{empty}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\begin{document}
+
+\begin{center}
+{\bf AECN 896-005\   
+}
+\end{center}
+
+\setlength{\unitlength}{1in}
+
+\begin{picture}(6,.1) 
+\put(0,0) {\line(1,0){6.25}}
+\end{picture}
+
+ \newcommand{\MWFClass}{%
+\calday[Monday]{\classday} % Monday
+\skipday % Tuesday (no class)
+\calday[Wednesday]{\classday} % Wednesday
+\skipday % Thursday (no class)
+\calday[Friday]{\classday} % Friday 
+\skipday\skipday % weekend (no class)
+}
+
+\newcommand{\MWClass}{%
+\calday[Monday]{\classday} % Monday
+\skipday % Tuesday (no class)
+\calday[Wednesday]{\classday} % Wednesday
+\skipday % Thursday (no class)
+\skipday % Friday (no class)
+\skipday\skipday % weekend (no class)
+}
+
+\newcommand{\TRClass}{%
+\skipday % Monday (no class)
+\calday[Tuesday]{\classday} % Tuesday
+\skipday % Wednesday (no class)
+\calday[Thursday]{\classday} % Thursday
+\skipday % Friday 
+\skipday\skipday % weekend (no class)
+}
+
+\newcommand{\Holiday}[2]{%
+\options{#1}{\noclassday}
+\caltext{#1}{#2}
+}
+
+\SetLabelAlign{parright}{\parbox[t]{\labelwidth}{\raggedleft#1}}
+
+\setlist[description]{style=multiline,topsep=10pt,leftmargin=5cm,font=\normalfont,align=parleft}
+
+\renewcommand{\arraystretch}{2}
+
+%======================================================
+% Instructor
+%======================================================
+\vskip.25in
+
+\noindent\textbf{Instructor:} 
+\begin{itemize}
+	\item  Taro Mieno: tmieno2@unl.edu 
+\end{itemize} 
+
+%======================================================
+% Lecture, Labs, Office Hours
+%======================================================
+\noindent\textbf{Lectures and Labs:} 
+\begin{itemize}
+	\item Lectures: MW 1:00 - 2:30 PM \href{https://github.com/tmieno2/AECN-Data-Science-R}{Course Website}
+\end{itemize}
+
+\vskip.15in
+
+\noindent\textbf{Office Hours:} Wednesday, 9:00 to 10:00 am or by appointment\\
+
+\noindent\textbf{Course Description:} The goal of this course is to prepare students for jobs that require quantitative skills beyond Microsoft Excel and graduate programs. The R software is used throughout the course. In order to achieve the goal, students will be introduced to the basics of programming and how to apply it to real world issues in the field of agricultural (agricultural economics, agronomy, etc) and environmental sciences. By completing the course, students will know data wrangling (e.g., merging, transforming datasets), data visualization, and exploratory data analysis, spatial data management.
+
+%======================================================
+% Reading Materials
+%======================================================
+\vskip.15in
+\noindent\textbf{Reading Materials:}\\
+
+\noindent \underline{Recommended}: Grolemund, Garrett. and Wickham, Hadley. 2019 \href{https://r4ds.had.co.nz/}{"R for Data Science"} \\
+
+\noindent \underline{Recommended}: Lovelace, Robin., Nowosad, Jakub., and Muenchow, Jannes. 2019 \href{https://geocompr.robinlovelace.net/}{"Geocomputation with R"}
+
+\vskip.15in
+
+\noindent\textbf{Prerequisites:} Introductory statistics (STAT 218) or equivalent
+
+\newpage 
+\noindent\textbf{Grading:}
+\begin{center}
+\begin{tabular}{lc}
+	 Assignments (3 assignments) :& 60\% \\
+	 Final Paper: & 40 \% \\
+	 Total: & 100\%
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \textbf{Assignments:} There will be 3 assignments. Late submissions will have 1/3 of a letter grade deducted from the grade for that submission, increasing by an additional 1/3 grade for each 24 hours beyond the deadline.
+	\item \textbf{Final Paper:} In this assignment, you write a paper with a particular emphasis on programming using real-world data sets. You must identify a topic that would involve collecting datasets from multiple different data sources. The topic has to be approved by me to avoid a final project without significant programming tasks by \textcolor{red}{Oct, 17}. The proposal of your final project detailing what datasets to use, where you collect them, and how you use them have to be submitted by \textcolor{red}{Nov, 7}.
+\end{itemize}
+
+\vspace*{.15in}
+
+\noindent\textbf{Important Deadlines:} 
+
+\begin{itemize}
+  \item final project topic approved by the instructor (Oct, 18)
+  \item final project proposal (Nov, 8)
+  \item final project submission (Dec, 15) 
+\end{itemize}
+
+%===================================
+% Schedule
+%===================================
+\clearpage
+\paragraph*{Tentative Schedule:}
+
+\begin{itemize}
+  \item Week 1 (Aug, 21 $\sim$ )
+  \begin{itemize}
+    \item M: Introduction to R
+    \item W: Introduction to R and Rmarkdown
+  \end{itemize}
+  \item Week 2 (Aug, 28 $\sim$ )
+  \begin{itemize}
+    \item M: Rmarkdown
+    \item W: Data Wrangling
+  \end{itemize}
+  \item Week 3 (Sep, 4 $\sim$ )
+  \begin{itemize}
+    \item M: \textcolor{red}{Labor Day: No Class}
+    \item W: Data Wrangling
+  \end{itemize}
+  \item Week 4 (Sep, 11 $\sim$ )
+  \begin{itemize}
+    \item M: Data Wrangling
+    \item W: Merge and reshape datasets
+  \end{itemize}
+  \item Week 5 (Sep, 18 $\sim$ )
+  \begin{itemize}
+    \item M: Data visualization 
+    \item W: Data visualization
+  \end{itemize}
+  \item Week 6 (Sep, 25 $\sim$ )
+  \begin{itemize}
+    \item M: Data visualization
+    \item W: Miscellaneous data manipulations
+  \end{itemize}
+  \item Week 7 (Oct, 2 $\sim$ )
+  \begin{itemize}
+    \item M: How to write and organize codes
+    \item W: Research flow illustration (Assignment 1 due)
+  \end{itemize}
+  \item Week 8 (Oct, 9 $\sim$ )
+  \begin{itemize}
+    \item M: Writing your own function
+    \item W: Looping
+  \end{itemize}
+  \item Week 9 (Oct, 16 $\sim$ )
+  \begin{itemize}
+    \item M: \textcolor{red}{Fall semester break: no class}
+    \item W: Parallel computing
+  \end{itemize}
+  \item Week 10 (Oct, 23 $\sim$ )
+  \begin{itemize}
+    \item M: Create tables
+    \item W: Create tables 
+  \end{itemize}
+  \item Week 10 (Oct, 30 $\sim$ )
+  \begin{itemize}
+    \item M: Spatial data
+    \item W: Spatial data (Assignment 2 due)
+  \end{itemize}
+  \item Week 11 (Nov, 6 $\sim$ )
+  \begin{itemize}
+    \item M: Spatial data
+    \item W: Spatial data
+  \end{itemize}
+  \item Week 12 (Nov, 13 $\sim$ )
+  \begin{itemize}
+    \item M: Spatial data
+    \item W: Spatial data
+  \end{itemize}
+  \item Week 13 (Nov, 20 $\sim$ )
+  \begin{itemize}
+    \item M: Spatial data
+    \item W: \textcolor{red}{Student Holiday: No class}
+  \end{itemize}
+  \item Week 14 (Nov, 27 $\sim$ )
+  \begin{itemize}
+    \item M: Writing reproducible articles
+    \item W: Writing reproducible articles (Assignment 3 due)
+  \end{itemize}
+  \item Week 15 (Dec, 4 $\sim$ )
+  \begin{itemize}
+    \item M: No class: work on the final paper
+    \item W: No class: work on the final paper
+  \end{itemize}
+\end{itemize}
+
+
+
+% \begin{center}
+
+% % Semester starts on 1/11/2010 and last for 16
+% % weeks, including finals week
+
+% \begin{calendar}{8/22/2022}{16}
+% \setlength{\calboxdepth}{.4in}
+% \setlength{\calwidth}{7in}
+% \MWFClass
+
+% %--------------------------
+% % Schedule
+% %--------------------------
+% %--- week 1 ---%
+% \caltextnext{Introduction to econometrics}
+% \caltextnext{\textcolor{blue}{Lab 1}: Introduction to R}
+
+% %--- week 2 ---%
+% \caltextnext{Simple univariate regression}
+% \caltextnext{Simple univariate regression}
+% \caltextnext{\textcolor{blue}{Lab 2}: Rmarkdown}
+
+% %--- week 3 ---%
+% \caltextnext{Simple univariate regression}
+% \caltextnext{\textcolor{blue}{Lab 3}: Assignment 1 review \textcolor{red}{Assignment 1 due before the class}}
+
+% %---  ---%
+% \caltextnext{Monte Carlo simulation}
+
+% \caltextnext{Multivariate regression}
+% \caltextnext{\textcolor{blue}{Lab 4}: Data management I (dplyr)}
+
+% \caltextnext{Multi-collinearity and omitted variable}
+% \caltextnext{Inference}
+% \caltextnext{\textcolor{blue}{Lab 5}: Data management II (dplyr)}
+
+% \caltextnext{Heteroskedasticity and robust standard error estimation}
+% \caltextnext{Clustered error and bootstrap}
+% \caltextnext{\textcolor{blue}{Lab 6}: Assignment 2 review\\
+%  \textcolor{red}{Assignment 2 due before class}}
+
+% \caltextnext{Functional form and scaling}
+% \caltextnext{Dummy variables}
+% \caltextnext{Panel data methods}
+% \caltextnext{\textcolor{blue}{Lab 7}: data visualization 1}
+
+% \caltextnext{Panel data methods}
+% \caltextnext{Panel data methods}
+% \caltextnext{\textcolor{blue}{Lab 8}: data visualization 2}
+
+% \caltextnext{Panel data methods}
+% \caltextnext{Panel data methods and paper expectation}
+% \caltextnext{\textcolor{blue}{Lab 9}: Assignment 3 review\\
+%  \textcolor{red}{Assignment 3 due before class}}
+
+% \caltextnext{Causal Inference}
+% \caltextnext{Causal Inference}
+% \caltextnext{\textcolor{blue}{Lab 10}: Research flow and R I (research question identification and data collection)}
+
+% \caltextnext{Causal Inference}
+% \caltextnext{Causal Inference}
+% \caltextnext{\textcolor{blue}{Lab 11} Research flow and R II (data management)}
+
+% \caltextnext{Causal Inference}
+% \caltextnext{Causal Inference}
+% \caltextnext{\textcolor{blue}{Lab 12}: Assignment 4 review \\ \textcolor{red}{Assignment 4 due}}
+
+% \caltextnext{Causal Inference}
+% \caltextnext{Causal Inference}
+% \caltextnext{\textcolor{blue}{Lab 13} Research flow and R III (exploratory analysis)}
+
+% \caltextnext{Limited dependent variable}
+% \caltextnext{Limited dependent variable}
+% \caltextnext{\textcolor{blue}{Lab 13} Research flow and R IV (regression analysis and reporting)}
+
+% \caltextnext{Limited dependent variable}
+% \caltextnext{Limited dependent variable}
+% \caltextnext{\textcolor{red}{No Class}}
+
+% % Limited dependent variable (count)
+% % Survival analysis 
+% % \textcolor{blue}{Lab 13}: Survival 
+% % Semi-parametric regression
+
+% %--------------------------
+% % Holidays
+% %--------------------------
+% \Holiday{9/5/2022}{\textcolor{red}{Labor Day: No class}}
+% \Holiday{10/17/2022}{\textcolor{red}{Fall semseter break: No class}}
+% \Holiday{11/23/2022}{\textcolor{red}{Student Holiday: No class}}
+% \Holiday{11/25/2022}{\textcolor{red}{Thanksgiving Vacation: No class}}
+
+% % %--------------------------
+% % % Finals week
+% % %--------------------------
+% % \options{4/26/2010}{\noclassday} % finals week
+% % \options{4/27/2010}{\noclassday} % finals week
+% % \options{4/28/2010}{\noclassday} % finals week
+% % \options{4/29/2010}{\noclassday} % finals week
+% % \options{4/30/2010}{\noclassday} % finals week
+% % \caltext{4/27/2010}{\textbf{Final Exam}}
+% \end{calendar}
+% \end{center}
+% \vskip.25in
+
+\newpage   
+
+\vskip.25in
+\noindent\textbf{Academic Honesty:}\\ 
+\noindent Students are expected to adhere to guidelines concerning academic dishonesty outlined in Section 4.2 of University's Student Code of Conduct (\url{http://stuafs.unl.edu/ja/code/}). Students are encouraged to contact the instructor for clarification of these guidelines if they have questions or concerns. The Department of Agricultural Economics has a written policy defining academic dishonesty, the potential sanctions for incidents of academic dishonesty, and the appeal process for students facing potential sanctions. The Department also has a policy regarding potential appeals of final course grades. These policies are available for review on the department’s website (\url{http://agecon.unl.edu/undergraduate})\\
+
+\vskip.25in
+\noindent\textbf{Students with disabilities:}\\
+\noindent Students with disabilities are encouraged to contact the instructor for a confidential discussion of their individual needs for academic accommodation. It is the policy of the University of Nebraska-Lincoln to provide flexible and individualized accommodation to students with documented disabilities that may affect their ability to fully participate in course activities or to meet course requirements. To receive accommodation services, students must be registered with the Services for Students with Disabilities (SSD) office, 132 Canfield Administration, 472-3787 voice or TTY. 
+
+\end{document}

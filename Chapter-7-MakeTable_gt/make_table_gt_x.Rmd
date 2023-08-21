@@ -949,7 +949,7 @@ text_transform(
 
 ---
 
-```{r ggplot-added-flip, include = F}
+```{r ggplot-added-flip, include = F, eval = F}
 gt_1 %>% #BREAK
   text_transform(
     locations = cells_body(

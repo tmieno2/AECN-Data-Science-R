@@ -5,17 +5,37 @@ author:
   - Taro Mieno^[University of Nebraska Lincoln, tmieno2@unl.edu] and John Doe^[Random University, johndoe@email.com]
 abstract: "Abstract: this research is so awesome that you cannot reject this paper."
 output:
-  bookdown::word_document2:
-    reference_docx: word-style.docx
-    pandoc_args: ["-Fpandoc-crossref"]
+  officedown::rdocx_document:
+    toc: false
+    toc_depth: 1
+    number_sections: true
+    reference_docx: "word_template.docx"
+    base_format: "bookdown::word_document2" # for equation numbering
+    plots:
+      style: Normal
+      align: center
+      caption:
+       style: Image Caption
+       pre: "Figure "
+       sep: ": "
+    tables:
+      style: Table
+      layout: autofit
+      width: 1.0
+      caption:
+       style: Table Caption
+       pre: "Table "
+       sep: ": "
 bibliography: bibliography.bib
 csl: agronomy.csl
 # eqnPrefix:
 #   - "Equation"
 ---
 
-```{r echo = F}
+```{r include = F}
 library(knitr)
+library(officedown)
+library(officer)
 
 opts_knit$set(root.dir = "/Users/tmieno2/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-9-WritingArticle")
 
@@ -23,16 +43,17 @@ options(htmltools.dir.version = FALSE)
 options(knitr.duplicate.label = "allow")
 
 opts_chunk$set(
-  fig.align = "center", 
+  fig.align = "center",
   fig.retina = 5,
-  warning = F, 
+  warning = F,
   message = F,
   cache = T,
   echo = F
-  )
+)
 ```
 
 ```{r eval = F}
+# This is for you to set working directory easily. This serves no purpose in knitting to a manuscript
 setwd("/Users/tmieno2/Dropbox/TeachingUNL/DataScience/LectureNotes/Chapter-9-WritingArticle")
 ```
 
@@ -70,7 +91,9 @@ bluh bluh [@shrader1966estimation; @adrian2005producers]
 
 bluh bluh [-@shrader1966estimation] 
 
-##### page break (you cannot see this text on the output WORD file)
+
+<!-- page break -->
+`r run_pagebreak()` 
 
 # Materials and Methods
 
@@ -88,8 +111,8 @@ See?
 
 ```{r summary_statistics}
 #--- number of observations by zone ---#
-num_obs <- reg_data %>% 
-  group_by(Zone) %>% 
+num_obs <- reg_data %>%
+  group_by(Zone) %>%
   summarize(n = n())
 
 num_obs_z2 <- filter(num_obs, Zone == "Zone 2")$n
@@ -102,27 +125,21 @@ Table \@ref(tab:table-1) presents summary statistics by zone.
 
 ## Statistical Model
 
-See equation ([@eq:eqn1]) for the statistical model we use.
+See equation \@ref(eq:eqn1) for the statistical model we use.
 
-$$y = \beta_0 + \beta_1 x + \varepsilon$$ {#eq:eqn1}
+\begin{equation}
+y = \beta_0 + \beta_1 x + \varepsilon
+(\#eq:eqn1)
+\end{equation}
 
-Equations written in the `aligned` environment (Equation ([-@eq:eqn2])).
 
-$$
-\begin{aligned}
- Y_z & = f_z(S) + g_z(N) + h_z(X,Y) + \varepsilon_z \\
-& = \sum_{i=1}^k \phi_k(S) + g_z(N) + h_z(X,Y) + \varepsilon_z
-\end{aligned}
-$$ {#eq:eqn2}
-
-Equations written in the `align` environment.
-
-$$
 \begin{align}
  Y_z & = f_z(S) + g_z(N) + h_z(X,Y) + \varepsilon_z \\
 & = \sum_{i=1}^k \phi_k(S) + g_z(N) + h_z(X,Y) + \varepsilon_z
+(\#eq:eqn2)
 \end{align}
-$$
+
+\@ref(eq:eqn2)
 
 # Results and Discussions
 
@@ -136,12 +153,12 @@ bluh blu^[This is a footnote]
 
 # Figures 
 
-```{r fig-1, fig.cap = "The Distribution of Yield by Zone"}
+```{r fig.id = "fig-1", fig.cap = "The Distribution of Yield by Zone"}
 ggplot() +
   geom_density(
     data = reg_data,
     aes(
-      x = Yield, 
+      x = Yield,
       fill = Zone,
       alpha = 0.3
     )
@@ -162,11 +179,11 @@ get_N <- function(x) {
 summary_table <- reg_data %>%
   datasummary(
     Zone * (
-      (`Yield (kg/ha)` = Yield) +
-        (`Nitrogen Rate (kg/ha)` = aa_n) +
-        (`Seed Rate (1000/ha)` = aa_s)
+      (`Yield (kg/ha)` <- Yield) +
+        (`Nitrogen Rate (kg/ha)` <- aa_n) +
+        (`Seed Rate (1000/ha)` <- aa_s)
     ) ~
-    Format(digits = 0) * get_N + Mean + SD + Min + Max,
+      Format(digits = 1) * get_N + Mean + SD + Min + Max,
     data = .,
     output = "flextable"
   ) %>%
