@@ -5,16 +5,16 @@ date: "`r Sys.Date()`"
 output:
   word_document:
     toc: yes
-  pdf_document:
-    toc: yes
   html_document:
-    number_sections: yes
-    theme: flatly
+    number_sections: no
+    theme: sandstone
     toc: yes
     toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
-```{r , include = F, eval = F}
+```{r , include = F}
 library(knitr)
 opts_chunk$set(
   echo = FALSE,
@@ -76,6 +76,7 @@ The average yield is `r mean_yield`.
 See the source rmd file:
 
 + list item 1
+  - another list
 + list item 2
 + list item 3
 + *italics*
@@ -147,6 +148,7 @@ No results are shown.
 
 ```{r, results = "hide"}
 a <- runif(100)
+a
 ```
 
 But, this shows the above code was evaluated and object `a` was created.
@@ -176,7 +178,7 @@ a
 
 # Caching
 
-```{r cache_1, eval = F, cache = T}
+```{r cache_1, cache = T}
 #--- repeat steps 1-3 B times ---#
 MC_sim <- function(i) {
   N <- 50000 # sample size
@@ -202,44 +204,7 @@ MC_results <- lapply(1:1000, MC_sim) %>%
 MC_results
 ```
 
-```{r cache_2, eval = F, cache = T}
+```{r cache_2, eval = T, cache = T, dependson = "cache_1"}
 MC_results
 ```
 
-
-# Interactive features: htmlwidgets
-
-## interactive data table  
-
-```{r }
-library(DT)
-iris %>% datatable(
-  extensions = "Buttons",
-  options = list(
-    dom = "Blfrtip",
-    buttons = c("copy", "csv", "excel", "pdf", "print"),
-    lengthMenu = list(
-      c(10, 25, 50, -1),
-      c(10, 25, 50, "All")
-    )
-  )
-)
-```
-
-## Interactive time-series data
-
-```{r }
-library(dygraphs)
-dygraph(nhtemp, main = "New Haven Temperatures") %>%
-  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))
-```
-
-## Interactive ggplot2 figures
-
-```{r }
-library(ggplot2)
-library(plotly)
-p <- ggplot(data = diamonds) +
-  geom_bar(aes(x = cut, fill = clarity), position = "dodge")
-ggplotly(p)
-```

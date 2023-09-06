@@ -32,5 +32,6 @@ Assignments/*/*.DS_Store
 */*.tex
 .Rproj.user
 Video/*
+Datasets/*
 Chapter-9*/*files/*
 Chapter-9*/*cache/*
