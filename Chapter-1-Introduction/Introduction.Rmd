@@ -556,7 +556,6 @@ min(c(1, 2))
 
 # Some other useful functions
 
-
 + create a sequence of values 
 
 ```{r }
@@ -582,6 +581,27 @@ v1_sum <- sum(v1)
 ```{r }
 v1_len <- length(v1)
 ```
+
+---
+
+# + and > on the console
+
+Notice that once the code is run, you will have `>` sign on the R console. But, sometimes, you see just see `+. This either means,
+
++ The code is still running (in this case, you will see the stop sign on the right upper part of the console pane.)
++ You did not close `(` with `)` or close `{` with `}`.
+
+Try to run the following:
+
+```{r, eval = F}
+mean(c(3, 5)
+```
+
+Then, you should see `+` and nothing seems to be happening. This is because R is waiting for more codes because you did not close `(` with `)`. 
+
++ When you see `+`, look at the codes that you just sent to the console and see if you have not closed `(` or `{`. If you found unclosed `(` or `{`, then close it by typing `)` or `}` on the console.  
+
++ If you cannot tell what happened by looking at the code, then you could also type random sequence of letters after `+`, which would cause an error, and then can start run codes again.
 
 ---
 
@@ -757,8 +777,7 @@ B
 A+B 
 
 #--- matrix multiplication by element ---#
-A*B   
-   
+A*B
 ```
 
 ---
