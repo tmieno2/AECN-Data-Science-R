@@ -2,7 +2,9 @@
 output:
   html_document:
     code_folding: "hide"
+    number_sections: true
     toc: true
+    toc_depth: 2
     toc_float: true
     df_print: paged
 ---
@@ -302,3 +304,69 @@ chickweight_grouped <- ChickWeight %>%
 
 print(chickweight_grouped)
 ```
+
+
+# Use all
+
+### Exercise 1: Calculate Average MPG by Cylinder
+
+**Dataset:** `mtcars` from the `datasets` package  
+**Functions to use:** `filter()`, `mutate()`, `group_by()`, `summarize()`
+
+**Task:** Filter the dataset to cars with more than 100 horsepower. Then, for these cars, calculate the average miles per gallon (`mpg`) for each number of cylinders (`cyl`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(datasets)
+data(mtcars)
+```
+
+**Solution:**
+```{r}
+library(dplyr)
+
+mtcars %>%
+  filter(hp > 100) %>%
+  group_by(cyl) %>%
+  summarize(avg_mpg = mean(mpg))
+```
+
+### Exercise 2: Adjusted Price Calculation
+
+**Dataset:** `diamonds` from the `ggplot2` package  
+**Functions to use:** `filter()`, `mutate()`, `group_by()`, `summarize()`
+
+**Task:** Filter diamonds that are "Ideal" in `cut` and have `carat` less than 1. Calculate an adjusted price which is 90% of the original `price`. Finally, calculate the average adjusted price for each clarity level.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution:**
+```{r}
+diamonds %>%
+  filter(cut == "Ideal", carat < 1) %>%
+  mutate(adjusted_price = price * 0.9) %>%
+  group_by(clarity) %>%
+  summarize(avg_adjusted_price = mean(adjusted_price))
+```
+
+### Exercise 3: Compute Average Dispersion by Gear
+
+**Dataset:** `mtcars`  
+**Functions to use:** `filter()`, `mutate()`, `group_by()`, `summarize()`
+
+**Task:** Filter cars with 4 or 6 cylinders. Create a new column named `disp_per_cyl` that calculates the dispersion (`disp`) per cylinder (`cyl`). Then compute the average `disp_per_cyl` for each gear (`gear`) level.
+
+**Solution:**
+```{r}
+mtcars %>%
+  filter(cyl %in% c(4, 6)) %>%
+  mutate(disp_per_cyl = disp / cyl) %>%
+  group_by(gear) %>%
+  summarize(avg_disp_per_cyl = mean(disp_per_cyl))
+```
+
+!

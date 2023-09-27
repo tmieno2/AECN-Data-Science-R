@@ -2,10 +2,13 @@
 output:
   html_document:
     code_folding: "hide"
+    number_sections: true
     toc: true
+    toc_depth: 2
     toc_float: true
     df_print: paged
 ---
+
 ## Basics
 
 ### Exercise 1: Visualizing the `mtcars` dataset

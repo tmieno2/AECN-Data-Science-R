@@ -2858,10 +2858,10 @@ div.tocify {
 </div>
 
 
-<div id="filter" class="section level1">
-<h1>Filter</h1>
-<div id="exercise-1-filtering-the-mtcars-dataset" class="section level2">
-<h2>Exercise 1: Filtering the <code>mtcars</code> dataset</h2>
+<div id="filter" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Filter</h1>
+<div id="exercise-1-filtering-the-mtcars-dataset" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Exercise 1: Filtering the <code>mtcars</code> dataset</h2>
 <p><strong>Objective:</strong> Filter the <code>mtcars</code> dataset for cars that have an automatic transmission (<code>am == 1</code>) and weigh more than 3,000 lbs (<code>wt &gt; 3</code>).</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(mtcars)</code></pre>
@@ -2879,8 +2879,8 @@ print(filtered_mtcars)</code></pre>
 ## Ford Pantera L  0  1    5    4
 ## Maserati Bora   0  1    5    8</code></pre>
 </div>
-<div id="exercise-2-working-with-the-iris-dataset" class="section level2">
-<h2>Exercise 2: Working with the <code>iris</code> dataset</h2>
+<div id="exercise-2-working-with-the-iris-dataset" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Exercise 2: Working with the <code>iris</code> dataset</h2>
 <p><strong>Objective:</strong> Filter the <code>iris</code> dataset for flowers of the species <code>setosa</code> where the sepal length (<code>Sepal.Length</code>) exceeds 5 cm.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(iris)</code></pre>
@@ -2936,8 +2936,8 @@ print(filtered_iris)</code></pre>
 ## 21         0.2  setosa
 ## 22         0.2  setosa</code></pre>
 </div>
-<div id="exercise-3-diving-into-the-diamonds-dataset-from-the-ggplot2-package" class="section level2">
-<h2>Exercise 3: Diving into the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
+<div id="exercise-3-diving-into-the-diamonds-dataset-from-the-ggplot2-package" class="section level2" number="1.3">
+<h2 number="1.3"><span class="header-section-number">1.3</span> Exercise 3: Diving into the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
 <p><strong>Objective:</strong> Filter the dataset for diamonds with a <code>cut</code> of “Premium” and a <code>carat</code> size between 1 and 2.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>library(ggplot2)
@@ -2963,8 +2963,8 @@ print(filtered_diamonds)</code></pre>
 ## # ℹ 5,438 more rows
 ## # ℹ 3 more variables: x &lt;dbl&gt;, y &lt;dbl&gt;, z &lt;dbl&gt;</code></pre>
 </div>
-<div id="exercise-4-exploring-the-airquality-dataset" class="section level2">
-<h2>Exercise 4: Exploring the <code>airquality</code> dataset</h2>
+<div id="exercise-4-exploring-the-airquality-dataset" class="section level2" number="1.4">
+<h2 number="1.4"><span class="header-section-number">1.4</span> Exercise 4: Exploring the <code>airquality</code> dataset</h2>
 <p><strong>Objective:</strong> Filter the data for days in June (<code>Month == 6</code>) where the ozone level (<code>Ozone</code>) exceeded 100 (ignoring NA values).</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(airquality)</code></pre>
@@ -2977,8 +2977,8 @@ print(filtered_airquality)</code></pre>
 ## [6] Day    
 ## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
 </div>
-<div id="exercise-5-investigating-the-chickweight-dataset" class="section level2">
-<h2>Exercise 5: Investigating the <code>ChickWeight</code> dataset</h2>
+<div id="exercise-5-investigating-the-chickweight-dataset" class="section level2" number="1.5">
+<h2 number="1.5"><span class="header-section-number">1.5</span> Exercise 5: Investigating the <code>ChickWeight</code> dataset</h2>
 <p><strong>Objective:</strong> Filter for records of chicks (<code>Chick</code>) number 1 to 5 (inclusive) and for times (<code>Time</code>) less than or equal to 10 days.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(ChickWeight)</code></pre>
@@ -3021,10 +3021,10 @@ print(filtered_chickweight)</code></pre>
 ## 30    106   10     5    1</code></pre>
 </div>
 </div>
-<div id="mutate" class="section level1">
-<h1>Mutate</h1>
-<div id="exercise-1-modifying-the-mtcars-dataset" class="section level2">
-<h2>Exercise 1: Modifying the <code>mtcars</code> dataset</h2>
+<div id="mutate" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Mutate</h1>
+<div id="exercise-1-modifying-the-mtcars-dataset" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Exercise 1: Modifying the <code>mtcars</code> dataset</h2>
 <p><strong>Objective:</strong> Add a column named <code>efficiency</code> that calculates miles-per-gallon (<code>mpg</code>) divided by the number of cylinders (<code>cyl</code>).</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(mtcars)</code></pre>
@@ -3135,8 +3135,8 @@ print(mutated_mtcars)</code></pre>
 ## Maserati Bora         1.875000
 ## Volvo 142E            5.350000</code></pre>
 </div>
-<div id="exercise-2-working-with-the-iris-dataset-1" class="section level2">
-<h2>Exercise 2: Working with the <code>iris</code> dataset</h2>
+<div id="exercise-2-working-with-the-iris-dataset-1" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Exercise 2: Working with the <code>iris</code> dataset</h2>
 <p><strong>Objective:</strong> Create a new column named <code>area</code> which multiplies sepal length (<code>Sepal.Length</code>) by sepal width (<code>Sepal.Width</code>).</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(iris)</code></pre>
@@ -3448,8 +3448,8 @@ print(mutated_iris)</code></pre>
 ## 149         2.3  virginica 21.08
 ## 150         1.8  virginica 17.70</code></pre>
 </div>
-<div id="exercise-3-enhancing-the-diamonds-dataset-from-the-ggplot2-package" class="section level2">
-<h2>Exercise 3: Enhancing the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
+<div id="exercise-3-enhancing-the-diamonds-dataset-from-the-ggplot2-package" class="section level2" number="2.3">
+<h2 number="2.3"><span class="header-section-number">2.3</span> Exercise 3: Enhancing the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
 <p><strong>Objective:</strong> Calculate the price per carat and name the new column <code>price_per_carat</code>.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>library(ggplot2)
@@ -3476,8 +3476,8 @@ print(mutated_diamonds)</code></pre>
 ## # ℹ 4 more variables: x &lt;dbl&gt;, y &lt;dbl&gt;,
 ## #   z &lt;dbl&gt;, price_per_carat &lt;dbl&gt;</code></pre>
 </div>
-<div id="exercise-4-adapting-the-airquality-dataset" class="section level2">
-<h2>Exercise 4: Adapting the <code>airquality</code> dataset</h2>
+<div id="exercise-4-adapting-the-airquality-dataset" class="section level2" number="2.4">
+<h2 number="2.4"><span class="header-section-number">2.4</span> Exercise 4: Adapting the <code>airquality</code> dataset</h2>
 <p><strong>Objective:</strong> Convert the temperature from Fahrenheit (<code>Temp</code>) to Celsius and name the new column <code>TempC</code>. The formula is <code>C = (F - 32) * 5/9</code>.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(airquality)</code></pre>
@@ -3641,8 +3641,8 @@ print(mutated_airquality)</code></pre>
 ## 152    18     131  8.0   76     9  29 24.44444
 ## 153    20     223 11.5   68     9  30 20.00000</code></pre>
 </div>
-<div id="exercise-5-adjusting-the-chickweight-dataset" class="section level2">
-<h2>Exercise 5: Adjusting the <code>ChickWeight</code> dataset</h2>
+<div id="exercise-5-adjusting-the-chickweight-dataset" class="section level2" number="2.5">
+<h2 number="2.5"><span class="header-section-number">2.5</span> Exercise 5: Adjusting the <code>ChickWeight</code> dataset</h2>
 <p><strong>Objective:</strong> Calculate the weight change by subtracting the minimum weight from the current weight for each chick. Name the new column <code>weight_change</code>.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(ChickWeight)</code></pre>
@@ -3669,10 +3669,10 @@ print(mutated_chickweight)</code></pre>
 ## # ℹ 568 more rows</code></pre>
 </div>
 </div>
-<div id="group-summary" class="section level1">
-<h1>Group summary</h1>
-<div id="exercise-1-summarizing-the-mtcars-dataset" class="section level2">
-<h2>Exercise 1: Summarizing the <code>mtcars</code> dataset</h2>
+<div id="group-summary" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Group summary</h1>
+<div id="exercise-1-summarizing-the-mtcars-dataset" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Exercise 1: Summarizing the <code>mtcars</code> dataset</h2>
 <p><strong>Objective:</strong> Group by the number of cylinders (<code>cyl</code>) and compute the average miles-per-gallon (<code>mpg</code>) for each group.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(mtcars)</code></pre>
@@ -3691,8 +3691,8 @@ print(mtcars_grouped1)</code></pre>
 ## 2     6    19.7
 ## 3     8    15.1</code></pre>
 </div>
-<div id="exercise-2-working-with-the-iris-dataset-2" class="section level2">
-<h2>Exercise 2: Working with the <code>iris</code> dataset</h2>
+<div id="exercise-2-working-with-the-iris-dataset-2" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Exercise 2: Working with the <code>iris</code> dataset</h2>
 <p><strong>Objective:</strong> Group by flower species (<code>Species</code>) and calculate the average sepal length (<code>Sepal.Length</code>) and sepal width (<code>Sepal.Width</code>) for each species.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(iris)</code></pre>
@@ -3712,8 +3712,8 @@ print(iris_grouped)</code></pre>
 ## 2 versicolor             5.94            2.77
 ## 3 virginica              6.59            2.97</code></pre>
 </div>
-<div id="exercise-3-analyzing-the-diamonds-dataset-from-the-ggplot2-package" class="section level2">
-<h2>Exercise 3: Analyzing the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
+<div id="exercise-3-analyzing-the-diamonds-dataset-from-the-ggplot2-package" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Exercise 3: Analyzing the <code>diamonds</code> dataset from the <code>ggplot2</code> package</h2>
 <p><strong>Objective:</strong> Group by <code>cut</code> and <code>color</code> and compute the median price for each combination.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>library(ggplot2)
@@ -3740,8 +3740,8 @@ print(diamonds_grouped)</code></pre>
 ## 10 Good  F            2647 
 ## # ℹ 25 more rows</code></pre>
 </div>
-<div id="exercise-4-delving-into-the-airquality-dataset" class="section level2">
-<h2>Exercise 4: Delving into the <code>airquality</code> dataset</h2>
+<div id="exercise-4-delving-into-the-airquality-dataset" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Exercise 4: Delving into the <code>airquality</code> dataset</h2>
 <p><strong>Objective:</strong> Group by month (<code>Month</code>) and compute the maximum temperature (<code>Temp</code>) and average ozone level (<code>Ozone</code>, omitting <code>NA</code> values) for each month.</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(airquality)</code></pre>
@@ -3763,8 +3763,8 @@ print(airquality_grouped)</code></pre>
 ## 4     8       97      60.0
 ## 5     9       93      31.4</code></pre>
 </div>
-<div id="exercise-5-insights-from-the-chickweight-dataset" class="section level2">
-<h2>Exercise 5: Insights from the <code>ChickWeight</code> dataset</h2>
+<div id="exercise-5-insights-from-the-chickweight-dataset" class="section level2" number="3.5">
+<h2 number="3.5"><span class="header-section-number">3.5</span> Exercise 5: Insights from the <code>ChickWeight</code> dataset</h2>
 <p><strong>Objective:</strong> Group by diet (<code>Diet</code>) and chick number (<code>Chick</code>). For each combination, compute the final weight (i.e., weight at the maximum time).</p>
 <p><strong>Load Dataset:</strong></p>
 <pre class="r fold-show"><code>data(ChickWeight)</code></pre>
@@ -3789,6 +3789,68 @@ print(chickweight_grouped)</code></pre>
 ##  9 1     17             142
 ## 10 1     19             157
 ## # ℹ 40 more rows</code></pre>
+</div>
+</div>
+<div id="use-all" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Use all</h1>
+<div id="exercise-1-calculate-average-mpg-by-cylinder" class="section level3" number="4.0.1">
+<h3 number="4.0.1"><span class="header-section-number">4.0.1</span> Exercise 1: Calculate Average MPG by Cylinder</h3>
+<p><strong>Dataset:</strong> <code>mtcars</code> from the <code>datasets</code> package<br />
+<strong>Functions to use:</strong> <code>filter()</code>, <code>mutate()</code>, <code>group_by()</code>, <code>summarize()</code></p>
+<p><strong>Task:</strong> Filter the dataset to cars with more than 100 horsepower. Then, for these cars, calculate the average miles per gallon (<code>mpg</code>) for each number of cylinders (<code>cyl</code>).</p>
+<p><strong>Load Dataset:</strong></p>
+<pre class="r fold-show"><code>library(datasets)
+data(mtcars)</code></pre>
+<p><strong>Solution:</strong></p>
+<pre class="r"><code>library(dplyr)
+
+mtcars %&gt;%
+  filter(hp &gt; 100) %&gt;%
+  group_by(cyl) %&gt;%
+  summarize(avg_mpg = mean(mpg))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["cyl"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["avg_mpg"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"25.90000"},{"1":"6","2":"19.74286"},{"1":"8","2":"15.10000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="exercise-2-adjusted-price-calculation" class="section level3" number="4.0.2">
+<h3 number="4.0.2"><span class="header-section-number">4.0.2</span> Exercise 2: Adjusted Price Calculation</h3>
+<p><strong>Dataset:</strong> <code>diamonds</code> from the <code>ggplot2</code> package<br />
+<strong>Functions to use:</strong> <code>filter()</code>, <code>mutate()</code>, <code>group_by()</code>, <code>summarize()</code></p>
+<p><strong>Task:</strong> Filter diamonds that are “Ideal” in <code>cut</code> and have <code>carat</code> less than 1. Calculate an adjusted price which is 90% of the original <code>price</code>. Finally, calculate the average adjusted price for each clarity level.</p>
+<p><strong>Load Dataset:</strong></p>
+<pre class="r fold-show"><code>library(ggplot2)
+data(diamonds)</code></pre>
+<p><strong>Solution:</strong></p>
+<pre class="r"><code>diamonds %&gt;%
+  filter(cut == &quot;Ideal&quot;, carat &lt; 1) %&gt;%
+  mutate(adjusted_price = price * 0.9) %&gt;%
+  group_by(clarity) %&gt;%
+  summarize(avg_adjusted_price = mean(adjusted_price))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["clarity"],"name":[1],"type":["ord"],"align":["right"]},{"label":["avg_adjusted_price"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"I1","2":"1433.017"},{"1":"SI2","2":"1633.691"},{"1":"SI1","2":"1496.900"},{"1":"VS2","2":"1320.578"},{"1":"VS1","2":"1437.798"},{"1":"VVS2","2":"1357.072"},{"1":"VVS1","2":"1308.522"},{"1":"IF","2":"1183.897"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="exercise-3-compute-average-dispersion-by-gear" class="section level3" number="4.0.3">
+<h3 number="4.0.3"><span class="header-section-number">4.0.3</span> Exercise 3: Compute Average Dispersion by Gear</h3>
+<p><strong>Dataset:</strong> <code>mtcars</code><br />
+<strong>Functions to use:</strong> <code>filter()</code>, <code>mutate()</code>, <code>group_by()</code>, <code>summarize()</code></p>
+<p><strong>Task:</strong> Filter cars with 4 or 6 cylinders. Create a new column named <code>disp_per_cyl</code> that calculates the dispersion (<code>disp</code>) per cylinder (<code>cyl</code>). Then compute the average <code>disp_per_cyl</code> for each gear (<code>gear</code>) level.</p>
+<p><strong>Solution:</strong></p>
+<pre class="r"><code>mtcars %&gt;%
+  filter(cyl %in% c(4, 6)) %&gt;%
+  mutate(disp_per_cyl = disp / cyl) %&gt;%
+  group_by(gear) %&gt;%
+  summarize(avg_disp_per_cyl = mean(disp_per_cyl))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["gear"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["avg_disp_per_cyl"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"36.84167"},{"1":"4","2":"26.20417"},{"1":"5","2":"26.00556"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>!</p>
 </div>
 </div>
 
@@ -3846,7 +3908,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
