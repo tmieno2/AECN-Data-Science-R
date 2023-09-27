@@ -2,6 +2,9 @@
 output:
   html_document:
     code_folding: "hide"
+    toc: true
+    toc_float: true
+    df_print: paged
 ---
 
 # Exercise: Research Workflow with mtcars Dataset
@@ -55,7 +58,7 @@ head(filtered_mtcars)
 
 **Required Functions:** 
 - `ggplot()`, `aes()`, `geom_point()`, and `facet_wrap()` from the `ggplot2` package.
-
+jv
 **Solution Code 3:**
 ```{r}
 library(ggplot2)

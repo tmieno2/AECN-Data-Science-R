@@ -1,0 +1,12 @@
+All at once
+```{r}
+list.files("Exercises") %>%
+  .[stringr::str_detect(., "rmd")] %>%
+  .[!stringr::str_detect(., "knit_exercises.rmd")] %>%
+  paste0("Exercises/", .) %>%
+  lapply(rmarkdown::render)
+```
+
+```{r}
+rmarkdown::render("Exercises/basi_objects_creation_extraction.rmd")
+```

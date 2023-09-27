@@ -2,11 +2,14 @@
 output:
   html_document:
     code_folding: "hide"
+    toc: true
+    toc_float: true
+    df_print: paged
 ---
 
 # Filter
 
-### Exercise 1: Filtering the `mtcars` dataset
+## Exercise 1: Filtering the `mtcars` dataset
 
 **Objective:** Filter the `mtcars` dataset for cars that have an automatic transmission (`am == 1`) and weigh more than 3,000 lbs (`wt > 3`).
 
@@ -26,7 +29,7 @@ filtered_mtcars <- mtcars %>%
 print(filtered_mtcars)
 ```
 
-### Exercise 2: Working with the `iris` dataset
+## Exercise 2: Working with the `iris` dataset
 
 **Objective:** Filter the `iris` dataset for flowers of the species `setosa` where the sepal length (`Sepal.Length`) exceeds 5 cm.
 
@@ -44,7 +47,7 @@ filtered_iris <- iris %>%
 print(filtered_iris)
 ```
 
-### Exercise 3: Diving into the `diamonds` dataset from the `ggplot2` package
+## Exercise 3: Diving into the `diamonds` dataset from the `ggplot2` package
 
 **Objective:** Filter the dataset for diamonds with a `cut` of "Premium" and a `carat` size between 1 and 2.
 
@@ -63,7 +66,7 @@ filtered_diamonds <- diamonds %>%
 print(filtered_diamonds)
 ```
 
-### Exercise 4: Exploring the `airquality` dataset
+## Exercise 4: Exploring the `airquality` dataset
 
 **Objective:** Filter the data for days in June (`Month == 6`) where the ozone level (`Ozone`) exceeded 100 (ignoring NA values).
 
@@ -81,7 +84,7 @@ filtered_airquality <- airquality %>%
 print(filtered_airquality)
 ```
 
-### Exercise 5: Investigating the `ChickWeight` dataset
+## Exercise 5: Investigating the `ChickWeight` dataset
 
 **Objective:** Filter for records of chicks (`Chick`) number 1 to 5 (inclusive) and for times (`Time`) less than or equal to 10 days.
 
