@@ -8,5 +8,5 @@ list.files("Exercises") %>%
 ```
 
 ```{r}
-rmarkdown::render("Exercises/basi_objects_creation_extraction.rmd")
+rmarkdown::render("Exercises/basic_objects_creation_extraction.rmd")
 ```
