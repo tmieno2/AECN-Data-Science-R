@@ -1,0 +1,301 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+---
+
+# Filter
+
+### Exercise 1: Filtering the `mtcars` dataset
+
+**Objective:** Filter the `mtcars` dataset for cars that have an automatic transmission (`am == 1`) and weigh more than 3,000 lbs (`wt > 3`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(dplyr)
+
+filtered_mtcars <- mtcars %>%
+  filter(am == 1 & wt > 3)
+
+print(filtered_mtcars)
+```
+
+### Exercise 2: Working with the `iris` dataset
+
+**Objective:** Filter the `iris` dataset for flowers of the species `setosa` where the sepal length (`Sepal.Length`) exceeds 5 cm.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(iris)
+```
+
+**Solution Code:**
+```{r}
+filtered_iris <- iris %>%
+  filter(Species == "setosa" & Sepal.Length > 5)
+
+print(filtered_iris)
+```
+
+### Exercise 3: Diving into the `diamonds` dataset from the `ggplot2` package
+
+**Objective:** Filter the dataset for diamonds with a `cut` of "Premium" and a `carat` size between 1 and 2.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+filtered_diamonds <- diamonds %>%
+  filter(cut == "Premium" & carat >= 1 & carat <= 2)
+
+print(filtered_diamonds)
+```
+
+### Exercise 4: Exploring the `airquality` dataset
+
+**Objective:** Filter the data for days in June (`Month == 6`) where the ozone level (`Ozone`) exceeded 100 (ignoring NA values).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(airquality)
+```
+
+**Solution Code:**
+```{r}
+filtered_airquality <- airquality %>%
+  filter(Month == 6 & Ozone > 100, !is.na(Ozone))
+
+print(filtered_airquality)
+```
+
+### Exercise 5: Investigating the `ChickWeight` dataset
+
+**Objective:** Filter for records of chicks (`Chick`) number 1 to 5 (inclusive) and for times (`Time`) less than or equal to 10 days.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(ChickWeight)
+```
+
+**Solution Code:**
+```{r}
+filtered_chickweight <- ChickWeight %>%
+  filter(Chick %in% c(1:5) & Time <= 10)
+
+print(filtered_chickweight)
+```
+
+# Mutate
+
+## Exercise 1: Modifying the `mtcars` dataset
+
+**Objective:** Add a column named `efficiency` that calculates miles-per-gallon (`mpg`) divided by the number of cylinders (`cyl`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(dplyr)
+
+mutated_mtcars <- mtcars %>%
+  mutate(efficiency = mpg/cyl)
+
+print(mutated_mtcars)
+```
+
+## Exercise 2: Working with the `iris` dataset
+
+**Objective:** Create a new column named `area` which multiplies sepal length (`Sepal.Length`) by sepal width (`Sepal.Width`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(iris)
+```
+
+**Solution Code:**
+```{r}
+mutated_iris <- iris %>%
+  mutate(area = Sepal.Length * Sepal.Width)
+
+print(mutated_iris)
+```
+
+## Exercise 3: Enhancing the `diamonds` dataset from the `ggplot2` package
+
+**Objective:** Calculate the price per carat and name the new column `price_per_carat`.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+mutated_diamonds <- diamonds %>%
+  mutate(price_per_carat = price/carat)
+
+print(mutated_diamonds)
+```
+
+## Exercise 4: Adapting the `airquality` dataset
+
+**Objective:** Convert the temperature from Fahrenheit (`Temp`) to Celsius and name the new column `TempC`. The formula is `C = (F - 32) * 5/9`.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(airquality)
+```
+
+**Solution Code:**
+```{r}
+mutated_airquality <- airquality %>%
+  mutate(TempC = (Temp - 32) * 5/9)
+
+print(mutated_airquality)
+```
+
+## Exercise 5: Adjusting the `ChickWeight` dataset
+
+**Objective:** Calculate the weight change by subtracting the minimum weight from the current weight for each chick. Name the new column `weight_change`.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(ChickWeight)
+```
+
+**Solution Code:**
+```{r}
+mutated_chickweight <- ChickWeight %>%
+  group_by(Chick) %>%
+  mutate(weight_change = weight - min(weight))
+
+print(mutated_chickweight)
+```
+
+# Group summary
+
+## Exercise 1: Summarizing the `mtcars` dataset
+
+**Objective:** Group by the number of cylinders (`cyl`) and compute the average miles-per-gallon (`mpg`) for each group.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(dplyr)
+
+mtcars_grouped1 <- mtcars %>%
+  group_by(cyl) %>%
+  summarize(avg_mpg = mean(mpg))
+
+print(mtcars_grouped1)
+```
+
+## Exercise 2: Working with the `iris` dataset
+
+**Objective:** Group by flower species (`Species`) and calculate the average sepal length (`Sepal.Length`) and sepal width (`Sepal.Width`) for each species.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(iris)
+```
+
+**Solution Code:**
+```{r}
+iris_grouped <- iris %>%
+  group_by(Species) %>%
+  summarize(
+    avg_sepal_length = mean(Sepal.Length),
+    avg_sepal_width = mean(Sepal.Width)
+  )
+
+print(iris_grouped)
+```
+
+## Exercise 3: Analyzing the `diamonds` dataset from the `ggplot2` package
+
+**Objective:** Group by `cut` and `color` and compute the median price for each combination.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+diamonds_grouped <- diamonds %>%
+  group_by(cut, color) %>%
+  summarize(median_price = median(price))
+
+print(diamonds_grouped)
+```
+
+## Exercise 4: Delving into the `airquality` dataset
+
+**Objective:** Group by month (`Month`) and compute the maximum temperature (`Temp`) and average ozone level (`Ozone`, omitting `NA` values) for each month.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+
+data(airquality)
+```
+
+**Solution Code:**
+```{r}
+airquality_grouped <- airquality %>%
+  group_by(Month) %>%
+  summarize(
+    max_temp = max(Temp),
+    avg_ozone = mean(Ozone, na.rm = TRUE)
+  )
+
+print(airquality_grouped)
+```
+
+## Exercise 5: Insights from the `ChickWeight` dataset
+
+**Objective:** Group by diet (`Diet`) and chick number (`Chick`). For each combination, compute the final weight (i.e., weight at the maximum time).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(ChickWeight)
+```
+
+**Solution Code:**
+```{r}
+chickweight_grouped <- ChickWeight %>%
+  group_by(Diet, Chick) %>%
+  summarize(final_weight = weight[which.max(Time)])
+
+print(chickweight_grouped)
+```
