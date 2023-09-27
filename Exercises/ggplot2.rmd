@@ -1,0 +1,354 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+---
+## Basics
+
+### Exercise 1: Visualizing the `mtcars` dataset
+
+**Objective:** Create a scatter plot of miles-per-gallon (`mpg`) against horsepower (`hp`), colored by the number of cylinders (`cyl`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(ggplot2)
+
+plot1 <- ggplot(mtcars, aes(x = hp, y = mpg, color = as.factor(cyl))) +
+  geom_point() +
+  labs(title = "MPG vs Horsepower", x = "Horsepower", y = "Miles-per-Gallon", color = "Cylinders")
+
+print(plot1)
+```
+
+### Exercise 2: Plotting the `iris` dataset
+
+**Objective:** Create a boxplot showing the distribution of petal lengths (`Petal.Length`) for each species (`Species`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(iris)
+```
+
+**Solution Code:**
+```{r}
+plot2 <- ggplot(iris, aes(x = Species, y = Petal.Length, fill = Species)) +
+  geom_boxplot() +
+  labs(title = "Petal Length Distribution by Species", x = "Species", y = "Petal Length")
+
+print(plot2)
+```
+
+### Exercise 3: Diving into the `diamonds` dataset
+
+**Objective:** Create a histogram of diamond prices (`price`), filled by diamond cut (`cut`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+plot3 <- ggplot(diamonds, aes(x = price, fill = cut)) +
+  geom_histogram(position="identity", alpha=0.6, bins = 50) +
+  labs(title = "Distribution of Diamond Prices", x = "Price", y = "Count")
+
+print(plot3)
+```
+
+### Exercise 4: Illustrating the `airquality` dataset
+
+**Objective:** Plot the average ozone level (`Ozone`) for each month (`Month`), ignoring missing values. Use a bar chart.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(airquality)
+```
+
+**Solution Code:**
+```{r}
+library(dplyr)
+
+aq_avg <- airquality %>%
+  group_by(Month) %>%
+  summarize(average_ozone = mean(Ozone, na.rm = TRUE))
+
+plot4 <- ggplot(aq_avg, aes(x = as.factor(Month), y = average_ozone, fill = as.factor(Month))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Ozone Level by Month", x = "Month", y = "Average Ozone")
+
+print(plot4)
+```
+
+### Exercise 5: Inspecting the `ChickWeight` dataset
+
+**Objective:** Create a line plot that shows the progression of weight (`weight`) over time (`Time`) for chicks fed Diet 1.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(ChickWeight)
+```
+
+**Solution Code:**
+```{r}
+plot5 <- ggplot(ChickWeight %>% filter(Diet == 1), aes(x = Time, y = weight, group = Chick)) +
+  geom_line() +
+  labs(title = "Weight Progression over Time for Diet 1", x = "Time (days)", y = "Weight (grams)")
+
+print(plot5)
+```
+
+These exercises are designed to give you practice across a range of different plot types and familiarize you with some of the capabilities of `ggplot2`.
+
+## Faceted figures
+
+Certainly! Here are some exercises involving the creation of faceted figures using the `ggplot2` package in R:
+
+### Exercise 1: Visualizing the `mtcars` dataset
+
+**Objective:** Create a scatter plot of miles-per-gallon (`mpg`) against weight (`wt`), colored by the number of gears (`gear`). Facet the plot by the number of cylinders (`cyl`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(ggplot2)
+
+plot1 <- ggplot(mtcars, aes(x = wt, y = mpg, color = as.factor(gear))) +
+  geom_point() +
+  labs(title = "MPG vs Weight", x = "Weight", y = "Miles-per-Gallon", color = "Gears") +
+  facet_wrap(~ cyl)
+
+print(plot1)
+```
+
+### Exercise 2: Working with the `diamonds` dataset
+
+**Objective:** Create a boxplot of diamond prices (`price`) for each diamond cut (`cut`). Facet the plot by diamond color (`color`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+plot2 <- ggplot(diamonds, aes(x = cut, y = price, fill = cut)) +
+  geom_boxplot() +
+  labs(title = "Diamond Prices by Cut", x = "Cut", y = "Price") +
+  facet_wrap(~ color)
+
+print(plot2)
+```
+
+### Exercise 3: Analyzing the `ChickWeight` dataset
+
+**Objective:** Plot the progression of weight (`weight`) over time (`Time`) for each chick using a line plot. Facet the visualization by the diet type (`Diet`).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(ChickWeight)
+```
+
+**Solution Code:**
+```{r}
+plot3 <- ggplot(ChickWeight, aes(x = Time, y = weight, group = Chick)) +
+  geom_line() +
+  labs(title = "Chick Weight Progression over Time", x = "Time (days)", y = "Weight (grams)") +
+  facet_wrap(~ Diet)
+
+print(plot3)
+```
+
+### Exercise 4: Investigating the `mpg` dataset from the `ggplot2` package
+
+**Objective:** Create a scatter plot of highway miles-per-gallon (`hwy`) against engine displacement (`displ`). Facet the plot by the drive type (`drv`), with different panels for each type of drive (front-wheel drive, rear-wheel drive, and four-wheel drive).
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(mpg)
+```
+
+**Solution Code:**
+```{r}
+plot4 <- ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point(aes(color = class)) +
+  labs(title = "Highway MPG vs Engine Displacement", x = "Engine Displacement", y = "Highway MPG", color = "Car Class") +
+  facet_wrap(~ drv)
+
+print(plot4)
+```
+
+### Exercise 5: Exploring the `InsectSprays` dataset
+
+**Objective:** Plot a boxplot showing the count of insects (`count`) for each spray type (`spray`). Facet the plot by spray type.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(InsectSprays)
+```
+
+**Solution Code:**
+```{r}
+plot5 <- ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
+  geom_boxplot() +
+  labs(title = "Insect Counts by Spray Type", x = "Spray Type", y = "Insect Count") +
+  facet_wrap(~ spray)
+
+print(plot5)
+```
+
+These exercises should give you ample experience in creating faceted figures in `ggplot2`, allowing you to visualize multiple aspects of datasets simultaneously.
+
+## More exercises with emphasis on adjusting figure appearence
+
+### Exercise 1: Colorful `mtcars` Scatter Plot
+
+**Objective:** 
+- Create a scatter plot of miles-per-gallon (`mpg`) against horsepower (`hp`).
+- Use a color scheme that displays a gradient based on `hp`.
+- Adjust the title text size and color.
+
+**Required Functions:** 
+- `ggplot`, `geom_point`, `scale_color_gradient`, `labs`, `theme`, `element_text`
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(mtcars)
+```
+
+**Solution Code:**
+```{r}
+library(ggplot2)
+
+plot1 <- ggplot(mtcars, aes(x = hp, y = mpg, color = hp)) +
+  geom_point() +
+  scale_color_gradient(low = "blue", high = "red") +
+  labs(title = "MPG vs Horsepower") +
+  theme(plot.title = element_text(size = 24, color = "darkgreen"))
+
+print(plot1)
+```
+
+### Exercise 2: Stylish `iris` Boxplot
+
+**Objective:** 
+- Generate a boxplot of sepal lengths (`Sepal.Length`) for each species (`Species`).
+- Choose custom colors for the boxplot fills.
+- Remove the legend entirely.
+
+**Required Functions:** 
+- `ggplot`, `geom_boxplot`, `scale_fill_manual`, `labs`, `theme`
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(iris)
+```
+
+**Solution Code:**
+```{r}
+plot2 <- ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("Setosa" = "purple", "Versicolor" = "orange", "Virginica" = "green")) +
+  theme(legend.position = "none")
+
+print(plot2)
+```
+
+### Exercise 3: Aesthetic `diamonds` Histogram
+
+**Objective:** 
+- Design a histogram for diamond prices (`price`).
+- Set bin colors to a specified hue, and the fill to another.
+- Increase the x-axis and y-axis label text size.
+
+**Required Functions:** 
+- `ggplot`, `geom_histogram`, `labs`, `theme`, `element_text`
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(diamonds)
+```
+
+**Solution Code:**
+```{r}
+plot3 <- ggplot(diamonds, aes(x = price)) +
+  geom_histogram(color = "navy", fill = "lightpink", bins = 30) +
+  theme(axis.title.x = element_text(size = 18),
+        axis.title.y = element_text(size = 18))
+
+print(plot3)
+```
+
+### Exercise 4: Shaped `mpg` Scatter Plot
+
+**Objective:** 
+- Produce a scatter plot of highway miles-per-gallon (`hwy`) against engine displacement (`displ`).
+- Modify the point shape based on drive type (`drv`).
+- Rename the legend title and entries.
+
+**Required Functions:** 
+- `ggplot`, `geom_point`, `scale_shape_manual`, `labs`
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(ggplot2)
+data(mpg)
+```
+
+**Solution Code:**
+```{r}
+plot4 <- ggplot(mpg, aes(x = displ, y = hwy, shape = drv)) +
+  geom_point(aes(color = class), size = 3) +
+  scale_shape_manual(name = "Drive Type",
+                     values = c("f" = 16, "r" = 17, "4" = 18),
+                     labels = c("Front", "Rear", "Four-wheel")) 
+
+print(plot4)
+```
+
+### Exercise 5: Distinguished `ToothGrowth` Bar Chart
+
+**Objective:** 
+- Create a bar chart showing average tooth growth (`len`) by supplement type (`supp`).
+- Change bar fill color based on dose (`dose`) using a bespoke palette.
+- Position the legend at the bottom of the figure.
+
+**Required Functions:** 
+- `ggplot`, `geom_bar`, `scale_fill_manual`, `labs`, `theme`, `dplyr::group_by`, `dplyr::summarize`
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(ToothGrowth)
+```
+
+**Solution Code:**
+```{r}
+library(dplyr)
+library(ggplot2)
+
+tooth_avg <- ToothGrowth %>%
+  group_by(supp, dose) %>%
+  summarize(average_len = mean(len))
+
+plot5 <- ggplot(tooth_avg, aes(x = supp, y = average_len, fill = as.factor(dose))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c("0.5" = "lightblue", "1.0" = "pink", "2.0" = "yellow")) +
+  theme(legend.position = "bottom")
+
+print(plot5)
+```
+
+With these exercises, learners will gain hands-on experience customizing the visual elements of their `ggplot2` plots.

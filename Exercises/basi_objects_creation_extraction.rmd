@@ -1,0 +1,118 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+---
+
+# Exercise 1: Vector Creation & Subsetting
+
+**Objective 1.1: Creation** 
+- Construct a numeric vector that contains the numbers from 5 to 15.
+
+**Required Functions:** 
+- `c()`
+
+**Solution Code 1.1:**
+```{r}
+numeric_vector <- c(5:15)
+print(numeric_vector)
+```
+
+**Objective 1.2: Subsetting** 
+- Extract the 2nd to 5th elements of the vector.
+
+**Required Functions:** 
+- `[]`
+
+**Solution Code 1.2:**
+```{r}
+subset_vector <- numeric_vector[2:5]
+print(subset_vector)
+```
+
+# Exercise 2: Matrix Construction & Subsetting
+
+**Objective 2.1: Construction** 
+- Build a 4x4 matrix using the numbers from 1 to 16.
+- Set the column names to "W", "X", "Y", and "Z".
+
+**Required Functions:** 
+- `matrix()`, `colnames()`
+
+**Solution Code 2.1:**
+```{r}
+my_matrix <- matrix(1:16, nrow = 4)
+colnames(my_matrix) <- c("W", "X", "Y", "Z")
+print(my_matrix)
+```
+
+**Objective 2.2: Subsetting** 
+- Extract the second and third rows of the matrix.
+
+**Required Functions:** 
+- `[]`
+
+**Solution Code 2.2:**
+```{r}
+subset_matrix <- my_matrix[2:3, ]
+print(subset_matrix)
+```
+
+# Exercise 3: List Making & Subsetting
+
+**Objective 3.1: Making** 
+- Create a list with three elements: a numeric vector of two numbers (10, 20), a character string "apple", and a boolean value TRUE.
+
+**Required Functions:** 
+- `list()`
+
+**Solution Code 3.1:**
+```{r}
+my_list <- list(numbers = c(10, 20), fruit = "apple", check = TRUE)
+print(my_list)
+```
+
+**Objective 3.2: Subsetting** 
+- Extract the "fruit" element from the list.
+
+**Required Functions:** 
+- `$` or `[]`
+
+**Solution Code 3.2:**
+```{r}
+fruit_element <- my_list$fruit
+# or fruit_element <- my_list[["fruit"]]
+print(fruit_element)
+```
+
+# Exercise 4: Data Frame Crafting & Subsetting
+
+**Objective 4.1: Crafting** 
+- Produce a data frame with three columns: `ID` (11 to 15), `Name` (Anna, Ben, Cathy, Dan, Ella), and `Score` (87, 92, 78, 95, 83).
+
+**Required Functions:** 
+- `data.frame()`
+
+**Solution Code 4.1:**
+```{r}
+ID <- 11:15
+Name <- c("Anna", "Ben", "Cathy", "Dan", "Ella")
+Score <- c(87, 92, 78, 95, 83)
+
+my_df <- data.frame(ID, Name, Score)
+print(my_df)
+```
+
+**Objective 4.2: Subsetting** 
+- Extract the rows where `Score` is greater than 90.
+
+**Required Functions:** 
+- `[]`
+
+**Solution Code 4.2:**
+```{r}
+high_scores <- my_df[my_df$Score > 90, ]
+print(high_scores)
+```
+
+With these exercises, learners can practice both the creation and extraction (subsetting) of elements within the fundamental R data structures.

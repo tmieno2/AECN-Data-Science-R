@@ -20,7 +20,7 @@ opts_chunk$set(
   warning = FALSE
   ) 
 
-opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
+# opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
 # setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
 
 ```
