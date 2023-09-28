@@ -1,0 +1,63 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: paged
+---
+
+# Exercise 1: Convert from Wide to Long Format
+
+**Dataset:** `airquality` from the `datasets` package  
+**Functions to use:** `pivot_longer()`
+
+**Task:** Convert the `airquality` dataset from wide format to long format such that the `Ozone`, `Solar.R`, `Wind`, and `Temp` columns are transformed into two columns: "variable" and "value".
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+library(datasets)
+data(airquality)
+```
+
+**Solution:**
+```{r}
+library(tidyr)
+
+airquality_long <- airquality %>%
+  pivot_longer(cols = c(Ozone, Solar.R, Wind, Temp), names_to = "variable", values_to = "value")
+```
+
+# Exercise 2: Convert from Long to Wide Format
+
+**Dataset:** The long format data from the solution of Exercise 1  
+**Functions to use:** `pivot_wider()`
+
+**Task:** Convert the `airquality_long` dataset from long format back to its original wide format.
+
+**Solution:**
+```{r}
+airquality_wide <- airquality_long %>%
+  pivot_wider(names_from = variable, values_from = value)
+```
+
+# Exercise 3: Reshape Multiple Value Columns
+
+**Dataset:** `USArrests` from the `datasets` package  
+**Functions to use:** `pivot_longer()`
+
+**Task:** The dataset `USArrests` contains crime data for different US states. Convert it to a long format where you have columns: "State", "Metric", and "Value". The "Metric" column should have entries like "Murder", "Assault", "UrbanPop", and "Rape".
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(USArrests)
+```
+
+**Solution:**
+```{r}
+USArrests_long <- USArrests %>%
+  pivot_longer(cols = c(Murder, Assault, UrbanPop, Rape), names_to = "Metric", values_to = "Value")
+```
+

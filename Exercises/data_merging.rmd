@@ -1,0 +1,169 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: paged
+---
+
+# Load Required Packages:
+```{r}
+library(dplyr)
+library(ggplot2) # For some datasets
+```
+
+# Merging with a single key
+
+## Exercise 1: Joining Economics Data
+
+**Datasets:** `economics` from the `ggplot2` package and a fictitious dataset for financial events.
+
+**Task:** Merge the `economics` dataset with a fictitious dataset that provides a financial event for specific dates. Join these datasets using `left_join` based on `date`.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(economics)
+
+# Creating a fictitious dataset of financial events
+financial_events <- tibble(
+  date = as.Date(c("1970-01-01", "1980-01-01", "1990-01-01", "2000-01-01")),
+  event = c("Event A", "Event B", "Event C", "Event D")
+)
+```
+
+**Solution:**
+```{r}
+economics_with_events <- left_join(economics, financial_events, by = "date")
+```
+
+## Exercise 2: Joining Chick Weight with Feed Type
+
+**Datasets:** `chickwts` from the `datasets` package.
+
+**Task:** The `chickwts` dataset contains the weight of chicks alongside feed type. Create a fictitious dataset that provides pricing information for each feed type. Join these datasets based on the `feed` type.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(chickwts)
+
+# Creating a fictitious dataset for feed pricing
+feed_prices <- tibble(
+  feed = unique(chickwts$feed),
+  price_per_kg = runif(length(unique(chickwts$feed)), 10, 50)
+)
+```
+
+**Solution:**
+```{r}
+chicks_with_prices <- left_join(chickwts, feed_prices, by = "feed")
+```
+
+## Exercise 3: Joining Plant Growth Data
+
+**Datasets:** `PlantGrowth` from the `datasets` package.
+
+**Task:** The `PlantGrowth` dataset provides information about the weight of plants under different treatment conditions. Create a fictitious dataset that assigns a scientific team responsible for each treatment type. Merge these datasets based on the `group` column.
+
+**Load Dataset:**
+```{r, class.source = 'fold-show'}
+data(PlantGrowth)
+
+# Creating a fictitious dataset for scientific teams
+teams <- tibble(
+  group = unique(PlantGrowth$group),
+  team = c("Team Alpha", "Team Beta", "Team Gamma")
+)
+```
+
+**Solution:**
+```{r}
+plants_with_teams <- left_join(PlantGrowth, teams, by = "group")
+```
+
+# Merging with multiple keys
+
+## Exercise 1: Joining Students with Courses by StudentID and Semester
+
+**Datasets:** Two fictitious datasets: one containing student enrollment details and another containing their grades.
+
+**Task:** Join the `enrollment` dataset with the `grades` dataset using `student_id` and `semester` as the key variables.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+enrollment <- tibble(
+  student_id = c(101, 102, 103, 101),
+  semester = c("Fall", "Fall", "Spring", "Spring"),
+  course_code = c("ENG101", "MAT101", "SCI101", "ENG101")
+)
+
+grades <- tibble(
+  student_id = c(101, 102, 103, 101),
+  semester = c("Fall", "Fall", "Spring", "Spring"),
+  course_code = c("ENG101", "MAT101", "SCI101", "MAT101"),
+  grade = c("A", "B+", "A-", "B")
+)
+```
+
+**Solution:**
+```{r}
+student_grades <- left_join(enrollment, grades, by = c("student_id", "semester", "course_code"))
+```
+
+## Exercise 2: Joining Employees with Project Assignments by Department and Role
+
+**Datasets:** Two fictitious datasets: one listing employee details and another detailing their project assignments.
+
+**Task:** Merge the `employees` dataset with the `projects` dataset using both `department` and `role` as the key variables.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+employees <- tibble(
+  emp_id = c(1, 2, 3, 4),
+  name = c("Alice", "Bob", "Charlie", "David"),
+  department = c("IT", "HR", "IT", "Finance"),
+  role = c("Developer", "Recruiter", "Manager", "Analyst")
+)
+
+projects <- tibble(
+  project_id = c("P1", "P2", "P3", "P4"),
+  department = c("IT", "HR", "IT", "Finance"),
+  role = c("Developer", "Recruiter", "Manager", "Manager"),
+  project_name = c("App Dev", "Hiring Campaign", "IT Strategy", "Budget Planning")
+)
+```
+
+**Solution:**
+```{r}
+employee_projects <- left_join(employees, projects, by = c("department", "role"))
+```
+
+## Exercise 3: Joining Store Transactions with Product Pricing by Date and Product Code
+
+**Datasets:** Two fictitious datasets: one containing transaction records and another with product pricing.
+
+**Task:** Join the `transactions` dataset with the `pricing` dataset using both `transaction_date` and `product_code` as the key variables.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+transactions <- tibble(
+  transaction_id = 1:4,
+  transaction_date = as.Date(c("2023-01-01", "2023-01-02", "2023-01-01", "2023-01-03")),
+  product_code = c("X001", "X002", "X001", "X003")
+)
+
+pricing <- tibble(
+  price_date = as.Date(c("2023-01-01", "2023-01-02", "2023-01-01", "2023-01-03")),
+  product_code = c("X001", "X002", "X003", "X003"),
+  price = c(100, 150, 90, 95)
+)
+```
+
+**Solution:**
+```{r}
+transaction_pricing <- left_join(transactions, pricing, by = c("transaction_date" = "price_date", "product_code"))
+```
+
+These exercises emphasize the use of `left_join` on multiple key variables and should offer comprehensive practice for students.

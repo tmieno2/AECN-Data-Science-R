@@ -561,7 +561,7 @@ Use `lapply()` to cube each element of the sequence of numbers that starts from 
 
 .panel[.panel-name[Exercise 2]
 
-Define a function that takes a nitrogen rate as an argument and calculate the estimated yield based on the following equation:
+Define a function that takes a nitrogen rate and corn price as arguments and calculate revenue. Yield can be estimated using the following equation:
 
 $$
 \mbox{corn yield} = 120 + 25 \times log(\mbox{nitrogen rate})

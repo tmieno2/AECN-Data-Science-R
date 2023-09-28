@@ -62,7 +62,7 @@ data(diamonds)
 **Solution Code:**
 ```{r}
 plot3 <- ggplot(diamonds, aes(x = price, fill = cut)) +
-  geom_histogram(position="identity", alpha=0.6, bins = 50) +
+  geom_histogram(position = "identity", alpha = 0.6, bins = 50) +
   labs(title = "Distribution of Diamond Prices", x = "Price", y = "Count")
 
 print(plot3)
@@ -132,7 +132,7 @@ library(ggplot2)
 plot1 <- ggplot(mtcars, aes(x = wt, y = mpg, color = as.factor(gear))) +
   geom_point() +
   labs(title = "MPG vs Weight", x = "Weight", y = "Miles-per-Gallon", color = "Gears") +
-  facet_wrap(~ cyl)
+  facet_wrap(~cyl)
 
 print(plot1)
 ```
@@ -152,7 +152,7 @@ data(diamonds)
 plot2 <- ggplot(diamonds, aes(x = cut, y = price, fill = cut)) +
   geom_boxplot() +
   labs(title = "Diamond Prices by Cut", x = "Cut", y = "Price") +
-  facet_wrap(~ color)
+  facet_wrap(~color)
 
 print(plot2)
 ```
@@ -171,7 +171,7 @@ data(ChickWeight)
 plot3 <- ggplot(ChickWeight, aes(x = Time, y = weight, group = Chick)) +
   geom_line() +
   labs(title = "Chick Weight Progression over Time", x = "Time (days)", y = "Weight (grams)") +
-  facet_wrap(~ Diet)
+  facet_wrap(~Diet)
 
 print(plot3)
 ```
@@ -191,7 +191,7 @@ data(mpg)
 plot4 <- ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_point(aes(color = class)) +
   labs(title = "Highway MPG vs Engine Displacement", x = "Engine Displacement", y = "Highway MPG", color = "Car Class") +
-  facet_wrap(~ drv)
+  facet_wrap(~drv)
 
 print(plot4)
 ```
@@ -210,7 +210,7 @@ data(InsectSprays)
 plot5 <- ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
   geom_boxplot() +
   labs(title = "Insect Counts by Spray Type", x = "Spray Type", y = "Insect Count") +
-  facet_wrap(~ spray)
+  facet_wrap(~spray)
 
 print(plot5)
 ```
@@ -292,8 +292,10 @@ data(diamonds)
 ```{r}
 plot3 <- ggplot(diamonds, aes(x = price)) +
   geom_histogram(color = "navy", fill = "lightpink", bins = 30) +
-  theme(axis.title.x = element_text(size = 18),
-        axis.title.y = element_text(size = 18))
+  theme(
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18)
+  )
 
 print(plot3)
 ```
@@ -318,9 +320,11 @@ data(mpg)
 ```{r}
 plot4 <- ggplot(mpg, aes(x = displ, y = hwy, shape = drv)) +
   geom_point(aes(color = class), size = 3) +
-  scale_shape_manual(name = "Drive Type",
-                     values = c("f" = 16, "r" = 17, "4" = 18),
-                     labels = c("Front", "Rear", "Four-wheel")) 
+  scale_shape_manual(
+    name = "Drive Type",
+    values = c("f" = 16, "r" = 17, "4" = 18),
+    labels = c("Front", "Rear", "Four-wheel")
+  )
 
 print(plot4)
 ```
