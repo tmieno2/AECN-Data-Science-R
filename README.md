@@ -69,6 +69,6 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
   + join datasets ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/data_merging.html))
   + reshape ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/reshape.html))
 + Data visualization with `ggplot2` 
-  + ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/ggplot2.html))
-  + ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/practice_theme.html))
+  + Create various figures ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/ggplot2.html))
+  + Change themes ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/practice_theme.html))
 + Research work flow ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/research_work_flow.html))
