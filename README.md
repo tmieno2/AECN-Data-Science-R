@@ -60,9 +60,10 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
 + Lecture 5: [datasets](https://www.dropbox.com/sh/tonqm6wiu72t5m7/AABZEwq2UZlq0s4RxZLKzq3Ya?dl=0)
 + Lecture 8: [datasets](https://www.dropbox.com/sh/mn7yk7baru0pm4e/AADDfjIHcWpxACamPh3NVGI4a?dl=0)
 
-## Exercises for practice coding
+## Exercises (coding practices)
 
 + Basic object types: vector, matrix, list, and data.frame ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/basic_objects_creation_extraction.html))
++ Piping ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/piping.html))
 + Data wrangling with `dplyr`
   + filter, mutate, group summary ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/data_wrangling_dplyr.html))
   + join datasets ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/data_merging.html))
