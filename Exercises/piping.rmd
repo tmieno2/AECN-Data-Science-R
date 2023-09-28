@@ -1,0 +1,228 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: paged
+---
+
+# Instructions
+
+The exercises here are for learning how to use the piping operator (%>%). Please always use the piping operator so that the codes in your solutions are all chained to be a single executable code.  
+
+You may see functions that you have not seen. Is that happens, loop them up online. It is part of the learning process.
+
+Load Required Packages:
+
+```{r, class.source = "fold-show", message = FALSE}
+library(tidyverse)
+```
+
+# Single piping operator
+
+## Exercise 1: Calculate the Sum
+
+**Dataset:** `mtcars$mpg` (available within R).
+
+**Task:** Compute the sum of the `mpg` (miles-per-gallon) column in the `mtcars` dataset.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(mtcars)
+```
+
+**Functions to Use:** `sum()`
+
+**Solution:**
+```{r}
+result_1 <- mtcars$mpg %>%
+  sum()
+print(result_1)
+```
+
+## Exercise 2: Average Sepal Length
+
+**Dataset:** `iris$Sepal.Length` (available within R).
+
+**Task:** Find the average of `Sepal.Length` from the `iris` dataset.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(iris)
+```
+
+**Functions to Use:** `mean()`
+
+**Solution:**
+```{r}
+result_2 <- iris$Sepal.Length %>%
+  mean()
+print(result_2)
+```
+
+## Exercise 3: Minimum Ozone
+
+**Dataset:** `airquality$Ozone` (available within R).
+
+**Task:** Identify the minimum value in the `Ozone` column from the `airquality` dataset.
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(airquality)
+```
+
+**Functions to Use:** `min()`
+
+**Solution:**
+```{r}
+result_3 <- airquality$Ozone %>%
+  min(na.rm = TRUE)
+print(result_3)
+```
+
+## Exercise 4: Sequence Generation
+
+**Dataset:** None (Fictitious Data).
+
+**Task:** Generate a sequence from 1 to 100 in steps of 5.
+
+**Load Dataset:**
+(No data to load for this exercise)
+
+**Functions to Use:** `seq()`
+
+**Solution:**
+```{r}
+result_4 <- 1 %>%
+  seq(100, by = 5)
+print(result_4)
+```
+
+## Exercise 5: Replication of Numbers
+
+**Dataset:** None (Fictitious Data).
+
+**Task:** Replicate the number 7 exactly 15 times.
+
+**Load Dataset:**
+(No data to load for this exercise)
+
+**Functions to Use:** `rep()`
+
+**Solution:**
+```{r}
+result_5 <- 7 %>%
+  rep(15)
+print(result_5)
+```
+
+# Multiple piping operators
+
+## Exercise 1: Mean of Subsetted Data
+
+**Dataset:** `mtcars$mpg` (available within R).
+
+**Task:** Filter out all values below 20 from `mtcars$mpg` and then compute the mean of the remaining values.
+
+**Functions to Use:** `subset()`, `mean()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(mtcars)
+```
+
+**Solution:**
+```{r}
+result_1 <- mtcars$mpg %>%
+  subset(. > 20) %>%
+  mean()
+print(result_1)
+```
+
+## Exercise 2: Sort and Retrieve
+
+**Dataset:** `airquality$Temp` (available within R).
+
+**Task:** Sort the `Temp` values in descending order and retrieve the first 5 values.
+
+**Functions to Use:** `sort()`, `head()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(airquality)
+```
+
+**Solution:**
+```{r}
+result_2 <- airquality$Temp %>%
+  sort(decreasing = TRUE) %>%
+  head(5)
+print(result_2)
+```
+
+## Exercise 3: Data Filtering and Range
+
+**Dataset:** `CO2$conc` (available within R).
+
+**Task:** Filter values below 350 from `CO2$conc` and then compute the range of the remaining values.
+
+**Functions to Use:** `subset()`, `range()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data(CO2)
+```
+
+**Solution:**
+```{r}
+result_3 <- CO2$conc %>%
+  subset(. > 350) %>%
+  range()
+print(result_3)
+```
+
+## Exercise 4: Character Manipulation
+
+**Dataset:** Fictitious data: `names <- c("John", "Marry", "Ben", "Anna", "Mike")`
+
+**Task:** Convert the `names` vector to uppercase and then retrieve names starting with the letter 'M'.
+
+**Functions to Use:** `toupper()`, `grep()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+names <- c("John", "Marry", "Ben", "Anna", "Mike")
+```
+
+**Solution:**
+```{r}
+result_4 <- names %>%
+  toupper() %>%
+  grep("^M", ., value = TRUE)
+print(result_4)
+```
+
+---
+
+## Exercise 5: Matrix Operations
+
+**Dataset:** Fictitious data: `mat <- matrix(1:9, ncol = 3)`
+
+**Task:** Retrieve the second column from `mat` and compute the sum of its values.
+
+**Functions to Use:** `[`, `sum()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+mat <- matrix(1:9, ncol = 3)
+```
+
+**Solution:**
+```{r}
+result_5 <- mat[, 2] %>%
+  sum()
+print(result_5)
+```
