@@ -1,0 +1,246 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: paged
+---
+
+# Instruction
+
+Exercises here are to get you familiar with looping. Please note the codes here are not at all practical. They are just for understanding the mechanics of looping in R using `for` and `lapply`.
+
+You may see functions that you have not seen. Is that happens, loop them up online. It is part of the learning process. 
+
+Load Required Packages:
+
+```{r, class.source = "fold-show", message = FALSE}
+library(tidyverse)
+```
+
+# Exercises
+
+## Exercise 1: Summing List Elements
+
+**Dataset:** `nums_list <- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))`
+
+**Task:** Compute the sum of each vector inside the `nums_list`.
+
+**Functions to Use:** `for` loop, `sum()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+nums_list <- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
+```
+
+**Solution:**
+```{r}
+sums <- numeric(length(nums_list))
+for (i in 1:length(nums_list)) {
+  sums[i] <- sum(nums_list[[i]])
+}
+print(sums)
+```
+
+
+## Exercise 2: Calculate Mean of List Items
+
+**Dataset:** `data_list <- list(c(10, 20, 30, 40), c(5, 15, 25, 35, 45), c(50, 60, 70))`
+
+**Task:** Compute the average of each vector in the `data_list`.
+
+**Functions to Use:** `lapply()`, `mean()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+data_list <- list(c(10, 20, 30, 40), c(5, 15, 25, 35, 45), c(50, 60, 70))
+```
+
+**Solution:**
+```{r}
+averages <- lapply(data_list, mean)
+print(averages)
+```
+
+
+## Exercise 3: Find Minimum Value of Each Matrix Row
+
+**Dataset:** `mat <- matrix(c(2, 9, 3, 5, 1, 8, 6, 7, 4), nrow = 3)`
+
+**Task:** Determine the minimum value in each row of the matrix `mat`.
+
+**Functions to Use:** `for` loop, `min()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+mat <- matrix(c(2, 9, 3, 5, 1, 8, 6, 7, 4), nrow = 3)
+```
+
+**Solution:**
+```{r}
+min_values <- numeric(nrow(mat))
+for (i in 1:nrow(mat)) {
+  min_values[i] <- min(mat[i, ])
+}
+print(min_values)
+```
+
+
+## Exercise 4: Compute Sum of Even Numbers
+
+**Dataset:** `numbers <- list(c(1, 2, 3, 4, 5), c(6, 7, 8, 9, 10))`
+
+**Task:** For each vector in the list `numbers`, compute the sum of even numbers only.
+
+**Functions to Use:** `lapply()`, `sum()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+numbers <- list(c(1, 2, 3, 4, 5), c(6, 7, 8, 9, 10))
+```
+
+**Solution:**
+```{r}
+sum_evens <- lapply(numbers, function(x) sum(x[x %% 2 == 0]))
+print(sum_evens)
+```
+
+
+## Exercise 5: Mean of First N Numbers
+
+**Dataset:** `n_values <- c(5, 10, 15)`
+
+**Task:** Calculate the mean of the first `n` natural numbers for each `n` in `n_values`.
+
+**Functions to Use:** `for` loop, `mean()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+n_values <- c(5, 10, 15)
+```
+
+**Solution:**
+```{r}
+means <- numeric(length(n_values))
+for (i in 1:length(n_values)) {
+  means[i] <- mean(1:n_values[i])
+}
+print(means)
+```
+
+# Looping over multiple variables
+
+### Exercise 1: Calculate the Sum and Product
+
+**Dataset:** Create a data frame using `expand.grid()` from vectors `c1 <- c(2, 4, 6)` and `c2 <- c(3, 5, 7)`.
+
+**Task:** For each row, calculate the sum and product of `c1` and `c2`, and return them as a data frame.
+
+**Functions to Use:** `lapply()`, `bind_rows()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+df1 <- expand.grid(c1 = c(2, 4, 6), c2 = c(3, 5, 7))
+```
+
+**Solution:**
+```{r}
+list_of_dfs1 <- lapply(1:nrow(df1), function(i) {
+  data.frame(sum_val = df1$c1[i] + df1$c2[i], product = df1$c1[i] * df1$c2[i])
+})
+final_df1 <- bind_rows(list_of_dfs1)
+print(final_df1)
+```
+
+### Exercise 2: Calculate the Difference and Quotient
+
+**Dataset:** Create a data frame using `expand.grid()` from vectors `v1 <- c(10, 20, 30)` and `v2 <- c(5, 10, 15)`.
+
+**Task:** For each row, calculate the difference (`v1 - v2`) and quotient (`v1/v2`) of `v1` and `v2`, and return them as a data frame.
+
+**Functions to Use:** `lapply()`, `bind_rows()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+df2 <- expand.grid(v1 = c(10, 20, 30), v2 = c(5, 10, 15))
+```
+
+**Solution:**
+```{r}
+list_of_dfs2 <- lapply(1:nrow(df2), function(i) {
+  data.frame(diff_val = df2$v1[i] - df2$v2[i], quotient = df2$v1[i] / df2$v2[i])
+})
+final_df2 <- bind_rows(list_of_dfs2)
+print(final_df2)
+```
+
+### Exercise 3: Square and Cube
+
+**Dataset:** Create a data frame using `expand.grid()` from vectors `s <- c(3, 4)` and `t <- c(2, 3)`.
+
+**Task:** For each row, calculate the square of `s` and the cube of `t`, and return them as a data frame.
+
+**Functions to Use:** `lapply()`, `bind_rows()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+df3 <- expand.grid(s = c(3, 4), t = c(2, 3))
+```
+
+**Solution:**
+```{r}
+list_of_dfs3 <- lapply(1:nrow(df3), function(i) {
+  data.frame(s_squared = df3$s[i]^2, t_cubed = df3$t[i]^3)
+})
+final_df3 <- bind_rows(list_of_dfs3)
+print(final_df3)
+```
+
+### Exercise 4: Increment and Decrement
+
+**Dataset:** Create a data frame using `expand.grid()` from vectors `x <- c(5, 6, 7)` and `y <- c(8, 9, 10)`.
+
+**Task:** For each row, increment the value of `x` by 2 and decrement the value of `y` by 1, then return them as a data frame.
+
+**Functions to Use:** `lapply()`, `bind_rows()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+df4 <- expand.grid(x = c(5, 6, 7), y = c(8, 9, 10))
+```
+
+**Solution:**
+```{r}
+list_of_dfs4 <- lapply(1:nrow(df4), function(i) {
+  data.frame(x_incr = df4$x[i] + 2, y_decr = df4$y[i] - 1)
+})
+final_df4 <- bind_rows(list_of_dfs4)
+print(final_df4)
+```
+
+### Exercise 5: Double and Half
+
+**Dataset:** Create a data frame using `expand.grid()` from vectors `p <- c(14, 16, 18)` and `q <- c(24, 26, 28)`.
+
+**Task:** For each row, double the value of `p` and half the value of `q`, and return them as a data frame.
+
+**Functions to Use:** `l
+
+apply()`, `bind_rows()`
+
+**Load Dataset:**
+```{r, class.source = "fold-show"}
+df5 <- expand.grid(p = c(14, 16, 18), q = c(24, 26, 28))
+```
+
+**Solution:**
+```{r}
+list_of_dfs5 <- lapply(1:nrow(df5), function(i) {
+  data.frame(p_double = df5$p[i] * 2, q_half = df5$q[i] / 2)
+})
+final_df5 <- bind_rows(list_of_dfs5)
+print(final_df5)
+```
