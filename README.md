@@ -72,3 +72,4 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
   + Create various figures ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/ggplot2.html))
   + Change themes ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/practice_theme.html))
 + Research work flow ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/research_work_flow.html))
++ Looping ([webpage](https://tmieno2.github.io/AECN-Data-Science-R/Exercises/looping.html))
