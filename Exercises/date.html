@@ -11,7 +11,7 @@
 
 
 
-<title>loop.knit</title>
+<title>date.knit</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -2858,214 +2858,100 @@ div.tocify {
 </div>
 
 
-<div id="instruction" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Instruction</h1>
-<p>Exercises here are to get you familiar with looping. Please note the codes here are not at all practical. They are just for understanding the mechanics of looping in R using <code>for</code> and <code>lapply</code>.</p>
-<p>You may see functions that you have not seen. Is that happens, loop them up online. It is part of the learning process.</p>
-<p>Load Required Packages:</p>
-<pre class="r fold-show"><code>library(tidyverse)</code></pre>
-</div>
-<div id="exercises" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Exercises</h1>
-<div id="exercise-1-summing-list-elements" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Exercise 1: Summing List Elements</h2>
-<p><strong>Dataset:</strong> <code>nums_list &lt;- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))</code></p>
-<p><strong>Task:</strong> Compute the sum of each vector inside the <code>nums_list</code>.</p>
-<p><strong>Functions to Use:</strong> <code>for</code> loop, <code>sum()</code></p>
-<p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>nums_list &lt;- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>sums &lt;- numeric(length(nums_list))
-for (i in 1:length(nums_list)) {
-  sums[i] &lt;- sum(nums_list[[i]])
-}
-print(sums)</code></pre>
-<pre><code>## [1]  6 15 24</code></pre>
-</div>
-<div id="exercise-2-calculate-mean-of-list-items" class="section level2" number="2.2">
-<h2 number="2.2"><span class="header-section-number">2.2</span> Exercise 2: Calculate Mean of List Items</h2>
-<p><strong>Dataset:</strong> <code>data_list &lt;- list(c(10, 20, 30, 40), c(5, 15, 25, 35, 45), c(50, 60, 70))</code></p>
-<p><strong>Task:</strong> Compute the average of each vector in the <code>data_list</code>.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>mean()</code></p>
-<p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>data_list &lt;- list(c(10, 20, 30, 40), c(5, 15, 25, 35, 45), c(50, 60, 70))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>averages &lt;- lapply(data_list, mean)
-print(averages)</code></pre>
-<pre><code>## [[1]]
-## [1] 25
+<div id="load-required-packages" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Load Required Packages:</h1>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
-## [[2]]
-## [1] 25
-## 
-## [[3]]
-## [1] 60</code></pre>
+##     date, intersect, setdiff,
+##     union</code></pre>
 </div>
-<div id="exercise-3-find-minimum-value-of-each-matrix-row" class="section level2" number="2.3">
-<h2 number="2.3"><span class="header-section-number">2.3</span> Exercise 3: Find Minimum Value of Each Matrix Row</h2>
-<p><strong>Dataset:</strong> <code>mat &lt;- matrix(c(2, 9, 3, 5, 1, 8, 6, 7, 4), nrow = 3)</code></p>
-<p><strong>Task:</strong> Determine the minimum value in each row of the matrix <code>mat</code>.</p>
-<p><strong>Functions to Use:</strong> <code>for</code> loop, <code>min()</code></p>
+<div id="exercise-1-extracting-month-and-year" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Exercise 1: Extracting Month and Year</h1>
+<p><strong>Dataset:</strong> <code>dates_1 &lt;- c(&quot;2023-04-05&quot;, &quot;2019-12-31&quot;, &quot;2022-08-14&quot;)</code></p>
+<p><strong>Task:</strong> Extract the month and year from each date in the <code>dates_1</code> vector. The output should be in the format <code>MM-YYYY</code>.</p>
+<p><strong>Functions to Use:</strong> <code>month()</code>, <code>year()</code></p>
 <p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>mat &lt;- matrix(c(2, 9, 3, 5, 1, 8, 6, 7, 4), nrow = 3)</code></pre>
+<pre class="r fold-show"><code>dates_1 &lt;- c(&quot;2023-04-05&quot;, &quot;2019-12-31&quot;, &quot;2022-08-14&quot;)
+dates_1</code></pre>
+<pre><code>## [1] &quot;2023-04-05&quot; &quot;2019-12-31&quot;
+## [3] &quot;2022-08-14&quot;</code></pre>
 <p><strong>Solution:</strong></p>
-<pre class="r"><code>min_values &lt;- numeric(nrow(mat))
-for (i in 1:nrow(mat)) {
-  min_values[i] &lt;- min(mat[i, ])
-}
-print(min_values)</code></pre>
-<pre><code>## [1] 2 1 3</code></pre>
+<pre class="r"><code>formatted_dates_1 &lt;- paste0(month(dates_1, label = TRUE), &quot;-&quot;, year(dates_1))
+formatted_dates_1</code></pre>
+<pre><code>## [1] &quot;Apr-2023&quot; &quot;Dec-2019&quot;
+## [3] &quot;Aug-2022&quot;</code></pre>
+<hr />
 </div>
-<div id="exercise-4-compute-sum-of-even-numbers" class="section level2" number="2.4">
-<h2 number="2.4"><span class="header-section-number">2.4</span> Exercise 4: Compute Sum of Even Numbers</h2>
-<p><strong>Dataset:</strong> <code>numbers &lt;- list(c(1, 2, 3, 4, 5), c(6, 7, 8, 9, 10))</code></p>
-<p><strong>Task:</strong> For each vector in the list <code>numbers</code>, compute the sum of even numbers only.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>sum()</code></p>
+<div id="exercise-2-calculating-days-difference" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Exercise 2: Calculating Days Difference</h1>
+<p><strong>Dataset:</strong> <code>start_dates &lt;- c(&quot;2021-05-01&quot;, &quot;2019-07-19&quot;)</code> and <code>end_dates &lt;- c(&quot;2021-05-15&quot;, &quot;2019-08-02&quot;)</code></p>
+<p><strong>Task:</strong> Calculate the number of days between the start and end dates for each pair.</p>
+<p><strong>Functions to Use:</strong> <code>ymd()</code>, <code>as.duration()</code></p>
 <p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>numbers &lt;- list(c(1, 2, 3, 4, 5), c(6, 7, 8, 9, 10))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>sum_evens &lt;- lapply(numbers, function(x) sum(x[x %% 2 == 0]))
-print(sum_evens)</code></pre>
-<pre><code>## [[1]]
-## [1] 6
-## 
-## [[2]]
-## [1] 24</code></pre>
+<pre class="r fold-show"><code>start_dates &lt;- c(&quot;2021-05-01&quot;, &quot;2019-07-19&quot;)
+end_dates &lt;- c(&quot;2021-05-15&quot;, &quot;2019-08-02&quot;)
+data.frame(start_dates, end_dates)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["start_dates"],"name":[1],"type":["chr"],"align":["left"]},{"label":["end_dates"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"2021-05-01","2":"2021-05-15"},{"1":"2019-07-19","2":"2019-08-02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="exercise-5-mean-of-first-n-numbers" class="section level2" number="2.5">
-<h2 number="2.5"><span class="header-section-number">2.5</span> Exercise 5: Mean of First N Numbers</h2>
-<p><strong>Dataset:</strong> <code>n_values &lt;- c(5, 10, 15)</code></p>
-<p><strong>Task:</strong> Calculate the mean of the first <code>n</code> natural numbers for each <code>n</code> in <code>n_values</code>.</p>
-<p><strong>Functions to Use:</strong> <code>for</code> loop, <code>mean()</code></p>
+<p><strong>Solution:</strong></p>
+<pre class="r"><code>days_diff &lt;- as.duration(ymd(end_dates) - ymd(start_dates))
+days_diff</code></pre>
+<pre><code>## [1] &quot;1209600s (~2 weeks)&quot;
+## [2] &quot;1209600s (~2 weeks)&quot;</code></pre>
+<hr />
+</div>
+<div id="exercise-3-rounding-up-dates" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Exercise 3: Rounding Up Dates</h1>
+<p><strong>Dataset:</strong> <code>dates_3 &lt;- c(&quot;2023-04-05 15:30:25&quot;, &quot;2019-12-31 06:20:15&quot;)</code></p>
+<p><strong>Task:</strong> Round the dates to the nearest hour.</p>
+<p><strong>Functions to Use:</strong> <code>round_date()</code></p>
 <p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>n_values &lt;- c(5, 10, 15)</code></pre>
+<pre class="r fold-show"><code>dates_3 &lt;- c(&quot;2023-04-05 15:30:25&quot;, &quot;2019-12-31 06:20:15&quot;)
+dates_3</code></pre>
+<pre><code>## [1] &quot;2023-04-05 15:30:25&quot;
+## [2] &quot;2019-12-31 06:20:15&quot;</code></pre>
 <p><strong>Solution:</strong></p>
-<pre class="r"><code>means &lt;- numeric(length(n_values))
-for (i in 1:length(n_values)) {
-  means[i] &lt;- mean(1:n_values[i])
-}
-print(means)</code></pre>
-<pre><code>## [1] 3.0 5.5 8.0</code></pre>
+<pre class="r"><code>rounded_dates &lt;- round_date(ymd_hms(dates_3), &quot;hour&quot;)
+rounded_dates</code></pre>
+<pre><code>## [1] &quot;2023-04-05 16:00:00 UTC&quot;
+## [2] &quot;2019-12-31 06:00:00 UTC&quot;</code></pre>
+<hr />
 </div>
-</div>
-<div id="looping-over-multiple-variables" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Looping over multiple variables</h1>
-<div id="exercise-1-calculate-the-sum-and-product" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Exercise 1: Calculate the Sum and Product</h2>
-<p><strong>Dataset:</strong> Create a data frame using <code>expand.grid()</code> from vectors <code>c1 &lt;- c(2, 4, 6)</code> and <code>c2 &lt;- c(3, 5, 7)</code>.</p>
-<p><strong>Task:</strong> For each row, calculate the sum and product of <code>c1</code> and <code>c2</code>, and return them as a data frame.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>bind_rows()</code></p>
+<div id="exercise-4-checking-leap-years" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Exercise 4: Checking Leap Years</h1>
+<p><strong>Dataset:</strong> <code>years &lt;- c(2000, 2001, 2004, 2100)</code></p>
+<p><strong>Task:</strong> Check which years in the <code>years</code> vector are leap years.</p>
+<p><strong>Functions to Use:</strong> <code>leap_year()</code></p>
 <p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>df1 &lt;- expand.grid(c1 = c(2, 4, 6), c2 = c(3, 5, 7))</code></pre>
+<pre class="r fold-show"><code>years &lt;- c(2000, 2001, 2004, 2100)
+years</code></pre>
+<pre><code>## [1] 2000 2001 2004 2100</code></pre>
 <p><strong>Solution:</strong></p>
-<pre class="r"><code>list_of_dfs1 &lt;- lapply(1:nrow(df1), function(i) {
-  data.frame(sum_val = df1$c1[i] + df1$c2[i], product = df1$c1[i] * df1$c2[i])
-})
-final_df1 &lt;- bind_rows(list_of_dfs1)
-print(final_df1)</code></pre>
-<pre><code>##   sum_val product
-## 1       5       6
-## 2       7      12
-## 3       9      18
-## 4       7      10
-## 5       9      20
-## 6      11      30
-## 7       9      14
-## 8      11      28
-## 9      13      42</code></pre>
+<pre class="r"><code>leap_years_check &lt;- leap_year(years)
+leap_years_check</code></pre>
+<pre><code>## [1]  TRUE FALSE  TRUE FALSE</code></pre>
+<hr />
 </div>
-<div id="exercise-2-calculate-the-difference-and-quotient" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Exercise 2: Calculate the Difference and Quotient</h2>
-<p><strong>Dataset:</strong> Create a data frame using <code>expand.grid()</code> from vectors <code>v1 &lt;- c(10, 20, 30)</code> and <code>v2 &lt;- c(5, 10, 15)</code>.</p>
-<p><strong>Task:</strong> For each row, calculate the difference (<code>v1 - v2</code>) and quotient (<code>v1/v2</code>) of <code>v1</code> and <code>v2</code>, and return them as a data frame.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>bind_rows()</code></p>
+<div id="exercise-5-adding-months-to-dates" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Exercise 5: Adding Months to Dates</h1>
+<p><strong>Dataset:</strong> <code>dates_5 &lt;- c(&quot;2021-11-30&quot;, &quot;2019-02-28&quot;)</code></p>
+<p><strong>Task:</strong> Add three months to each date in the <code>dates_5</code> vector.</p>
+<p><strong>Functions to Use:</strong> <code>ymd()</code>, <code>months()</code></p>
 <p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>df2 &lt;- expand.grid(v1 = c(10, 20, 30), v2 = c(5, 10, 15))</code></pre>
+<pre class="r fold-show"><code>dates_5 &lt;- c(&quot;2021-11-30&quot;, &quot;2019-02-28&quot;)
+dates_5</code></pre>
+<pre><code>## [1] &quot;2021-11-30&quot; &quot;2019-02-28&quot;</code></pre>
 <p><strong>Solution:</strong></p>
-<pre class="r"><code>list_of_dfs2 &lt;- lapply(1:nrow(df2), function(i) {
-  data.frame(diff_val = df2$v1[i] - df2$v2[i], quotient = df2$v1[i] / df2$v2[i])
-})
-final_df2 &lt;- bind_rows(list_of_dfs2)
-print(final_df2)</code></pre>
-<pre><code>##   diff_val  quotient
-## 1        5 2.0000000
-## 2       15 4.0000000
-## 3       25 6.0000000
-## 4        0 1.0000000
-## 5       10 2.0000000
-## 6       20 3.0000000
-## 7       -5 0.6666667
-## 8        5 1.3333333
-## 9       15 2.0000000</code></pre>
-</div>
-<div id="exercise-3-square-and-cube" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Exercise 3: Square and Cube</h2>
-<p><strong>Dataset:</strong> Create a data frame using <code>expand.grid()</code> from vectors <code>s &lt;- c(3, 4)</code> and <code>t &lt;- c(2, 3)</code>.</p>
-<p><strong>Task:</strong> For each row, calculate the square of <code>s</code> and the cube of <code>t</code>, and return them as a data frame.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>bind_rows()</code></p>
-<p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>df3 &lt;- expand.grid(s = c(3, 4), t = c(2, 3))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>list_of_dfs3 &lt;- lapply(1:nrow(df3), function(i) {
-  data.frame(s_squared = df3$s[i]^2, t_cubed = df3$t[i]^3)
-})
-final_df3 &lt;- bind_rows(list_of_dfs3)
-print(final_df3)</code></pre>
-<pre><code>##   s_squared t_cubed
-## 1         9       8
-## 2        16       8
-## 3         9      27
-## 4        16      27</code></pre>
-</div>
-<div id="exercise-4-increment-and-decrement" class="section level2" number="3.4">
-<h2 number="3.4"><span class="header-section-number">3.4</span> Exercise 4: Increment and Decrement</h2>
-<p><strong>Dataset:</strong> Create a data frame using <code>expand.grid()</code> from vectors <code>x &lt;- c(5, 6, 7)</code> and <code>y &lt;- c(8, 9, 10)</code>.</p>
-<p><strong>Task:</strong> For each row, increment the value of <code>x</code> by 2 and decrement the value of <code>y</code> by 1, then return them as a data frame.</p>
-<p><strong>Functions to Use:</strong> <code>lapply()</code>, <code>bind_rows()</code></p>
-<p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>df4 &lt;- expand.grid(x = c(5, 6, 7), y = c(8, 9, 10))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>list_of_dfs4 &lt;- lapply(1:nrow(df4), function(i) {
-  data.frame(x_incr = df4$x[i] + 2, y_decr = df4$y[i] - 1)
-})
-final_df4 &lt;- bind_rows(list_of_dfs4)
-print(final_df4)</code></pre>
-<pre><code>##   x_incr y_decr
-## 1      7      7
-## 2      8      7
-## 3      9      7
-## 4      7      8
-## 5      8      8
-## 6      9      8
-## 7      7      9
-## 8      8      9
-## 9      9      9</code></pre>
-</div>
-<div id="exercise-5-double-and-half" class="section level2" number="3.5">
-<h2 number="3.5"><span class="header-section-number">3.5</span> Exercise 5: Double and Half</h2>
-<p><strong>Dataset:</strong> Create a data frame using <code>expand.grid()</code> from vectors <code>p &lt;- c(14, 16, 18)</code> and <code>q &lt;- c(24, 26, 28)</code>.</p>
-<p><strong>Task:</strong> For each row, double the value of <code>p</code> and half the value of <code>q</code>, and return them as a data frame.</p>
-<p><strong>Functions to Use:</strong> `l</p>
-<p>apply()<code>,</code>bind_rows()`</p>
-<p><strong>Load Dataset:</strong></p>
-<pre class="r fold-show"><code>df5 &lt;- expand.grid(p = c(14, 16, 18), q = c(24, 26, 28))</code></pre>
-<p><strong>Solution:</strong></p>
-<pre class="r"><code>list_of_dfs5 &lt;- lapply(1:nrow(df5), function(i) {
-  data.frame(p_double = df5$p[i] * 2, q_half = df5$q[i] / 2)
-})
-final_df5 &lt;- bind_rows(list_of_dfs5)
-print(final_df5)</code></pre>
-<pre><code>##   p_double q_half
-## 1       28     12
-## 2       32     12
-## 3       36     12
-## 4       28     13
-## 5       32     13
-## 6       36     13
-## 7       28     14
-## 8       32     14
-## 9       36     14</code></pre>
-</div>
+<pre class="r"><code>new_dates &lt;- ymd(dates_5) + months(3)
+new_dates</code></pre>
+<pre><code>## [1] NA           &quot;2019-05-28&quot;</code></pre>
+<hr />
+<p>These exercises should help learners understand various functionalities of the <code>lubridate</code> package in R, within a Quarto-friendly format.</p>
 </div>
 
 

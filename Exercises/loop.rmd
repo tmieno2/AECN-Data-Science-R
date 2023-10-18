@@ -133,7 +133,7 @@ print(means)
 
 # Looping over multiple variables
 
-### Exercise 1: Calculate the Sum and Product
+## Exercise 1: Calculate the Sum and Product
 
 **Dataset:** Create a data frame using `expand.grid()` from vectors `c1 <- c(2, 4, 6)` and `c2 <- c(3, 5, 7)`.
 
@@ -155,7 +155,7 @@ final_df1 <- bind_rows(list_of_dfs1)
 print(final_df1)
 ```
 
-### Exercise 2: Calculate the Difference and Quotient
+## Exercise 2: Calculate the Difference and Quotient
 
 **Dataset:** Create a data frame using `expand.grid()` from vectors `v1 <- c(10, 20, 30)` and `v2 <- c(5, 10, 15)`.
 
@@ -177,7 +177,7 @@ final_df2 <- bind_rows(list_of_dfs2)
 print(final_df2)
 ```
 
-### Exercise 3: Square and Cube
+## Exercise 3: Square and Cube
 
 **Dataset:** Create a data frame using `expand.grid()` from vectors `s <- c(3, 4)` and `t <- c(2, 3)`.
 
@@ -199,7 +199,7 @@ final_df3 <- bind_rows(list_of_dfs3)
 print(final_df3)
 ```
 
-### Exercise 4: Increment and Decrement
+## Exercise 4: Increment and Decrement
 
 **Dataset:** Create a data frame using `expand.grid()` from vectors `x <- c(5, 6, 7)` and `y <- c(8, 9, 10)`.
 
@@ -221,7 +221,7 @@ final_df4 <- bind_rows(list_of_dfs4)
 print(final_df4)
 ```
 
-### Exercise 5: Double and Half
+## Exercise 5: Double and Half
 
 **Dataset:** Create a data frame using `expand.grid()` from vectors `p <- c(14, 16, 18)` and `q <- c(24, 26, 28)`.
 

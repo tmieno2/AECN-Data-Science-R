@@ -1,0 +1,43 @@
+
+# Proposal for course matericals by FCSA 
+
+## Ideal prodcuts from FCSA for the course
+
+The key motivation of the collaboration with FCSA is to expose students to real-world application of data science skills so that they have a good idea of how course materials can be used in practice. 
+
+## Desired contentes shared by FCSA
+
+Mock project(s) that uses R codes to analyze financial data to get actionable insights.
+
+### R codes 
+
+R codes conduct following things.
+
++ Exploratory data analysis
++ Analysis
++ Hyepothesis testing
+
+Here are desired specific elements in the R codes that are used. 
+
++ `tidyverse` is used where possible for data wrangling (`dplyr`, `tidyr`) and visualization (`ggplot2`). I heard from Shara that you guys use Power BI for data visualization. That is good to see as well if you do not use `ggplot2`.
++ `data.table` is used where computation speed matters (Shara told me you guys do this for some operations).
++ Looping is used for automating repetitive processes
+
+I would like to store the codes in my github repository for this course.
+
+### Datasets 
+
+I would like to store these datasets in a public repository that current and future students can access for assignments or their final projects. 
+
+### Presentation
+
+Please let me know if you would like to record a video or give a in-class live delivery (in this case, I would like to ask your permission for recording). We meet at 1pm on Mondays and Wednesdays.
+
+This presentation has the following structure:
+
++ Introduction of the presenter and what FCSA does
++ Presents the mock project
++ Qualifications (what are you looking for from job applicants?)
++ Work envrironment?
++ Any opportunity? (internship)
+

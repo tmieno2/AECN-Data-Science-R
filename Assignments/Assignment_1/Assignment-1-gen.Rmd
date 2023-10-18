@@ -14,15 +14,14 @@ geometry: margin=0.75in
 library(knitr)
 
 opts_chunk$set(
-  echo= TRUE,
+  echo = TRUE,
   comment = NA,
   message = FALSE,
   warning = FALSE
-  ) 
+)
 
 opts_knit$set(root.dir = "~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
 # setwd("~/Dropbox/TeachingUNL/DataScience/Assignments/Assignment_1")
-
 ```
 
 ```{r packages, echo = F}
@@ -78,39 +77,38 @@ We have three separate datasets saved in various formats. Here are the list of d
 
 
 ```{r eval = F, echo = F}
-#===================================
+# ===================================
 # generate data
-#===================================
+# ===================================
 #--- sat data ---#
-sat_CO <- readRDS("all_sat_CO.rds") 
-write_csv(sat_CO, "all_sat_CO_as1.csv") 
+sat_CO <- readRDS("all_sat_CO.rds")
+write_csv(sat_CO, "all_sat_CO_as1.csv")
 
 
 #--- irrigation data ---#
-data_CO <- readRDS("data_CO.rds") %>% 
-  select(wdid, pumpingAF, latdecdeg, longdecdeg, year, PCC, WellCap, REAname) %>% 
+data_CO <- readRDS("data_CO.rds") %>%
+  select(wdid, pumpingAF, latdecdeg, longdecdeg, year, PCC, WellCap, REAname) %>%
   tibble()
 
 saveRDS(data_CO, "data_CO_as1.rds")
 
 #--- daymet data ---#
-daymet <- readRDS("dyamet_raw.rds") %>% 
+daymet <- readRDS("dyamet_raw.rds") %>%
   setnames(
-    c("year","yday","dayl..s.","prcp..mm.day.","srad..W.m.2.","swe..kg.m.2.","tmax..deg.c.","tmin..deg.c.","vp..Pa."),
-    c("year","year.day","daylight","precip","solar.rad","snow.water.equiv","max.temp","min.temp","vapor.pressure")
-  ) %>% 
+    c("year", "yday", "dayl..s.", "prcp..mm.day.", "srad..W.m.2.", "swe..kg.m.2.", "tmax..deg.c.", "tmin..deg.c.", "vp..Pa."),
+    c("year", "year.day", "daylight", "precip", "solar.rad", "snow.water.equiv", "max.temp", "min.temp", "vapor.pressure")
+  ) %>%
   mutate(
-    date = as.Date(year.day - 1, origin = paste(year,"-01-01",sep=""))
-  ) %>% 
+    date = as.Date(year.day - 1, origin = paste(year, "-01-01", sep = ""))
+  ) %>%
   mutate(
     month = month(date),
     day = day(date)
-  ) 
+  )
 
 save.dta13(select(daymet, wdid, year, month, day, precip, max.temp, min.temp), "daymet_raw_as1.dta")
 
 read.dta13("daymet_raw_as1.dta")
-
 ```
 
 ---
@@ -130,7 +128,7 @@ ir_data <- readRDS("data_CO_as1.rds")
 Import "all_sat_CO_as1.csv" using the `read_csv()` function from the `readr` package and assign the data to an R object called `sat_data`
 
 ```{r include = F}
-sat_data <- read_csv("all_sat_CO_as1.csv") 
+sat_data <- read_csv("all_sat_CO_as1.csv")
 ```
 
 ---
@@ -140,7 +138,7 @@ sat_data <- read_csv("all_sat_CO_as1.csv")
 Import "daymet_raw_as1.dta", convert it (which is a `data.frame`) into a `tibble`, and assign the data to an R object called `daymet_data`
 
 ```{r include = F}
-daymet_data <- read.dta13("daymet_raw_as1.dta") %>% 
+daymet_data <- read.dta13("daymet_raw_as1.dta") %>%
   tibble()
 ```
 
@@ -219,9 +217,9 @@ Find the mean of `pumping_costs` by energy provider (`REAname`) and year (`year`
 
 ```{r echo = F}
 (
-pcc_mean <- ir_data %>% 
-  group_by(REAname, year) %>%  
-  summarize(pc_mean = mean(pumping_costs))
+  pcc_mean <- ir_data %>%
+    group_by(REAname, year) %>%
+    summarize(pc_mean = mean(pumping_costs))
 )
 ```
 
@@ -259,9 +257,9 @@ ggplot(data = ir_data) +
   facet_wrap(year ~ .) +
   scale_color_viridis_c() +
   coord_equal() +
-    theme(
-      legend.position = "bottom"
-    )
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
 Do you observe any spatial patterns in groundwater use?
@@ -273,16 +271,16 @@ Do you observe any spatial patterns in groundwater use?
 It seems that extremely high values of groundwater use is making it a bit hard to recognize a spatial pattern in groundwater use (if any). Filter `ir_data` to those that satisfy `pumpingAF < 500` and then make the same map. 
 
 ```{r echo = F, fig.height = 15}
-ir_data %>% 
-  filter(pumpingAF < 500) %>% 
+ir_data %>%
+  filter(pumpingAF < 500) %>%
   ggplot(data = .) +
-    geom_point(aes(x = longdecdeg, y = latdecdeg, color = pumpingAF)) +
-    facet_wrap(year ~ .) +
-    scale_color_viridis_c() +
-    coord_equal() +
-    theme(
-      legend.position = "bottom"
-    )
+  geom_point(aes(x = longdecdeg, y = latdecdeg, color = pumpingAF)) +
+  facet_wrap(year ~ .) +
+  scale_color_viridis_c() +
+  coord_equal() +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
 # Saturated thickness data: Exploratory analysis and data Wrangling
@@ -293,9 +291,9 @@ Find the mean of saturated thickness (`sat_thickness`) by year.
 
 ```{r echo = F}
 (
-sat_mean_data <- sat_data %>% 
-  group_by(year) %>% 
-  summarize(sat_mean = mean(sat_thickness))
+  sat_mean_data <- sat_data %>%
+    group_by(year) %>%
+    summarize(sat_mean = mean(sat_thickness))
 )
 ```
 
@@ -323,19 +321,18 @@ ggplot(data = sat_mean_data) +
   xlab("Year") +
   ylab("Saturated Thickness (feet)") +
   annotate(
-    'text',
+    "text",
     x = 1992,
     y = 145,
-    label = 'At this rate, groundwater\n is all gone soon!!.',
+    label = "At this rate, groundwater\n is all gone soon!!.",
     size = 6,
     color = "red"
   ) +
   theme(
     axis.text.x = element_text(angle = 90),
     panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank() 
+    panel.grid.minor = element_blank()
   )
-
 ```
 
 Anything that you notice from the figure?
@@ -361,7 +358,7 @@ Since we do not use weather data in months excepts the irrigation season, filter
 
 ```{r echo = F}
 (
-daymet_data <- filter(daymet_data, month %in% 5:9)  
+  daymet_data <- filter(daymet_data, month %in% 5:9)
 )
 ```
 
@@ -380,7 +377,7 @@ Daily GDD (growing degree days) is defined as `(max.temp + min.temp)/2 - 10`. Us
 
 
 ```{r include = F}
-daymet_data <- mutate(daymet_data, daily_gdd = (max.temp + min.temp)/2 - 10) 
+daymet_data <- mutate(daymet_data, daily_gdd = (max.temp + min.temp) / 2 - 10)
 ```
 
 ---
@@ -390,8 +387,8 @@ daymet_data <- mutate(daymet_data, daily_gdd = (max.temp + min.temp)/2 - 10)
 For each well-year, calculate the sum of daily GDD during the irrigation season, name it `GDD`, and assign it to an R object called `GDD_data`
 
 ```{r echo = F}
-GDD_data <- daymet_data %>% 
-  group_by(year, wdid) %>% 
+GDD_data <- daymet_data %>%
+  group_by(year, wdid) %>%
   summarize(GDD = sum(daily_gdd))
 ```
 
@@ -416,9 +413,9 @@ We now work on precipitation variables. Find the monthly total precipitation by 
 
 ```{r echo =F}
 (
-precip_data <- daymet_data %>% 
-  group_by(wdid, year, month) %>% 
-  summarize(tot_precip = sum(precip))
+  precip_data <- daymet_data %>%
+    group_by(wdid, year, month) %>%
+    summarize(tot_precip = sum(precip))
 )
 ``` 
 
@@ -430,8 +427,8 @@ We would like to have monthly precipitation as separate columns instead of havin
 
 ```{r echo = F}
 (
-precip_data_wide <- precip_data %>% 
-  pivot_wider(values_from = tot_precip, names_from = `month`, names_prefix = "m_")
+  precip_data_wide <- precip_data %>%
+    pivot_wider(values_from = tot_precip, names_from = `month`, names_prefix = "m_")
 )
 ```
 
@@ -462,7 +459,7 @@ Merge `precip_data_wide` and `GDD_data` using `left_join()`. Assign the merged d
 
 ```{r echo = F}
 (
-weather_data <- left_join(precip_data_wide, GDD_data, by = c("wdid", "year")) 
+  weather_data <- left_join(precip_data_wide, GDD_data, by = c("wdid", "year"))
 )
 ```
 
@@ -474,11 +471,11 @@ weather_data <- left_join(precip_data_wide, GDD_data, by = c("wdid", "year"))
 
 ```{r echo = F}
 (
-season_precip_data <- precip_data %>% 
-  group_by(wdid, year) %>% 
-  summarize(season_precip_well = sum(tot_precip)) %>% 
-  group_by(year) %>% 
-  summarize(season_precip = mean(season_precip_well))  
+  season_precip_data <- precip_data %>%
+    group_by(wdid, year) %>%
+    summarize(season_precip_well = sum(tot_precip)) %>%
+    group_by(year) %>%
+    summarize(season_precip = mean(season_precip_well))
 
 )
 ```
@@ -487,9 +484,9 @@ season_precip_data <- precip_data %>%
 
 ```{r echo = F}
 (
-mean_gw_data <- ir_data %>% 
-  group_by(year) %>% 
-  summarize(mean_gw = mean(pumpingAF))
+  mean_gw_data <- ir_data %>%
+    group_by(year) %>%
+    summarize(mean_gw = mean(pumpingAF))
 )
 ```
 
@@ -497,7 +494,7 @@ mean_gw_data <- ir_data %>%
 
 
 ```{r echo = F}
-gw_precip_data <- left_join(mean_gw_data, season_precip_data, by = "year") %>% 
+gw_precip_data <- left_join(mean_gw_data, season_precip_data, by = "year") %>%
   pivot_longer(-year, names_to = "variable", values_to = "value")
 ```
 
@@ -520,12 +517,11 @@ ggplot(data = gw_precip_data) +
 + Go back to `gw_precip_data` and change the texts in `variable` so that `mean_gw` becomes `Groundwater Use (acre-feet)` and `season_precip` becomes `Total Precipitation (mm)`.
 
 ```{r echo = F}
-gw_precip_data <- gw_precip_data %>% 
+gw_precip_data <- gw_precip_data %>%
   mutate(variable = case_when(
     variable == "mean_gw" ~ "Groundwater Use (acre-feet)",
     variable == "season_precip" ~ "Total Precipitation (mm)"
-  )) 
-
+  ))
 ```
 
 + Now use `gw_precip_data` to create the faceted figure again and confirm the strip texts now look more explanatory.  
@@ -535,7 +531,7 @@ gw_precip_data
 ```{r echo = F}
 ggplot(data = gw_precip_data) +
   geom_line(aes(y = value, x = year)) +
-  facet_grid(variable ~ ., scale = "free_y") 
+  facet_grid(variable ~ ., scale = "free_y")
 ```
 
 # Combine all the datasets and explore further
@@ -550,12 +546,11 @@ ggplot(data = gw_precip_data) +
 
 ```{r echo = F}
 (
-final_data <- left_join(ir_data, sat_data, by = c("wdid", "year")) %>% 
-  left_join(., weather_data, by = c("wdid", "year")) %>% 
-  select(-latdecdeg, -longdecdeg) %>% 
-  relocate(wdid, starts_with("m_"))
+  final_data <- left_join(ir_data, sat_data, by = c("wdid", "year")) %>%
+    left_join(., weather_data, by = c("wdid", "year")) %>%
+    select(-latdecdeg, -longdecdeg) %>%
+    relocate(wdid, starts_with("m_"))
 )
-
 ```
 
 ---
@@ -568,9 +563,9 @@ final_data <- left_join(ir_data, sat_data, by = c("wdid", "year")) %>%
 + facet the figure by `high_wy`
 
 ```{r echo = F}
-final_data <- final_data %>% 
-  mutate(tot_precip = m_5 + m_6 + m_7 + m_8 + m_9) %>% 
-  mutate(high_wy = ifelse(well_yield > 600, TRUE, FALSE))  
+final_data <- final_data %>%
+  mutate(tot_precip = m_5 + m_6 + m_7 + m_8 + m_9) %>%
+  mutate(high_wy = ifelse(well_yield > 600, TRUE, FALSE))
 
 ggplot(data = final_data) +
   geom_point(aes(y = pumpingAF, x = tot_precip)) +
@@ -589,7 +584,7 @@ $$
 $$
 
 ```{r echo = F}
-lm(pumpingAF ~ well_yield + pumping_costs + m_5 + m_6 + m_7 + m_8 + m_9 + GDD, data = final_data) %>%  summary() 
+lm(pumpingAF ~ well_yield + pumping_costs + m_5 + m_6 + m_7 + m_8 + m_9 + GDD, data = final_data) %>% summary()
 ```
 
 What do you find?

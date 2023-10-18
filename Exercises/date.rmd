@@ -1,0 +1,135 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: paged
+---
+
+# Load Required Packages {.unnumbered}
+```{r setup, message=FALSE, class.source="fold-show"}
+library(lubridate)
+```
+
+
+# Exercise 1: Extracting Month and Year
+
+**Dataset:** `dates_1 <- c("2023-04-05", "2019-12-31", "2022-08-14")`
+
+**Task:** Extract the month and year from each date in the `dates_1` vector. The output should be in the format `MM-YYYY`.
+
+**Functions to Use:** `month()`, `year()`
+
+**Load Dataset:**
+
+```{r, class.source="fold-show"}
+dates_1 <- c("2023-04-05", "2019-12-31", "2022-08-14")
+dates_1
+```
+
+**Solution:**
+
+```{r}
+formatted_dates_1 <- paste0(month(dates_1, label = TRUE), "-", year(dates_1))
+formatted_dates_1
+```
+
+---
+
+# Exercise 2: Calculating Days Difference
+
+**Dataset:** `start_dates <- c("2021-05-01", "2019-07-19")` and `end_dates <- c("2021-05-15", "2019-08-02")`
+
+**Task:** Calculate the number of days between the start and end dates for each pair.
+
+**Functions to Use:** `ymd()`, `as.duration()`
+
+**Load Dataset:**
+
+```{r, class.source="fold-show"}
+start_dates <- c("2021-05-01", "2019-07-19")
+end_dates <- c("2021-05-15", "2019-08-02")
+data.frame(start_dates, end_dates)
+```
+
+**Solution:**
+
+```{r}
+days_diff <- as.duration(ymd(end_dates) - ymd(start_dates))
+days_diff
+```
+
+---
+
+# Exercise 3: Rounding Up Dates
+
+**Dataset:** `dates_3 <- c("2023-04-05 15:30:25", "2019-12-31 06:20:15")`
+
+**Task:** Round the dates to the nearest hour.
+
+**Functions to Use:** `round_date()`
+
+**Load Dataset:**
+
+```{r, class.source="fold-show"}
+dates_3 <- c("2023-04-05 15:30:25", "2019-12-31 06:20:15")
+dates_3
+```
+
+**Solution:**
+
+```{r}
+rounded_dates <- round_date(ymd_hms(dates_3), "hour")
+rounded_dates
+```
+
+---
+
+# Exercise 4: Checking Leap Years
+
+**Dataset:** `years <- c(2000, 2001, 2004, 2100)`
+
+**Task:** Check which years in the `years` vector are leap years.
+
+**Functions to Use:** `leap_year()`
+
+**Load Dataset:**
+
+```{r, class.source="fold-show"}
+years <- c(2000, 2001, 2004, 2100)
+years
+```
+
+**Solution:**
+
+```{r}
+leap_years_check <- leap_year(years)
+leap_years_check
+```
+
+---
+
+# Exercise 5: Adding Months to Dates
+
+**Dataset:** `dates_5 <- c("2021-11-30", "2019-02-28")`
+
+**Task:** Add three months to each date in the `dates_5` vector.
+
+**Functions to Use:** `ymd()`, `months()`
+
+**Load Dataset:**
+
+```{r, class.source="fold-show"}
+dates_5 <- c("2021-11-30", "2019-02-28")
+dates_5
+```
+
+**Solution:**
+
+```{r}
+new_dates <- ymd(dates_5) + months(3)
+new_dates
+```
