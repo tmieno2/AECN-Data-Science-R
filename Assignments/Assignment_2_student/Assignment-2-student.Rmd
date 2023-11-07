@@ -144,6 +144,9 @@ Using a for loop, find the predicted yield values for all the subplots at the se
 
 In writing a for loop, create a storage of predicted yield values you will be calculating like below:
 
+```{r echo = TRUE}
+yield_store <- rep(0, nrow(data))
+```
 
 Then, within the loop, assign the calculated yield value to `yield_store` for each iteration. 
 
@@ -221,6 +224,11 @@ Finally, create a histrogram of the optimal seed rates.
 Now, we would like to find the economically optimal seed rate at various combinations of soy price and seed price to understand the sensitivity of the optimal seed rates to them.  
 
 Here are the sequence of soy and seed prices:
+
+```{r echo = TRUE}
+soy_price_seq <- seq(6, 11, by = 0.1)
+seed_price_seq <- seq(0.2, 0.5, by = 0.01)
+```
 
 It would be nice to implement similar tactics as we did in **Q12** where all the possible combinations of parameters are generated as a single `data.frame`, which makes it possible to do everything vectorized without resorting to looping.
 

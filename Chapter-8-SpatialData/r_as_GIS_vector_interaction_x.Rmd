@@ -1023,7 +1023,7 @@ dplyr::select(KS_counties, NAME, COUNTYFP, intersect_wells)
 ---
 class: middle
 
-# Subsetting to a geographic extent (bounding box)
+# Cropping to a geographic extent (bounding box)
 
 + We can use `st_crop()` to subset (crop) spatial objects to a spatial bounding box (extent) of a spatial object. 
 
@@ -1333,15 +1333,16 @@ Our goal is to assign the county-level corn price information from the Kansas co
 ---
 class: middle
 
-First let's create and add a fake county-level corn price variable to the Kansas county data.  
+First let's create and add a fake county-level corn price variable to the Kansas county data. 
 
 ```{r create_corn_price}
-KS_corn_price <- KS_counties %>%  
+KS_corn_price <- 
+  KS_counties %>%  
   mutate(
     corn_price = seq(3.2, 3.9, length = nrow(.)) 
   ) %>% 
   dplyr::select(COUNTYFP, corn_price)
-```  
+```
 
 ---
 class: middle
@@ -1354,7 +1355,7 @@ Here is the map of Kansas counties color-differentiated by fake corn price:
 <br>
 <br>
 <br>
-```{r county-price, eval = F}	
+```{r county-price, eval = F}
 ggplot() + 
 	geom_sf(
 		data = KS_corn_price, 

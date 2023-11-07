@@ -121,7 +121,7 @@ name: create-modify
 Install the `flextable` package and library it.
 
 ```{r eval = F}
-install.pacakges(flextable) 
+install.packages("flextable") 
 ```
 
 ```{r eval = F}
