@@ -14,7 +14,7 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r, child = 'setup.Rmd'}
+```{r, child = '../setup.Rmd'}
 ```
 
 ```{r, include = F, cache = F}
@@ -92,7 +92,8 @@ class: middle
 + Import treatment block shape files:
 
 ```{r results = "hide"}
-treatment_blocks <- st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %>%
+treatment_blocks <- 
+  st_read(dsn = "./Data", layer = "ZP_TRT_Blocks_Buff") %>%
   #--- transform the CRS so that it is consistent with the raster data ---#
   st_transform(4326)
 ```
@@ -113,8 +114,9 @@ yield <-
 
 + Import drone imagery data (GeoTiff) file.
 
-```{r }
-ndre <- raster("./Data/NDRE.tif")
+```{r , cache = FALSE}
+ndre <- raster::raster("./Data/NDRE.tif")
+ndre_sr <- terra::rast("./Data/NDRE.tif")
 ```
 
 ---
@@ -130,7 +132,7 @@ class: middle
 ]
 
 .right6[
-```{r echo = F}
+```{r echo = F, out.width = "100%"}
 tm_shape(ndre) +
   tm_raster(title = "NDRE") +
   tm_shape(yield) +
@@ -163,10 +165,14 @@ class: middle
 
 .content-box-green[**How**]
 
-You can crop a raster layer by using `raster::crop()`.
+You can crop a raster layer by using `raster::crop()` or `terra::crop()`.
 
 ```{r eval = F}
+#--- raster ---#
 raster::crop(Raster*, sf)
+
+#--- terra ---#
+terra::crop(SpatRaster, sf)
 ```
 
 The resulting `Raster*` object is the original cropped to the bounding box of the `sf` object.
@@ -180,14 +186,18 @@ Crop `ndre` to the bounding box of `treatment_blocks`.
 
 .content-box-green[**Code**]
 
-```{r }
+```{r cache = F}
+#--- raster ---#
 ndre_cropped <- raster::crop(ndre, treatment_blocks)
+
+#--- terra ---#
+ndre_cropped_sr <- raster::crop(ndre_sr, treatment_blocks)
 ```
 
 ---
 class: middle
 
-```{r echo = F, out.width = "70%"}
+```{r echo = F, out.width = "80%"}
 tm_shape(ndre_cropped) +
   tm_raster(title = "NDRE") +
   tm_shape(treatment_blocks) +
@@ -243,7 +253,7 @@ cell_centroids <- st_centroid(raster_like_cells) %>%
 ]
 
 .right6[
-```{r points-extact-viz, fig.cap = "Visual illustration of raster data extraction for points data", echo = F, out.width = "50%"}
+```{r points-extact-viz, fig.cap = "Visual illustration of raster data extraction for points data", echo = F, out.width = "100%"}
 #--------------------------
 # Create points for which values are extracted
 #--------------------------
@@ -271,24 +281,21 @@ ggplot() +
 ```
 ]
 
-
-
- 
-
 ---
 class: middle
 
 .content-box-green[**How**]
 
-You can use `raster::extract()` with the following syntax: 
+You can use `raster::extract()` or `terra::extract()` with the following syntax: 
 
 ```{r eval = F}
-raster::extract(raster, sf of points)	
+raster::extract(Raster^*, sf of points)
+terra::extract(SpatRaster, sf of points)
 ```
 
 ---
 class: middle
-	
+
 
 .content-box-green[**Goal**]
 
@@ -296,38 +303,6 @@ Extract NDRE values for yield points data:
 
 + match each of the yield points with the cell in which it resides in
 + assign the cell (NDRE) value to the point
-		
----
-class: middle
-
-.left4[
-<br>
-+ Here is the visualization of two yield points from `yield` and raster cells from `ndre` that surround the yield points.
-
-+ We are finding the raster cell to extract the value from for each of all the yield points.
-]
-
-.right6[
-```{r echo = F}
-yield_subset <- yield[treatment_blocks, ] %>%
-  .[1:2, ]
-
-yield_subset_buffer <- st_buffer(yield_subset, dist = 0.00001)
-
-ndre_subset <- crop(ndre, yield_subset_buffer)
-
-tm_shape(ndre_subset) +
-  tm_raster() +
-  tm_shape(yield_subset) +
-  tm_symbols(size = 0.4, col = "green") +
-  tm_layout(
-    frame = F,
-    legend.outside = TRUE
-  )
-```
-]
-
-
 
 ---
 class: middle
@@ -335,8 +310,16 @@ class: middle
 .content-box-green[**Implementation**]
 
 ```{r }
-ndre_extracted <- raster::extract(ndre, yield)
+#--- raster ---#
+ndre_extracted_r <- raster::extract(ndre, yield)
+
+#--- terra ---#
+ndre_extracted_t <- terra::extract(ndre_sr, yield)
 ```
+
+.content-box-red[**Aside**]
+
+On my computer, `terra::extract()` takes about 0.5 seconds while `raster::extract()` takes about 2.5 seconds.
 
 .content-box-green[**Next step**]
 
@@ -347,24 +330,37 @@ We need to merge the extracted values back to the points data so that we can use
 ---
 class: middle
 
-.content-box-red[**Aside**]
+Notice that the extracted data are in different format for the `raster` and `terra` options.
 
-+ In the appendix, raster data extraction for points data using the `terra` package is introduced, which is faster than the raster package. 
+The `raster` way gives you a simple vector:    
 
-+ On my computer, `terra::extract()` takes about 0.5 seconds while `raster::extract()` takes about 2.5 seconds.
+```{r}
+#--- raster ---#
+head(ndre_extracted_r)
+class(ndre_extracted_r)
+```
 
+The `terra` way gives you a `data.frame`
+
+```{r}
+#--- terra ---#
+head(ndre_extracted_t)
+class(ndre_extracted_t)
+```
 
 ---
 class: middle
 
+# `raster` way
+
 .content-box-green[**Merging the extracted values to the points data**]
 
-The $n$th value in `ndre_extracted` is for the $n$th point in `yield`.
+The $n$th value in `ndre_sr_extracted_r` is for the $n$th point in `yield`.
 
 So, you can simply do this:
 
 ```{r }
-yield <- mutate(yield, NDRE = ndre_extracted)
+yield <- mutate(yield, NDRE = ndre_extracted_r)
 ```
 
 We see only `NA` values for NDRE. No worries, the job was successful.
@@ -372,6 +368,48 @@ We see only `NA` values for NDRE. No worries, the job was successful.
 ```{r }
 filter(yield, !is.na(NDRE))
 ```
+
+---
+class: middle
+
+# `terra` way
+
+.content-box-green[**Merging the extracted values to the points data**]
+
+The $n$th row in `ndre_sr_extracted_t` is for the $n$th point in `yield`.
+
+So, you can simply do this:
+
+```{r }
+yield <- mutate(yield, NDRE = ndre_extracted_t$NDRE)
+```
+
+---
+class: middle
+
+# Multiple layers
+
+Create a two-layer raster objects (two of the same layers here):
+
+```{r, cache = FALSE}
+ndre_stack <- raster::stack(c("./Data/NDRE.tif", "./Data/NDRE.tif"))
+ndre_sr <- terra::rast(c("./Data/NDRE.tif", "./Data/NDRE.tif"))
+```
+
+Now, extract: 
+
+```{r }
+#--- raster ---#
+ndre_extracted_r <- raster::extract(ndre_stack, yield)
+head(ndre_extracted_r)
+```
+
+```{r}
+#--- terra ---#
+ndre_extracted_t <- terra::extract(ndre_sr, yield)
+head(ndre_extracted_t)
+```
+
 
 ---
 class: middle
@@ -394,7 +432,7 @@ class: middle
 ]
 
 .right6[
-```{r polygons-extact-viz, fig.cap = "Visual illustration of raster data extraction for polygons data", echo = F, out.width = "50%"}
+```{r polygons-extact-viz, fig.cap = "Visual illustration of raster data extraction for polygons data", echo = F, out.width = "100%"}
 #--------------------------
 # Create a polygon for which values are extracted
 #--------------------------
@@ -414,27 +452,24 @@ polygons_extract_viz
 ```
 ]
 
-
 ---
 class: middle
 
 .content-box-green[**How**]
 
-We use the `exact_extract()` function from the `exactextractr` package:
+We can use the `exact_extract()` function from the `exactextractr` package:
 
 ```{r eval = F}
 library(exactextractr)
 ```
 
 ```{r eval = FALSE}
-exact_extract(raster, polygons sf) 
+exact_extract(raster, polygons sf)
 ```
 
 .content-box-green[**Why exact_extract()?**]
 
-We can actually use `raster::extract` for polygons data as well.
-
-However, it is unbearably slow. `exact_extract()` is much faster.
+It is typically faster than `terra::extract()`.
 
 ---
 class: middle
@@ -601,7 +636,55 @@ ndre_extracted <- terra::extract(ndre_sr, `st_coordinates`(yield))
 ndre_extracted <- terra::extract(ndre_sr, st_coordinates(yield))
 ```
 
+---
+class: inverse, center, middle
+name: data-structure
 
+# Appendix (terra)
 
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
 
+---
+class: middle
 
+.content-box-green[**How**]
+
+We can use the `extract()` function from the `raster` or `terra` package:
+
+```{r eval = FALSE}
+raster::extract(raster, polygons sf)
+terra::extract(raster, polygons sf)
+```
+
+.content-box-green[**Note**]
+
+Often times, `terra::extract()` is significantly faster than `raster::extract()`. It is more so when the underlying raster data is larger or there are more polygons.
+
+---
+class: middle
+
+.content-box-green[**Goal**]
+
+Extract NDRE values for the treatment block polygons.
+
+.content-box-green[**Implementation**]
+
+```{r results = "hide", cache = FALSE}
+ndre_extracted <- terra::extract(ndre_sr, treatment_blocks)
+```
+
+---
+class: middle
+
+The object returned by `exact_extract()` is a list:
+
+```{r }
+#--- check the class ---#
+class(ndre_extracted)
+```
+
+Notice that the observations with the same ID now have more than one values from the raster layers because you are extracting to polygons.
+
+```{r}
+head(ndre_extracted)
+```
