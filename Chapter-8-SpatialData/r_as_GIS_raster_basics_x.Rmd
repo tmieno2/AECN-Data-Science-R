@@ -72,6 +72,8 @@ name: data-type
 
 # `raster` package: `RasterLayer`, `RasterStack`, and `RasterBrick`
 
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
 ---
 class: middle
 
@@ -230,6 +232,50 @@ While spatial operations on `RasterBrick` are supposedly faster than `RasterStac
 
 ---
 class: inverse, center, middle
+name: data-type
+
+# `terra` package: `SpatRast`
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=1000px></html>
+
+---
+class: middle
+
+`terra` offers only one obejct class for raster data: `SpatRast`
+
+---
+class: middle
+
+# `SpatRaster`
+
+Let's take a look at a `SpatRaster` object
+```{r}
+(
+  drone_blue_sr <- terra::rast("Data/Annos_062718_RE_transparent_reflectance_blue.tif")
+)
+```
+
+Yes, the information presented here is very similar to what we saw earlier with `Raster`^* object.
+
+---
+class: middle
+
+But, `SpatRaster` object can have multiple layers like `RasterLayer` and `RasterBrick`. 
+
+```{r}
+(
+  drone_bg_sr <-
+    terra::rast(c(
+      "Data/Annos_062718_RE_transparent_reflectance_blue.tif",
+      "Data/Annos_062718_RE_transparent_reflectance_green.tif"
+    ))
+)
+```
+
+This is more convenient.
+
+---
+class: inverse, center, middle
 name: io
 
 # Raster data input and output
@@ -243,7 +289,10 @@ class: middle
 
 Raster data files can come in numerous different formats. For example, PRPISM weather data comes in the Band Interleaved by Line (BIL) format, some of the Daymet data comes in netCDF format. Other popular formats include GeoTiff, SAGA, ENVI, and many others. 
 
-### Read raster file(s)
+---
+class: middle
+
+# Read raster file(s) with `raster`
 
 You can use `raster()` to read raster data of many common formats, and it should be almost always the case that the raster data you got can be read using this function. Here, we read a GeoTiff file (a file with .tif extension):
 
@@ -256,8 +305,7 @@ drone_blue <- raster("./Data/Annos_062718_RE_transparent_reflectance_blue.tif")
 ---
 class: middle
 
-One important thing to note here is that the cell values of the raster data are actually not in memory when you "read" raster data from a file. 
-You basically just established a connection to the file. This helps to reduce the memory footprint of raster data handling. You can check this by `raster::inMemory()` function.
+One important thing to note here is that the cell values of the raster data are actually not in memory when you "read" raster data from a file. You basically just established a connection to the file. This helps to reduce the memory footprint of raster data handling. You can check this by `raster::inMemory()` function.
 
 ```{r }
 inMemory(drone_blue)
@@ -277,7 +325,7 @@ files_list <- c(
 
 #--- read the two at the same time ---#
 (
-  drone_blue_green <- stack(files_list)
+  drone_blue_green <- raster::stack(files_list)
 )
 ```
 
@@ -288,7 +336,28 @@ For example, you can combine PRISM temperature and precipitation raster layers.
 ---
 class: middle
 
-# Write raster files
+# Read raster file(s) with `terra`
+
+You can use `rast()` to read raster data.
+
+```{r read_no_eval_terra}
+drone_blue_sr <- terra::rast("./Data/Annos_062718_RE_transparent_reflectance_blue.tif")
+```
+
+You can read multiple raster data files into one `SpatRast` object as we saw earlier.
+
+```{r read_no_eval_terra}
+drone_bg_sr <-
+  terra::rast(c(
+    "Data/Annos_062718_RE_transparent_reflectance_blue.tif",
+    "Data/Annos_062718_RE_transparent_reflectance_green.tif"
+  ))
+```
+
+---
+class: middle
+
+# Write raster files with `raster`
 
 You can write a `Raster*` object using `writeRaster()`.
 
@@ -304,7 +373,7 @@ class: middle
 
 .content-box-green[**Example**]
 
-```{r }
+```{r, eval = F}
 writeRaster(drone_green, "./Data/export_example_green.tif", format = "GTiff", overwrite = TRUE)
 ```
 
@@ -336,13 +405,33 @@ There is no advantage in saving two raster layers as a single GeoTiff file. The 
 ---
 class: middle
 
+# Write raster files with `terra`
+
+You can write a `SpatRast` object using `terra::writeRaster()` (yes, it is exactly the same function name with `raster`).
+
+.content-box-green[**Example**]
+
+```{r, eval = F}
+terra::writeRaster(drone_green, "./Data/export_example_green_using_terra.tif", format = "GTiff", overwrite = TRUE)
+```
+
+However, the key difference between the `raster` and `terra` is the `terra` writes the file much faster.
+
+---
+class: middle
+
 # Exercise 1
 
-Read "NIR.tif" and "RED.tif", and name them `NIR` and `RED`. 
+Read "NIR.tif" and "RED.tif", and name them `NIR` and `RED`. You can use either `raster` or `terra`. 
 
-```{r include = F}
+```{r include = F, eval = F}
 NIR <- raster("./Data/NIR.tif")
 RED <- raster("./Data/RED.tif")
+```
+
+```{r include = F}
+NIR <- terra::rast("./Data/NIR.tif")
+RED <- terra::rast("./Data/RED.tif")
 ```
 
 ---
@@ -358,7 +447,7 @@ class: middle
 
 .content-box-red[**Raster arithmetic**]
 
-+ You can do basic arithmetic operations using raster layers as long as they share the same spatial extent and resolution. 
++ You can do basic arithmetic operations using raster layers as long as they share the same spatial extent and resolution (both `raster` and `terra`). 
 
 + Raster arithmetic operations are done element-by-element (cell-by-cell).
 
@@ -422,20 +511,20 @@ Using `NIR` and `RED`,  calculate NDVI and name it `NDVI`.
 
 $NDVI = (NIR-RED)/(NIR+RED)$
 
-```{r ndvi-calc, include = F}
+```{r ndvi-calc, include = F, cache = TRUE}
 NDVI <- (NIR - RED) / (NIR + RED)
 ```
 
-The use the following code to visualize NDVI.
+Then, use the following code to visualize NDVI.
 
-```{r eval = F}
+```{r eval = F, cache = TRUE}
 tm_shape(NDVI) +
   tm_raster()
 ```
 ]
 
 .right5[
-```{r echo = F}
+```{r echo = F, cache = TRUE, out.width="100%"}
 tm_shape(NDVI) +
   tm_raster(title = NDVI) +
   tm_layout(
@@ -473,11 +562,10 @@ plot(drone_blue)
 ]
 
 .right5[
-```{r plot_stack_run, echo = F}
+```{r plot_stack_run, echo = F, out.width = "100%"}
 plot(drone_blue)
 ```
 ]
-
 
 ---
 class: middle
@@ -487,14 +575,14 @@ class: middle
 .left5[
 To have a quick visualization of the data values of `Raster*` objects, you can also use the `tmap` package as well.
 
-```{r tmap-static-raster, eval = F}  
+```{r tmap-static-raster, eval = F, out.width = "100%"}  
 tm_shape(drone_blue) +
   tm_raster()
 ```
 ]
 
 .right5[
-```{r tmap-static-raster-f, ref.label = "tmap-static-raster", echo = F}  
+```{r tmap-static-raster-f, ref.label = "tmap-static-raster", echo = F, out.width = "100%"}  
 
 ```
 ]
