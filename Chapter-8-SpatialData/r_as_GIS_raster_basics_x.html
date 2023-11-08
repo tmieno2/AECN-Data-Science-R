@@ -657,7 +657,7 @@ Let's take a look at a `SpatRaster` object
 ## name        : Annos_062718_RE_transparent_reflectance_blue
 ```
 
-Yes, the information presented here is very similar to what we saw earlier with `Raster`^* object.
+Yes, the information presented here is very similar to what we saw earlier with `Raster`* object.
 
 ---
 class: middle
@@ -687,6 +687,48 @@ But, `SpatRaster` object can have multiple layers like `RasterLayer` and `Raster
 ```
 
 This is more convenient.
+
+---
+class: middle
+
+# Conversion
+
+Sometimes, it is necessary to convert a `SpatRaster` to a `Raster`* object because there are many packages that accepts only `Raster`* objects. Fortunately, it is easy to do this.
+
++ from `SpatRaster` to `Raster`*
+
+
+```r
+as(drone_blue_sr, "Raster")
+```
+
+```
+## class      : RasterLayer 
+## dimensions : 9640, 4768, 45963520  (nrow, ncol, ncell)
+## resolution : 0.08794, 0.08794  (x, y)
+## extent     : 286164.7, 286584, 4433250, 4434097  (xmin, xmax, ymin, ymax)
+## crs        : +proj=utm +zone=15 +datum=WGS84 +units=m +no_defs 
+## source     : Annos_062718_RE_transparent_reflectance_blue.tif 
+## names      : Annos_062718_RE_transparent_reflectance_blue
+```
+
++ from `Raster`* to `SpatRaster` 
+
+
+```r
+rast(drone_blue)
+```
+
+```
+## class       : SpatRaster 
+## dimensions  : 9640, 4768, 1  (nrow, ncol, nlyr)
+## resolution  : 0.08794, 0.08794  (x, y)
+## extent      : 286164.7, 286584, 4433250, 4434097  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=utm +zone=15 +datum=WGS84 +units=m +no_defs 
+## source      : Annos_062718_RE_transparent_reflectance_blue.tif 
+## name        : Annos_062718_RE_transparent_reflectance_blue
+```
+
 
 ---
 class: inverse, center, middle
@@ -977,7 +1019,7 @@ tm_shape(NDVI) +
 ]
 
 .right5[
-&lt;img src="r_as_GIS_raster_basics_x_files/figure-html/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="r_as_GIS_raster_basics_x_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -1011,7 +1053,6 @@ plot(drone_blue)
 .right5[
 &lt;img src="r_as_GIS_raster_basics_x_files/figure-html/plot_stack_run-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
-
 
 ---
 class: middle

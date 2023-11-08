@@ -249,13 +249,13 @@ class: middle
 # `SpatRaster`
 
 Let's take a look at a `SpatRaster` object
-```{r}
+```{r, cache = FALSE}
 (
   drone_blue_sr <- terra::rast("Data/Annos_062718_RE_transparent_reflectance_blue.tif")
 )
 ```
 
-Yes, the information presented here is very similar to what we saw earlier with `Raster`^* object.
+Yes, the information presented here is very similar to what we saw earlier with `Raster`* object.
 
 ---
 class: middle
@@ -273,6 +273,26 @@ But, `SpatRaster` object can have multiple layers like `RasterLayer` and `Raster
 ```
 
 This is more convenient.
+
+---
+class: middle
+
+# Conversion
+
+Sometimes, it is necessary to convert a `SpatRaster` to a `Raster`* object because there are many packages that accepts only `Raster`* objects. Fortunately, it is easy to do this.
+
++ from `SpatRaster` to `Raster`*
+
+```{r}
+as(drone_blue_sr, "Raster")
+```
+
++ from `Raster`* to `SpatRaster` 
+
+```{r}
+rast(drone_blue)
+```
+
 
 ---
 class: inverse, center, middle
