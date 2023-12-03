@@ -234,6 +234,10 @@ It would be nice to implement similar tactics as we did in **Q12** where all the
 
 Looking at the size of `eval_data_all`, which is for single price combination, the memory profile of the evaluation data is 
 
+```{r echo = T}
+object.size(eval_data_all) %>% format(units = "Mb")
+```
+
 If we were to create a single evaluation dataset for all the combinations of soy price, seed price, and seed rates, then what would be approximate size of the data?   
 
 **Q14**
