@@ -54,7 +54,7 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
 
 + Final Project 
     * Instruction ([here](https://tmieno2.github.io/AECN-Data-Science-R/FinalProject/final_project_x.html))
-    * Submission link ([here](https://www.dropbox.com/request/4rH7feLQSlJkoJBlNJy3))
+    * Submission link ([here](https://www.dropbox.com/request/XCskvzc4gcWRfE77jhNU))
     * Samples ([here](https://www.dropbox.com/scl/fi/vbraoz05kvkjdk4e3bxs1/R_Final_Project_ZH_Summary.html?rlkey=idr9ghdjnfqkxr7ca6qmxcp8r&dl=0))
 
 
