@@ -46,6 +46,7 @@ This is the repository for AECN 396/AECN896-002 at University of Nebraska Lincol
 + Assignment 2
     * Rmd template and datasets ([here](https://www.dropbox.com/sh/1r5k6p5vcdlk5dx/AAAZxa9e427cXaz1Jw6sE8nNa?dl=0))
     * Submission link ([here](https://www.dropbox.com/request/4kpFrPyezSheeIyA5PXo))
+    * Solution ([here](https://www.dropbox.com/scl/fo/dw7yy2xfpg97xsb7no5zu/h?rlkey=3aqbb9dz9qao8nnpnau6kb5m8&dl=0))
 + Assignment 3
     * Rmd template and datasets ([here](https://www.dropbox.com/scl/fo/p27sphr6ies6u55313ipb/h?rlkey=20rsdjlshz8cz0k96qpcmcf2g&dl=0))
     * Submission link ([here](https://www.dropbox.com/request/kqNUZ347GNoTW3MZXAvn))
